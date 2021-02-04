@@ -11,16 +11,22 @@
 	<bean id="dataSource"
 		  class="com.zaxxer.hikari.HikariDataSource"
 		  p:driverClassName="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"
-		  p:jdbcUrl="jdbc:log4jdbc:mysql://localhost:3306/open?serverTimezone=UTC"
+		  p:jdbcUrl="jdbc:log4jdbc:mysql://openproject.cvlxlk5s1yan.ap-northeast-2.rds.amazonaws.com:3306/open?serverTimezone=UTC"
 		  p:username="aia"
-		  p:password="aia"		
+		  p:password="aiaje0914"		
 	/>		  
 	
 	<!-- SqlSessionFactoryBean 등록 -->
 	<bean id="sqlSessionFactory"
 				class="org.mybatis.spring.SqlSessionFactoryBean"
 				p:dataSource-ref="dataSource"
-				p:mapperLocations="classpath:com/mw/member/mapper/*.xml"
+				p:mapperLocations="classpath:com/aia/main/guestbook/dao/mapper/*.xml"
 	/>
+	
+	<!-- SqlSessionTemplate 등록 -->
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean>
 	
 </beans>

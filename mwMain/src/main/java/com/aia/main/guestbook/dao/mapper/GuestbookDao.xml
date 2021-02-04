@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.aia.main.guestbook.dao.GuestbookDao">
+	
+	<!-- Guestbook 타입의 resultMap : 방명록 게시판 (A의 방명록) -->
+	<resultMap id="guestbookResultList"
+				type="com.aia.main.guestbook.domain.Guestbook">
+		<id column="memberNo" property="memberNo"></id>
+		<result column="gbookNo" property="gbookNo"/>
+		<result column="writerNo" property="writerNo"/>
+		<result column="writerName" property="writerName"/>
+		<result column="writerPhoto" property="writerPhoto"/>
+		<result column="writerLoc" property="writerLoc"/>
+		<result column="content" property="content"/>
+		<result column="contentPhoto" property="contentPhoto"/>
+		<result column="regDate" property="regDate"/>
+		<result column="updateDate" property="updateDate"/>
+		<result column="secret" property="secret"/>
+	</resultMap>
+	
+	<!-- Guestbook 타입의 resultMap : 방명록 게시물 (B가 남긴 방명록 1개) -->
+	<resultMap id="guestbookResult"
+				type="com.aia.main.guestbook.domain.Guestbook">
+		<id column="gbookNo" property="gbookNo"></id>
+		<result column="memberNo" property="memberNo"/>
+		<result column="writerNo" property="writerNo"/>
+		<result column="writerName" property="writerName"/>
+		<result column="writerPhoto" property="writerPhoto"/>
+		<result column="writerLoc" property="writerLoc"/>
+		<result column="content" property="content"/>
+		<result column="contentPhoto" property="contentPhoto"/>
+		<result column="regDate" property="regDate"/>
+		<result column="updateDate" property="updateDate"/>
+		<result column="secret" property="secret"/>
+	</resultMap>
+	
+	<!-- 방명록 게시물 총 수 -->
+	<select id="selectTotalCnt" resultType="int">
+		select count(*) from guestbook
+	</select>
+	
+	<!-- 방명록 게시물 전체 리스트 조회 -->
+	<select id="selectAllGuestbook"
+			parameterType="map"
+			resultMap="guestbookResult">
+		select * from guestbook
+	</select>
+
+	<!-- 회원 A의 방명록 게시판 조회 -->
+	<select id="selectGuestbookByMemberNo"
+			resultMap="guestbookResultList">
+		select * from guestbook where memberNo=?	
+	</select>
+	
+	<!-- 회원 A의 방명록 게시판의 게시물 총 수 -->
+	<select id="selectTotalCntByMemberNo" resultType="int">
+		select count(*) from guestbook where MemberNo=?
+	</select>
+	
+	<!-- 1개의 방명록 게시물 조회 -->
+	<select id="selectGuestbookByGbookNo"
+			resultMap="guestbookResult">
+		select * from guestbook where gbookNo=?
+	</select>
+	
+
+	
+</mapper> 
