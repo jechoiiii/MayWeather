@@ -229,8 +229,44 @@
 					console.log('x좌표 : '+ x, 'y좌표 : '+ y, 'latitude : '+ latitude, 'longitude : '+ longitude);
 					
 			        
-			     	// xy 좌표로 날씨 API 불러오기
-					xml2json(x, y);
+			     	// xy 좌표로 날씨 API 불러오기 => CORS 문제 발생
+					//xml2json(x, y);
+			     	
+			     	// CORS 문제 해결 : 위치정보를 ajax로 서버에 전송
+			    	// 위치정보를 자바스크립트 객체에 담는다.
+			        var location =  { 
+			    			x : x, 
+			    			y : y , 
+			    			lat : latitude, 
+			    			lot : longitude
+			    	};
+			    	
+			    	// ajax로 서버에 locData 전송
+			        $.ajax({
+			        	url: "weatherByTime",
+			        	type: "POST",
+			        	data : location,	
+			        	success: function(data){
+			        		alert(location);
+			        	},
+			        	error: function(){
+			        		alert("위치정보 전송 실패");
+			        	}
+			        });
+			    	
+			        $.ajax({
+			        	url: "weatherNow",
+			        	type: "POST",
+			        	data : location,	
+			        	 success: function(data){
+			        		alert(location);
+			        	},
+			        	error: function(){
+			        		alert("위치정보 전송 실패");
+			        	}
+			        });
+	
+			     	
 					
 			  	}, function(error) {
 							console.error(error);
@@ -322,69 +358,6 @@
 		    return rs;
 		}
 
-		
-		
-		// 위치에 맞는 API 불러오기 -----------------------------------------
-		function xml2json(x, y){
-	    	
-	    	// 현재 시간
-		    var today = new Date();
-		    var yyyy = today.getFullYear();
-		    var dd = today.getDate();
-		    var mm = today.getMonth()+1;
-		    var hours = today.getHours();
-		    var minutes = today.getMinutes();
-		 
-		    // 요청 시간
-		    if(minutes < 30){
-		        // 30분보다 작으면 한시간 전 값
-		        hours = hours - 1;
-		        if(hours < 0){
-		            // 자정 이전은 전날로 계산
-		            today.setDate(today.getDate() - 1);
-		            hours = 23;
-		        }
-		    }
-		    if(hours<10) {
-		        hours='0'+hours
-		    }
-		    if(mm<10) {
-		        mm='0'+mm
-		    }
-		    if(dd<10) {
-		        dd='0'+dd
-		    } 
-		    
-		    console.log("time" + yyyy + mm + dd + hours + minutes);
-		     
-		    // API 키 값
-		    apikey = "Ul4%2BcYS7f9Q31NjJP%2FIk1ly9GOGQ8G%2FYPCnJyBsV3hh6ZLptcQZZuR3WufjzBKZb1QEs8%2BqUwJJzc6rlACTkyA%3D%3D";;
-		    today = yyyy+""+mm+""+dd;
-		    basetime = hours + "00";
-		    
-		   	var apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst"
-		    			+ "?ServiceKey=" + apikey
-		   				+ "&pageNo=1"
-		   				+ "&numOfRows=10"
-		   				+ "&dataType=json"
-						+ "&base_date=" + today
-		   				+ "&base_time=" + basetime
-						+ "&nx=" + x
-						+ "&ny=" + y;
-			
-		    $.ajax({
-			    url: apiUrl,
-			    type: 'GET',
-			    cache: false,
-			    success: function(data) {
-			    	
-			       $('.weather_now').append(JSON.stringify(data));
-			    }
-		    }); 
-		 
-		} 
-
-	
 		
 	
 		$(document).ready(function() {
