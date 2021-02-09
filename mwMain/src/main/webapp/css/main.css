@@ -52,6 +52,32 @@
 		font-size: 0.9em;
 		text-align: left;
 	}
+	
+	/* 헤더 ---------------------------- */
+	
+	.header_loc {
+    	position: absolute;
+    	top: 35px;
+    	left: 145px;
+    }
+    
+    #btnLocc {
+  		width: 100px;
+    	background-color: #64c2eb;
+    	color: black;
+    	border: 0px;
+    	text-align: center;
+    }
+    
+    .header_time {
+    	width: 100px;
+    	position: absolute;
+    	background-color: #64c2eb;
+    	color: grey;
+    	border: 0px;
+    	text-align: center;
+    }
+    
 
     /* 위치  -----------------------------*/
     .location {
@@ -90,13 +116,24 @@
     .weather_now {
     	width: 50%;
         padding-top: 30px;
-        padding-left: 20px;
+        padding-left: 10px;
         float: left;
     }
     
     .weather_now table {
     	border-collapse: separate;
-    	border-spacing: 0 5px;	
+    	width: 100px;
+    	height: 100px;
+    	table-layout: fixed;
+    }
+    
+    #tmp_max {
+    	text-align: right;
+    }
+    
+    #tmp_min {
+    	text-align: left;
+    	padding-left: 5px;
     }
     
     /* 오늘의 코디 추천 ----------------------------- */

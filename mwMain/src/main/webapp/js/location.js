@@ -31,16 +31,68 @@
 			    			lot : longitude
 			    	};
 			    	
-			    	// ajax로 서버에 locData 전송
+			    	// ajax로 서버에 위치정보 전송 & API 데이터 받기
 			        $.ajax({
 			        	url: "http://localhost:8080/main/weatherbytime",
 			        	type: "GET",
 			        	data : location,
 			        	async: false,
 			        	success: function(data){
-			        		alert("Location Send Success ! ");
-							$('.weather').append(data);
-							console.log(data);
+			        		alert("위치정보 전송 성공 ! ");
+			        		
+			        		
+			        		var jsonObj = JSON.parse(data);
+			        		//console.log(jsonObj);
+			        		
+			        		var itemArray = jsonObj.response.body.items.item;
+			        		//console.log(itemArray);
+			        		console.log(itemArray.length);
+			        		
+                            
+                           // 필요한 값만 받아오기
+                           for(var i=0; i < itemArray.length; i++){
+                           		var category = itemArray[i].category;
+                                var fcstValue = itemArray[i].fcstValue;
+                                var fcstDate = itemArray[i].fcstDate;
+                                var fcstTime = itemArray[i].fcstTime;
+                                
+                               //console.log('category: '+ category, 'fcstValue: '+ fcstValue, 'fcstDate : '+ fcstDate, 'fcstTime: '+ fcstTime);
+                                
+                                // 일일 최저 기온
+                             	if(category=='TMN' && i < itemArray.length/2){  // 당일 최저 기온만
+                             		var tmp_min = fcstValue;
+                             
+                             		if((tmp_min*10)%10 == 0){	// 소수점 떼기 
+                             			tmp_min = parseInt(tmp_min);
+                             		}
+                             		
+                             		$('#tmp_min').html(tmp_min +'°');
+                             	}
+                             	
+                             	// 일일 최고 기온
+                             	if(category=='TMX' && i < itemArray.length/2) {	// 당일 최고 기온만
+                             		var tmp_max = fcstValue;
+                             		
+                             		if((tmp_max*10)%10 == 0){	// 소수점 떼기 
+                             			tmp_max = parseInt(tmp_max);
+                             		}
+                             		
+                             		$('#tmp_max').html(tmp_max +'° /');
+                             	}
+                             	
+                             	
+                             	
+                             	
+                            
+                            }
+
+                              
+
+                            // // DB 에 저장
+                            // var loc = document.getElementById("header_loc");
+                            // loc.setAttribute(location, location);
+                                                    
+                            
 			        	},
 			        	error: function(){
 			        		alert("Location Send Fail !");
@@ -73,7 +125,7 @@
 			  alert('GPS를 지원하지 않습니다');
 			}
 		
-		}
+		} 
 		
 		
 		
