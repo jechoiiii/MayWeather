@@ -98,6 +98,9 @@
     }
     
     #weatherBtn {
+    	position: absolute;
+    	top: 110px;
+    	right: 10px;
         background-color: #ffd74e;
         padding: 5px;
         border-radius: 10px;
