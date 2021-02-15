@@ -6,96 +6,77 @@
  <html>
  <head>
  <meta charset="UTF-8">
- <title>방명록 리스트 </title>
+ <title>방명록 리스트 TEST </title>
+ <link rel="styleSheet" href="<c:url value="/css/default.css"/>">
+ <link rel="styleSheet" href="<c:url value="/css/main.css"/>">
+ <link rel="styleSheet" href="<c:url value="/css/guestbook.css"/>">
  <%@ include file="/WEB-INF/views/include/basicset.jsp"%>
  <style>
  
-	.table {
-		/* border: 1px solid #DDD; */
-		width: 100%;
-	}
-	
-	td, th {
-		border-bottom: 1px solid #DDD;
-		text-align: center;
-		padding: 10px 0;
-	}
-	
-	.nowpage {
-		font-size: 1.5em;
-		font-weight: bold;
-	}
-	
-	.paging {
-		text-align: center;
-	}
-	
-	div.searchBox {
-		border: 1px solid #CCC;
-		margin: 15px 0;
-		padding: 10px 20px;
-		background-color: #EEE;
-	}
- 
  </style>
  </head>
- <body>
+ <body bgcolor="#f5f5f5">
  	<%@ include file="/WEB-INF/views/include/header.jsp"%>
 
- 	<main class="container">
-		<div
-			class="d-flex align-items-center p-3 my-3 text-white bg-purple rounded shadow-sm">
-			<div class="lh-1">
-				<h1 class="h2 mb-0 text-white lh-1">GUESTBOOK</h1>
-			</div>
-		</div>
- 	
-		<div class="my-3 p-3 bg-white rounded shadow-sm">
-			<h3 class="border-bottom pb-2 mb-0">방명록</h3>
-			
-			<div class="d-flex text-muted pt-3">
-				<table class="table  table-striped table-hover">
-					<tr>
-						<th>방명록 번호</th>
-						<th>방명록 주인 번호</th>
-						<th>작성자 번호</th>
-						<th>작성자 이름</th>
-						<th>작성자 사진</th>
-						<th>작성자 위치</th>
-						<th>내용</th>
-						<th>사진</th>
-						<th>작성날짜</th>
-						<th>수정날짜</th>
-						<th>비밀글 여부</th>
-					</tr>
+	<div class="content" id="content" name="content">
+       
+    	<div class="listForm" id="listForm">
+    		
+    		
+    		<div class="listTitle">
+    			<button type="button" onclick="backBtn" class="gb_back"><img width="15" src="<c:url value="/image/back.png"/>"></button>
+    			00님의 GuestBook
+    			<button type="button" onclick="modalOpen" class="gbwrite_modal"><img width="30" src="<c:url value="/image/icon/write.png"/>"></button>
+    		</div>
+    		
+    		<div class="list">
+    			<table class="listTable">
+    			
+    				<tr class="gblist_width">
+    					<td rowspan="2" class="gblist_memImgR">
+    						<img width="30" class="gblist_memImg" src="<c:url value="/image/blue.jpg"/>">
+    					</td>
+						<td class="gblist_info">닉네임</td>
+						<td rowspan="3" class="gblist_uploadPhoto">
+							<img height="60" src="<c:url value="/image/ootdTest.jpg"/>">
+						</td>
+    				</tr>
+    				<tr class="gblist_info">
+						<td class="font7">서울 종로구 · 2021.01.01</td>
+    				</tr>
+    				<tr class="gblist_con">
+						<td colspan="2" class="gblist_content">잘 보고 갑니다~</td>
+    				</tr>
+   
+   					<c:forEach items="${list}" var="guestbook">
 
-					<c:forEach items="${list}" var="guestbook">
-						<tr>
-							<td>${guestbook.gbookNo}</td>
-							<td>${guestbook.memberNo}</td>
-							<td>${guestbook.writerNo}</td>
-							<td>${guestbook.writerName}</td>
-							<td>${guestbook.writerPhoto}</td>
-							<td>${guestbook.writerLoc}</td>
-							<td>${guestbook.content}</td>
-							<td>${guestbook.contentPhoto}</td>
-							<td>
-								<fmt:formatDate value="${guestbook.regDate}" pattern="yyyy.MM.dd." />
+	     				<tr class="gblist_width">
+	    					<td rowspan="2" class="gblist_memImgR">
+	    						<img width="30" class="gblist_memImg" src="<c:url value="/image/blue.jpg"/>">
+	    					</td>
+							<td class="gblist_info">${guestbook.writerName}</td>
+							<td rowspan="3" class="gblist_uploadPhoto">
+								<img height="60" src="<c:url value="/image/ootdTest.jpg"/>">
 							</td>
-							<td>
-								<fmt:formatDate value="${guestbook.updateDate}" pattern="yyyy.MM.dd." />
-							</td>
-							<td>${guestbook.secret}</td>	
-						</tr>
-					</c:forEach>
+	    				</tr>
+	    				<tr class="gblist_info">
+							<td class="font7">${guestbook.writerLoc} · <fmt:formatDate value="${guestbook.regDate}" pattern="yyyy.MM.dd." /></td>
+	    				</tr>
+	    				<tr class="gblist_con">
+							<td colspan="2" class="gblist_content">${guestbook.content}</td>
+	    				</tr>  					
+   					
+   					</c:forEach>
+    			
+    			</table>
+    		</div>
+    	
+ 
+    	</div>
 
-				</table>
-		</div>
-
- 		
- 	</div>
-</main>
-
+	</div>
+	
+	
  	<%@ include file="/WEB-INF/views/include/footer.jsp"%>
 
 

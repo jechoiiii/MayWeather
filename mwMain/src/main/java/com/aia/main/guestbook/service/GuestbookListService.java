@@ -15,7 +15,7 @@ import com.aia.main.guestbook.domain.GuestbookListPage;
 import lombok.extern.log4j.Log4j;
 
 @Service
-//@Log4j
+@Log4j
 public class GuestbookListService {
 
 	private GuestbookDao dao;
@@ -23,8 +23,44 @@ public class GuestbookListService {
 	@Autowired
 	private SqlSessionTemplate template;
 	
-	// 추후 코드 수정
-	int memberNo = 0010;
+	// 회원 A의 방명록 게시판 조회 
+	public List<Guestbook> getGbookList(int memberNo) {
+		
+		List<Guestbook> list = null;
+		
+		try {
+			dao = template.getMapper(GuestbookDao.class);
+			
+			list = dao.selectGuestbookByMemberNo(memberNo);
+			
+			log.info(list);
+		
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+			
+		return list;
+		
+	}
+	
+	// 회원 A의 방명록 게시판의 게시물 수 조회 
+	public int getGbookCntByMemNo(int memberNo) {
+		
+		int gbookCnt = 0;
+		
+		try {
+			dao = template.getMapper(GuestbookDao.class);
+			
+			gbookCnt = dao.selectTotalCntByMemberNo(memberNo);
+			
+			log.info(gbookCnt);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return gbookCnt;
+	}
+	
 	
 	// 전체 게시물 조회
 	public List<Guestbook> getAllGbookList() {
@@ -32,20 +68,19 @@ public class GuestbookListService {
 		List<Guestbook> list = null;
 		
 		try {
-		
-			// MemberDao 구현체 생성 
 			dao = template.getMapper(GuestbookDao.class);
 			
 			list = dao.selectAllGuestbook();
 			
-			System.out.println(list);
-			//log.info(list);
+			log.info(list);
 		
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+			
 		return list;
 	}
+	
+	
+	
 }

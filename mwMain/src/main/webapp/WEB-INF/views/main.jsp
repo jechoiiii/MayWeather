@@ -213,6 +213,8 @@
 
 <script>
 
+		var myHostUrl = 'http://localhost:8080';
+		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 있는 값으로 하고 있음*/
 		var memIdx = '<%=(String)session.getAttribute("memidx")%>';
 		var memNic = '<%=(String)session.getAttribute("memnic")%>';
 		var memLoc = '<%=(String)session.getAttribute("memloc")%>';
@@ -225,12 +227,18 @@
 		
 		var wn_data;			// 초단기실황 데이터
 		var wbt_data;			// 동네예보 데이터
+		
 		var tmp_min;			// 일일 최저 기온
 		var tmp_max;			// 일일 최고 기온 
 		var tmp_now;			// 현재 기온
 		var rain_now;			// 현재 강수량 
 		var pty_now;			// 현재 강수형태
 		var sky_now;			// 현재 강수형태(한글)
+		
+		var wbt_fcstTime;		// 예보시간
+		var wbt_tmp;			// 3시간 기온
+		var wbt_rain;			// 3시간 강수확률
+		var wbt_sky;			// 하늘상태 
 
 		
 
@@ -247,22 +255,44 @@
 		/* 시간대별 Button 클릭 이벤트 */
 		$('#weatherBtn').click(function() {
 			
-			alert(x);
-			alert(wn_data[1].category);
-			alert(wbt_data[1].category);
-			
 			var weatherHtml = '<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
 							+ 	'<div class="weatherBT_title"><span class="font5">시간대별 일기 예보</span></div>'
-							+ 	'<div class="weatherBT_content">'
-							+ 		'<div class="weatherBT_table">' // 테이블 삽입 반복 
-							+ 			'<table>'
-							+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">오후 00시</td></tr>'
-							+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/weatherTest.png"/>"></td></tr>'
-							+				'<tr style="height:100px;"><td id="weatherTable_tmp" class="font5">0°</td></tr>'
-							+ 				'<tr style="height:40px;"><td id="weatherTable_rain" class="font7">00%</td></tr>'
-							+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button"></td></tr>'
-							+ 			'</table>'
-							+ 		'</div>'
+							+ 	'<div class="weatherBT_content">';
+							+		'<div class="weatherBT_tableWrap">'
+							
+				for(var i=0; i<wbt_data.length; i++){
+					var wbt_category = wbt_data[i].category;
+        			var wbt_fcstValue = wbt_data[i].fcstValue;
+            		var wbt_fcstDate = wbt_data[i].fcstDate;
+            		wbt_fcstTime = wbt_data[i].fcstTime;
+            		
+            		// 3시간 기온
+            		if(wbt_category=='T3H') {
+            			wbt_tmp = wbt_fcstValue;
+            		}
+            		
+            		// 3시간 강수확률
+            		if(wbt_category=='POP') {
+            			wbt_rain = wbt_fcstValue;
+            		}
+            		
+            		// 하늘상태 --------> 이미지 변환 처리 필요 * 
+            		if(wbt_category='SKY') {
+            			wbt_sky = wbt_fcstValue;
+            		}
+					
+					weatherHtml += 		'<div class="weatherBT_table">' // 테이블 삽입 반복 
+								+ 			'<table>'
+								+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+wbt_fcstTime+'시</td></tr>'
+								+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/weatherTest.png"/>"></td></tr>'
+								+				'<tr style="height:100px;"><td id="weatherTable_tmp" class="font5">'+wbt_tmp+'°</td></tr>'
+								+ 				'<tr style="height:40px;"><td id="weatherTable_rain" class="font7">'+wbt_rain+'%</td></tr>'
+								+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button"></td></tr>'
+								+ 			'</table>'
+								+ 		'</div>';
+				}			
+							
+				weatherHtml += 		'</div>'
 							+		'<div class="weatherBT_detail">'
 							+			'<table>'
 							+				'<tr><td class="onleft">오늘, 오후 00:00</td><td></td></tr>'
