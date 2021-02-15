@@ -1,7 +1,4 @@
-		var latitude;	// GPS 위도 
-		var longitude;	// GPS 경도
-		var x;			// X 좌표 (기상청 기준)
-		var y;			// Y 좌표 (기상청 기준)
+
 		
 		function getLocation() {
 		
@@ -19,7 +16,7 @@
 					console.log('x좌표 : '+ x, 'y좌표 : '+ y, 'latitude : '+ latitude, 'longitude : '+ longitude);
 					
 			        
-			     	// xy 좌표로 날씨 API 불러오기 => CORS 문제 발생
+			     	// xy 좌표로 js로 날씨 API 불러오기 => CORS 문제 발생
 					//xml2json(x, y);
 			     	
 			     	// CORS 문제 해결 : 위치정보를 ajax로 서버에 전송
@@ -31,87 +28,134 @@
 			    			lot : longitude
 			    	};
 			    	
-			    	// ajax로 서버에 위치정보 전송 & API 데이터 받기
+			    	
+			    	// xy 좌표로 주소 구하기 -------------------------------------------
+			    	
+			    	
+			    	
+			    	
+			    	// 초단기실황 API 데이터 
 			        $.ajax({
+			        	url: "http://localhost:8080/main/weathernow",
+			        	type: "GET",
+			        	data : location,
+			        	async: false,	
+			        	success: function(data){
+			        		alert('초단기실황 API 성공');
+			        		
+			        		var jsonObj = JSON.parse(data);
+			        		wn_data = jsonObj.response.body.items.item;
+			        		
+			        		for(var i=0; i < wn_data.length; i++) {
+			        			var wn_category = wn_data[i].category;
+			        			var wn_obsrValue = wn_data[i].obsrValue;
+		                		var wn_baseDate = wn_data[i].baseDate;
+		                		var wn_baseTime = wn_data[i].baseTime;
+			        		
+			        			console.log('wn_category: '+ wn_category, 'wn_obsrValue: '+ wn_obsrValue, 'wn_baseDate : '+ wn_baseDate, 'wn_baseTime: '+ wn_baseTime);
+			        		
+			        			// 현재 기온
+				              	if(wn_category=='T1H') {
+				              		tmp_now = wn_obsrValue;
+				              	}
+				              	
+				              	// 현재 강수량 
+				              	if(wn_category=='RN1'){
+				              		rain_now = wn_obsrValue;
+				              	}
+				              	
+				              	// 현재 강수형태 
+				              	if(wn_category='PTY'){
+				              		pty_now = wn_obsrValue;
+				              	}
+			        		
+			        		} // end of For문
+			        		
+			        		
+			        	},
+			        	error: function(){
+			        		alert("초단기실황 API 전송 실패");
+			        	}
+			        }); 
+			  
+			  		// 동네예보 API 데이터
+			    	$.ajax({
 			        	url: "http://localhost:8080/main/weatherbytime",
 			        	type: "GET",
 			        	data : location,
-			        	async: false,
+			        	async: false,	
 			        	success: function(data){
-			        		alert("위치정보 전송 성공 ! ");
-			        		
+			        		alert('동네예보 API 성공');
 			        		
 			        		var jsonObj = JSON.parse(data);
-			        		//console.log(jsonObj);
+			        		wbt_data = jsonObj.response.body.items.item;
 			        		
-			        		var itemArray = jsonObj.response.body.items.item;
-			        		//console.log(itemArray);
-			        		console.log(itemArray.length);
+			        		for(var i=0; i < wbt_data.length; i++) {
+			        			var wbt_category = wbt_data[i].category;
+			        			var wbt_fcstValue = wbt_data[i].fcstValue;
+		                		var wbt_fcstDate = wbt_data[i].fcstDate;
+		                		var wbt_fcstTime = wbt_data[i].fcstTime;
+		                		
+		                		console.log('wbt_category: '+ wbt_category, 'wbt_fcstValue: '+ wbt_fcstValue, 'wbt_fcstDate : '+ wbt_fcstDate, 'wbt_fcstTime: '+ wbt_fcstTime);
 			        		
-                            
-                           // 필요한 값만 받아오기
-                           for(var i=0; i < itemArray.length; i++){
-                           		var category = itemArray[i].category;
-                                var fcstValue = itemArray[i].fcstValue;
-                                var fcstDate = itemArray[i].fcstDate;
-                                var fcstTime = itemArray[i].fcstTime;
-                                
-                               //console.log('category: '+ category, 'fcstValue: '+ fcstValue, 'fcstDate : '+ fcstDate, 'fcstTime: '+ fcstTime);
-                                
-                                // 일일 최저 기온
-                             	if(category=='TMN' && i < itemArray.length/2){  // 당일 최저 기온만
-                             		var tmp_min = fcstValue;
-                             
-                             		if((tmp_min*10)%10 == 0){	// 소수점 떼기 
-                             			tmp_min = parseInt(tmp_min);
-                             		}
-                             		
-                             		$('#tmp_min').html(tmp_min +'°');
-                             	}
-                             	
-                             	// 일일 최고 기온
-                             	if(category=='TMX' && i < itemArray.length/2) {	// 당일 최고 기온만
-                             		var tmp_max = fcstValue;
-                             		
-                             		if((tmp_max*10)%10 == 0){	// 소수점 떼기 
-                             			tmp_max = parseInt(tmp_max);
-                             		}
-                             		
-                             		$('#tmp_max').html(tmp_max +'° /');
-                             	}
-                             	
-                             	
-                             	
-                             	
-                            
-                            }
-
-                              
-
-                            // // DB 에 저장
-                            // var loc = document.getElementById("header_loc");
-                            // loc.setAttribute(location, location);
-                                                    
-                            
+			        			// 일일 최저 기온
+				              	if(wbt_category=='TMN' && i < wbt_data.length/2){  // 당일 최저 기온만
+				              		tmp_min = wbt_fcstValue;
+				              
+				              		if((tmp_min*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_min = parseInt(tmp_min);
+				              		}
+				              		//$('#tmp_min').html(tmp_min +'°');
+				              	}
+			              	
+				              	// 일일 최고 기온
+				              	if(wbt_category=='TMX' && i < wbt_data.length/2) {	// 당일 최고 기온만
+				              		tmp_max = wbt_fcstValue;
+				              		
+				              		if((tmp_max*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_max = parseInt(tmp_max);
+				              		}
+				              		//$('#tmp_max').html(tmp_max +'° /');
+				              	}
+			        		
+			        		} // end of For문
+			        		
 			        	},
 			        	error: function(){
-			        		alert("Location Send Fail !");
-			        	}
-			        });
-			    	
-			  /*       $.ajax({
-			        	url: "weatherNow",
-			        	type: "POST",
-			        	data : location,	
-			        	 success: function(data){
-			        		alert(location);
-			        	},
-			        	error: function(){
-			        		alert("위치정보 전송 실패");
+			        		alert("동네예보 API 전송 실패");
 			        	}
 			        }); 
-			  */
-	
+			    	
+
+					console.log(wn_data);
+					console.log(wbt_data);
+					console.log(wbt_data[1].category);
+			         	              	
+	              	console.log('tmp_min: '+ tmp_min);
+	              	console.log('tmp_max: '+ tmp_max);	
+	              	console.log('tmp_now: '+ tmp_now);
+	              	console.log('rain_now: '+ rain_now);
+	              	console.log('pty_now: '+ pty_now);
+     	
+		       		var wnhtml = '<div class="weather_now">';
+		       		wnhtml += 		'<table>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td colspan="2" class="font4" id="sky_now">'+pty_now+'</td>';
+		       		wnhtml += 			'</tr>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td colspan="2" class="font1" id="tmp_now">'+tmp_now+'°</td>';
+		       		wnhtml += 			'</tr>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td colspan="2" class="font4" id="rain_now">'+rain_now+'%</td>';
+		       		wnhtml += 			'</tr>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td class="font5" id="tmp_max">'+tmp_max+'° /</td>';
+		       		wnhtml += 			'<td class="font5" id="tmp_min">'+tmp_max+'°</td>';
+		       		wnhtml +=			'</tr>';
+		       		wnhtml += 		'</table>';
+		       		wnhtml += 	'</div>';
+		       		
+		       		$('.weather_now').html(wnhtml);
 				
 			  	}, function(error) {
 							console.error(error);

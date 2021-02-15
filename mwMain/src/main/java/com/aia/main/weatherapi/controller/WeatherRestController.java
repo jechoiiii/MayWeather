@@ -45,37 +45,37 @@ public class WeatherRestController {
 		// 초단기실황 API
 		String callBackUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtNcst";
 		String serviceKey = "Ul4%2BcYS7f9Q31NjJP%2FIk1ly9GOGQ8G%2FYPCnJyBsV3hh6ZLptcQZZuR3WufjzBKZb1QEs8%2BqUwJJzc6rlACTkyA%3D%3D";
-		String pageNo = "1";		// 페이지 번호
-		String numOfRows = "10";	// 한 페이지 결과 수
-		String dataType = "json";	// 받는 데이터 타입
+		String pageNo = "1";			// 페이지 번호
+		String numOfRows = "10";		// 한 페이지 결과 수
+		String dataType = "json";		// 받는 데이터 타입
 		String nx = "" + loc.getX(); 	// 예보지점 x좌표 
 		String ny = "" + loc.getY();	// 예보지점 y좌표	
 
 		// 요청 날짜 : 오늘
-		String base_date =  "" + reqTime.getYear() + "0"+ reqTime.getMonth()+ reqTime.getDay(); 
+		String base_date =  "";
+		if(reqTime.getMonth()<10 && reqTime.getDay()<10) {	// 월 또는 일이 한자리수일때 처리  
+			base_date = reqTime.getYear() + "0" + reqTime.getMonth() + "0" + reqTime.getDay(); 
+		} else if(reqTime.getMonth()>10 && reqTime.getDay()<10) {
+			base_date = reqTime.getYear() + reqTime.getMonth() + "0" + reqTime.getDay(); 
+		} else if(reqTime.getMonth()<10 && reqTime.getDay()>=10) {
+			base_date = reqTime.getYear() + "0" + reqTime.getMonth() + reqTime.getDay(); 
+		} else {
+			base_date = "" + reqTime.getYear() + reqTime.getMonth() + reqTime.getDay(); 
+		}
 		
-		// 요청 시간 : API 제공 시간인 40분보다 이를 경우 -> hour-1
-		String base_time = "";	
-		if(reqTime.getMin() < 40) {	
-			base_time = (reqTime.getHour()-1)+"00";
+		// 요청 시간
+		String base_time = "";
+		if(reqTime.getHour() < 10) {
+			base_time = "0" + reqTime.getHour()+"00";
 		} else {					
 			base_time = reqTime.getHour()+"00";
 		}
 
 		System.out.println("base_date : "+ base_date + "base_time : " +base_time);
 	   
-		String apiUrl = callBackUrl
-						+ "?serviceKey=" + serviceKey
-						+ "&pageNo="+ pageNo
-						+ "&numOfRows=" + numOfRows
-						+ "&dataType=" + dataType
-						+ "&base_date=" + base_date
-						+ "&base_time=" + base_time
-						+ "&nx=" + nx
-						+ "&ny=" + ny;
-
-		
-		//URI 코드 % -> 25 encoding 방지.
+		String apiUrl = callBackUrl+ "?serviceKey=" + serviceKey+ "&pageNo="+ pageNo+ "&numOfRows=" + numOfRows+ "&dataType=" 
+						+ dataType+ "&base_date=" + base_date+ "&base_time=" + base_time+ "&nx=" + nx+ "&ny=" + ny;
+	
 		URI uri = new URI(apiUrl);
 
 		String apiData = template.getForObject(uri, String.class);
@@ -112,25 +112,26 @@ public class WeatherRestController {
 		// 요청 날짜/시간 : 전날 23시부터 153개의 데이터를 조회하면 오늘과 내일의 날씨를 알 수 있음 
 		
 		// 요청 날짜 : 어제
-		String base_date = "" + reqTime.getYear() + "0"+ reqTime.getMonth()+ "0"+ (reqTime.getDay()-1);
+		String base_date =  "";
+		if(reqTime.getMonth()<10 && reqTime.getDay()<10) {	// 월 또는 일이 한자리수일때 처리  
+			base_date = reqTime.getYear() + "0" + reqTime.getMonth() + "0" + (reqTime.getDay()-1); 
+		} else if(reqTime.getMonth()>10 && reqTime.getDay()<10) {
+			base_date = reqTime.getYear() + reqTime.getMonth() + "0" + (reqTime.getDay()-1); 
+		} else if(reqTime.getMonth()<10 && reqTime.getDay()>10) {
+			base_date = reqTime.getYear() + "0" + reqTime.getMonth() + (reqTime.getDay()-1); 
+		} else {
+			base_date = "" + reqTime.getYear() + reqTime.getMonth() + (reqTime.getDay()-1); 
+		}
+		
 		// 요청 시간 : 23시
 		String base_time = "2300";
 		
 		System.out.println("base_date : "+ base_date + "base_time : " +base_time);
 
 	   
-		String apiUrl = callBackUrl
-				+ "?serviceKey=" + serviceKey
-				+ "&pageNo="+ pageNo
-				+ "&numOfRows=" + numOfRows
-				+ "&dataType=" + dataType
-				+ "&base_date=" + base_date
-				+ "&base_time=" + base_time
-				+ "&nx=" + nx
-				+ "&ny=" + ny;
+		String apiUrl = callBackUrl+ "?serviceKey=" + serviceKey+ "&pageNo="+ pageNo+ "&numOfRows=" + numOfRows+ "&dataType=" 
+						+ dataType+ "&base_date=" + base_date+ "&base_time=" + base_time+ "&nx=" + nx+ "&ny=" + ny;
 
-		
-		//URI 코드 % -> 25 encoding 방지.
 		URI uri = new URI(apiUrl);
 
 		String apiData = template.getForObject(uri, String.class);		

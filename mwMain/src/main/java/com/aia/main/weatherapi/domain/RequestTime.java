@@ -7,21 +7,12 @@ public class RequestTime {
 	
 	Calendar cal = Calendar.getInstance();
 	
-	String date;	// 202102051600 형태로
 	int year = cal.get(Calendar.YEAR);
 	int month = cal.get(Calendar.MONTH) + 1;
 	int day = cal.get(Calendar.DAY_OF_MONTH);
 	int hour = cal.get(Calendar.HOUR_OF_DAY);
 	int min = cal.get(Calendar.MINUTE);	
-	
-	
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
-	
+
 	
 	public int getYear() {
 		return year;
@@ -41,8 +32,16 @@ public class RequestTime {
 	public void setDay(int day) {
 		this.day = day;
 	}
-	public int getHour() {
-		return hour;
+	public int getHour() {	// API 제공 시간인 40분보다 이를 경우 -> hour-1
+		if(min<40) {
+			if(hour==0) {	// 0시 -> 23시
+				return 23;
+			} else {
+				return hour-1;
+			}
+		} else {
+			return hour;
+		}
 	}
 	public void setHour(int hour) {
 		this.hour = hour;
@@ -54,8 +53,6 @@ public class RequestTime {
 		this.min = min;
 	}
 
-	
-	
 	
 	
 }

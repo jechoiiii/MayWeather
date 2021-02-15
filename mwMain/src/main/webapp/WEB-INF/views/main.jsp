@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<% 
+	session.setAttribute("memidx", "10");
+	session.setAttribute("memnic", "메이웨더");
+	session.setAttribute("memloc", "0.00,0.00");	
+%>
 <!DOCTYPE html>
  <html>
  <head>
@@ -10,6 +15,7 @@
  <link rel="styleSheet" href="<c:url value="/css/default.css"/>">
  <link rel="styleSheet" href="<c:url value="/css/main.css"/>">
  <link rel="styleSheet" href="<c:url value="/css/weather.css"/>">
+ <link rel="styleSheet" href="<c:url value="/css/guestbook.css"/>">
  
  <%@ include file="/WEB-INF/views/include/basicset.jsp"%>
   
@@ -38,10 +44,13 @@
 				<div class="location" id="location">
 		    		<!-- <button id="btnLoc" onclick="btnLoc_click()"></button>
 		    		종로구 -->
+		    		<input type="button" class="font6" value="방명록" id="gbookBtn"> 
+		    		
 		    	</div>
 		    	
 		    	<div class="weather">
 		    	
+		    		
 		    		<div class="weather_btn"> 
 		    			<input type="button" class="font6" value="시간대별" id="weatherBtn"> 
 		    		</div>
@@ -56,7 +65,10 @@
 		    					<td colspan="2" class="font4" id="sky_now">약한 비</td>
 		    				</tr>	
 		    				<tr>
-		    					<td colspan="2" class="font1" id="tmp_now">0°</td>
+		    					<td colspan="2" class="font0" id="tmp_now">0°</td>
+		    				</tr>	
+		    				<tr>
+		    					<td colspan="2" class="font4" id="rain_now">0%</td>
 		    				</tr>	
 		    				<tr>
 		    					<td class="font5" id="tmp_max">0° /</td>
@@ -196,23 +208,48 @@
 
 
 <script type="text/javascript" src="<c:url value="/js/location.js"/>" charset="UTF-8"></script> 
-
+<script type="text/javascript" src="<c:url value="/js/guestbook.js"/>" charset="UTF-8"></script> 
 
 
 <script>
 
-	
+		var memIdx = '<%=(String)session.getAttribute("memidx")%>';
+		var memNic = '<%=(String)session.getAttribute("memnic")%>';
+		var memLoc = '<%=(String)session.getAttribute("memloc")%>';
+
+
+ 		var latitude;			// GPS 위도 
+		var longitude;			// GPS 경도
+		var x;					// X 좌표 (기상청 기준)
+		var y;					// Y 좌표 (기상청 기준)
+		
+		var wn_data;			// 초단기실황 데이터
+		var wbt_data;			// 동네예보 데이터
+		var tmp_min;			// 일일 최저 기온
+		var tmp_max;			// 일일 최고 기온 
+		var tmp_now;			// 현재 기온
+		var rain_now;			// 현재 강수량 
+		var pty_now;			// 현재 강수형태
+		var sky_now;			// 현재 강수형태(한글)
+
+		
+
 		$(document).ready(function() {
 
 			// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocation();
 			
-			
-		});
+		
+		})
+		
 		
 		
 		/* 시간대별 Button 클릭 이벤트 */
 		$('#weatherBtn').click(function() {
+			
+			alert(x);
+			alert(wn_data[1].category);
+			alert(wbt_data[1].category);
 			
 			var weatherHtml = '<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
 							+ 	'<div class="weatherBT_title"><span class="font5">시간대별 일기 예보</span></div>'

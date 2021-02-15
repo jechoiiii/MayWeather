@@ -8,10 +8,14 @@
 
     .mainForm {
         max-width: 500px;
-        height: 660px;
+        height: 650px;
         padding-left: 20px;
         padding-right: 20px;
         text-align: center;
+    }
+    
+    .font0 {
+    	font-size: 1.7em;
     }
     
    	.font1 {
@@ -118,7 +122,7 @@
     
     .weather_now {
     	width: 50%;
-        padding-top: 30px;
+        padding-top: 20px;
         padding-left: 10px;
         float: left;
     }
