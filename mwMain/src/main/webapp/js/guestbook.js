@@ -24,11 +24,10 @@
  					
  					$(".mainForm").remove();
  					
- 					var listhtml = '<div class="listForm" id="listForm">';
- 					listhtml += 	'<div class="listTitle">';
+ 					var listhtml = '<div class="listTitle">';
  					listhtml += 		'<button type="button" onclick="backBtn" class="gb_back"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
  					listhtml += 		'00님의 GuestBook(15)';
- 					listhtml += 		'<button type="button" onclick="modalOpen" class="gbwrite_modal"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
+ 					listhtml += 		'<button type="button" onclick="openModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
  					listhtml += 	'</div>'; 		
  					listhtml += 	'<div class="list">';
  					listhtml += 		'<table class="listTable">';
@@ -52,10 +51,11 @@
 	 					listhtml +=					'</tr> ';
  					}
  					
+ 					
  					listhtml +=			'</table>';
- 					listhtml +=		'</div>';
+ 					
 
- 					$('#content').html(listhtml);
+ 					$('#gblistForm').html(listhtml);
  					
 	 			}, 
  				error: function(e) {
@@ -65,8 +65,58 @@
  			})
 			
 			
-		});
+		});                                        
 		
 		
-			
-
+		
+        /* 방명록 등록 (모달 창) ----------------------------------------------- */
+		const modal = document.querySelector('.regModal_wrapper');
+		
+        function setModal() {
+            
+        	var reghtml = '<table class="regModal_table">';
+			reghtml +=					'<tr class="">';
+			reghtml +=						'<td class="tableExp1">잘 보셨나요?</td>';
+			reghtml +=						'<td table="tableImg" rowspan="2" colspan="2"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>';
+			reghtml +=					'</tr>';
+			reghtml +=					'<tr><td class="tableExp2">00님에게 인사를 남겨보세요:)</td></tr>';
+			reghtml +=					'<tr class="insertArea">';
+			reghtml +=						'<td class="tableInsert" colspan="2">';
+			reghtml +=							'<input type="text" name="gb_content" class="input_text" value="00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요." onfocus="clearInput()" onblur="putDefaultVal()"></td>';
+			reghtml +=						'<td class="tableInsertPhoto"><button id="photo_submit_btn" onclick="regGuestbook()"><img width="20" src="http://localhost:8080/main/image/camera.png"></button></td>';
+			reghtml +=					'</tr>';
+			reghtml +=				'</table>';
+            
+            $('.regModal_body').html(reghtml);
+            
+        }
+        
+        setModal();
+        
+        // 모달 창 열기
+        function openModal() {
+        	modal.style.display = 'flex';
+        }
+        
+        // 모달 창 닫기 
+        function closeModal() {
+        	modal.style.display = 'none';
+        }
+        
+        // 입력폼 focus 시 내용 제거 
+        function clearInput() {
+        	$('.input_text').val('');
+        }
+        
+        // 입력폭 focus 안할시 디폴트값 입력 
+        function putDefaultVal() {
+        	$('.input_text').val('00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요.');
+        }
+        
+        // 방명록 등록 함수
+        function regGuestbook() {
+        	
+        }
+        
+ 
+		

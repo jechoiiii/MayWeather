@@ -3,7 +3,7 @@
  
 	/* ---------------------- GUESTBOOK 리스트 ---------------------- */
 
-	.listForm {
+	.gblistForm {
 		max-width: 500px;
         height: 650px;
         padding-left: 20px;
@@ -72,3 +72,129 @@
  	}
  	
  	/* ---------------------- GUESTBOOK 리스트 끝 ---------------------- */
+ 	
+ 	
+ 	/* ---------------------- GUESTBOOK 등록 MODAL ---------------------- */
+ 	
+/*  	.modalFade {
+ 	    display:none;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 90%;
+        background-color:rgba( 255, 255, 255, 0.5 );
+        padding-top: 150px;
+        padding-left: 30px;
+    } */
+    
+   .regModal_wrapper {
+    	position: fixed;
+    	top: 0px;
+    	left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+        
+    .regModal_wrapper tr, .regModal_wrapper td {
+        /* border: 1px solid; */
+    }
+ 
+    .regModal {
+        position: relative;
+        width: 400px;
+        height: 570px;
+        background-color: white;
+        margin: 20px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .regModal_back {
+        float: left;
+    }
+    
+    /* 방명록 등록 모달창 헤더 */
+    .regModal_header {
+    }
+    
+    .reg_modal_close_btn {
+    	border: 0px;
+    	padding: 10px;
+    }
+    
+    .regModal_title {
+        text-align: center;
+        padding: 10px;
+    }
+    
+    /* 방명록 등록 모달창 내용 */
+    .regModal_body {
+    	width: 100%;
+    	height: 87%;
+    }
+    
+    .regModal_table {
+        width: 100%;
+        height: 480px;
+    }
+    
+    .regModal_table td {
+    	padding: 10px;
+    }
+    
+    .tableExp1 {
+        width: 75%;
+        height: 30px;
+        font-weight: 0.8em;
+    }
+    
+    .tableExp2 {
+        width: 75%;
+        height: 50px;
+        font-weight: 0.5em;
+    }
+    
+    .tableImg {
+        width: 25%;
+    }
+    
+    .insertArea {
+        vertical-align: top;
+    }
+    
+    .tableInsert {
+        vertical-align: top;
+    }
+    
+    .tableInsert input[type=text]{
+        width: 100%;
+        height: 100%;
+        border: 0px;
+        padding: 10px;
+    }
+    
+    .tableInsertPhoto {
+        width: 50px;
+        padding-top: 50px;
+    }
+    
+    #photo_submit_btn {
+        border: 0px;
+    }
+    
+    /* 방명록 등록 모달창 Footer */
+    #reg_submit_btn {
+        width: 100%;
+        height: 35px;
+        background-color: #ffd74e;
+        color: white;
+        border: 0px;
+        border-radius: 0 0 20px 20px;
+    }
+ 	

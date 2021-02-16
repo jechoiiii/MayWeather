@@ -38,6 +38,7 @@
 	
 		<div class="content" id="content" name="content">
 	
+			<!-- 메인 -->
 			<div class="mainForm" method="get" enctype="multipart/form-data"> 
 		    
 		    	
@@ -197,6 +198,30 @@
 		    	
 			</div>
 	    	
+	    	<!-- 방명록 리스트 -->
+	    	<div class="gblistForm" id="gblistForm" method="get" enctype="multipart/form-data"></div>
+	    	
+	    	<!-- 방명록 등록 (모달 창) -->
+	    		<div class="regModal_wrapper" style="display: none;">
+	    			<div class="regModal">
+	    			
+	    				<div class="regModal_header">
+                             <div class="regModal_back">
+                                 <button type="button" onclick="closeModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+                             </div>
+                             <div class="regModal_title">방명록 남기기</div>
+                         </div>
+	    					
+	    				<div class="regModal_body"></div>
+	    				
+	    				<div class="regModal_footer">
+                           <button id="reg_submit_btn" type="button" class="regBtnSuccess">보내기</button>
+                       </div>
+                       
+	    			</div>
+	    		</div>
+	    		
+	    	
 	    </div>
 	    	
 	</div>
@@ -245,7 +270,7 @@
 		$(document).ready(function() {
 
 			// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
-			getLocation();
+			//getLocation();
 			
 		
 		})
@@ -320,4 +345,6 @@
 </script>
 
  </body>
+ 
+
  </html> 

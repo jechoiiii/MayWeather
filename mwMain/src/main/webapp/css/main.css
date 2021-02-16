@@ -95,6 +95,7 @@
         width: 100%;
         height: 30%;
         text-align: center;
+        padding-top: 35px;
     }
     
     .weather_btn {
@@ -114,7 +115,6 @@
     
     .weather_icon {
     	width: 50%;
-        padding-top: 20px;
         padding-left: 50px;
         padding-right: 10px;
         float: left;
@@ -122,16 +122,16 @@
     
     .weather_now {
     	width: 50%;
-        padding-top: 20px;
-        padding-left: 10px;
         float: left;
     }
     
     .weather_now table {
     	border-collapse: separate;
-    	width: 100px;
+    	width: 120px;
     	height: 100px;
     	table-layout: fixed;
+    	border-spacing: 3
+    	px;
     }
     
     #tmp_max {
