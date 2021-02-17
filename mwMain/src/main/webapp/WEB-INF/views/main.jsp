@@ -95,7 +95,7 @@
 		var memLoc = '<%=(String)session.getAttribute("memloc")%>';
 		
 		var file;				// 방명록 첨부 사진 
-		var secret_check = 'N';		// 방명록 등록 체크여부
+		var secret_check;		// 방명록 등록 체크여부
 
  		var latitude;			// GPS 위도 
 		var longitude;			// GPS 경도
@@ -325,7 +325,7 @@
 						+		'<td class="tableInsertPhoto"><label for="gbContentPhoto"><img width="20" src="http://localhost:8080/main/image/camera.png"></label><input type="file" id="gbContentPhoto" name="gbContentPhoto" style="display:none;"></td>'
 						+	'</tr>'
 						+	'<tr class="secretArea" height="50">'
-						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbSecret" name="gbSecret" value="N" onclick="checkSecret()"></td>'
+						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
 						+ 	'</tr>'
 						+ '</table>';
             
@@ -351,15 +351,25 @@
 		
         // 방명록 등록
         function regGuestbook() {
+
+      		
+        	$('input:checkbox[name="gbcheck"]').each(function(){
+        		if($(this).is(":checked") == true) {
+        			secret_check = 'Y';
+        		} else  {
+        			secret_check = 'N';
+        		}
+        	})
         	
-        	// 로그인 체크
-        	//fnLoginChk();
-      
  			
         	var form = $('#gbregForm')[0];
         	var formData = new FormData(form);
         	
-        	//formData.append('gbSecret', $('#gbSecret').val());
+        	console.log(form);
+        	console.log(formData);
+        	console.log(secret_check);
+        	
+        	formData.append('gbSecret', secret_check);
         	 
         	
         	$.ajax({
@@ -374,11 +384,7 @@
             	data: formData,
 	           	success: function (data) {
 	           		
-	           		alert('등록 데이터 ajax 전송 성공');
-	           		console.log(formData);
-	           		console.log($('#gbSecret').val());
-	           		console.log($('#gbContent').val());
-	           		console.log($('#gbContentPhoto').val());
+	           		console.log('등록 데이터 ajax 전송 성공');
 	           	
 	           	
 	            },
@@ -386,13 +392,7 @@
 	                alert('등록 데이터 ajax 에러' + e);
 	            }
        		})
-        	
-
-        }
-
-        // 비밀글 체크박스 클릭 시 -> 'Y'
-        function checkSecret() {
-        	$('#gbSecret').val('Y');
+ 
         }
 		
 
