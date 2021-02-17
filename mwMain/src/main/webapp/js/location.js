@@ -36,8 +36,8 @@
 			    	
 			    	// 초단기실황 API 데이터 
 			        $.ajax({
-			        	url: "http://localhost:8080/main/weathernow",
-			        	type: "GET",
+			        	url: myHostUrl + '/main/weathernow',
+			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
 			        	success: function(data){
@@ -52,7 +52,7 @@
 		                		var wn_baseDate = wn_data[i].baseDate;
 		                		var wn_baseTime = wn_data[i].baseTime;
 			        		
-			        			console.log('wn_category: '+ wn_category, 'wn_obsrValue: '+ wn_obsrValue, 'wn_baseDate : '+ wn_baseDate, 'wn_baseTime: '+ wn_baseTime);
+			        			//console.log('wn_category: '+ wn_category, 'wn_obsrValue: '+ wn_obsrValue, 'wn_baseDate : '+ wn_baseDate, 'wn_baseTime: '+ wn_baseTime);
 			        		
 			        			// 현재 기온
 				              	if(wn_category=='T1H') {
@@ -64,8 +64,8 @@
 				              		rain_now = wn_obsrValue;
 				              	}
 				              	
-				              	// 현재 강수형태 
-				              	if(wn_category='PTY'){
+				              	// 현재 강수형태 --> 한글 변환 필요 *
+				              	if(wn_category=='PTY'){
 				              		pty_now = wn_obsrValue;
 				              	}
 			        		
@@ -80,8 +80,8 @@
 			  
 			  		// 동네예보 API 데이터
 			    	$.ajax({
-			        	url: "http://localhost:8080/main/weatherbytime",
-			        	type: "GET",
+			        	url: myHostUrl + '/main/weatherbytime',
+			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
 			        	success: function(data){
@@ -96,7 +96,7 @@
 		                		var wbt_fcstDate = wbt_data[i].fcstDate;
 		                		var wbt_fcstTime = wbt_data[i].fcstTime;
 		                		
-		                		console.log('wbt_category: '+ wbt_category, 'wbt_fcstValue: '+ wbt_fcstValue, 'wbt_fcstDate : '+ wbt_fcstDate, 'wbt_fcstTime: '+ wbt_fcstTime);
+		                		//console.log('wbt_category: '+ wbt_category, 'wbt_fcstValue: '+ wbt_fcstValue, 'wbt_fcstDate : '+ wbt_fcstDate, 'wbt_fcstTime: '+ wbt_fcstTime);
 			        		
 			        			// 일일 최저 기온
 				              	if(wbt_category=='TMN' && i < wbt_data.length/2){  // 당일 최저 기온만
@@ -149,8 +149,8 @@
 		       		wnhtml += 				'<td colspan="2" class="font4" id="rain_now">'+rain_now+'%</td>';
 		       		wnhtml += 			'</tr>';
 		       		wnhtml += 			'<tr>';
-		       		wnhtml += 				'<td class="font5" id="tmp_max">'+tmp_max+'° /</td>';
-		       		wnhtml += 			'<td class="font5" id="tmp_min">'+tmp_max+'°</td>';
+		       		wnhtml += 				'<td class="font5" id="tmp_max">최고:'+tmp_max+'° /</td>';
+		       		wnhtml += 			'<td class="font5" id="tmp_min">최저:'+tmp_min+'°</td>';
 		       		wnhtml +=			'</tr>';
 		       		wnhtml += 		'</table>';
 		       		wnhtml += 	'</div>';

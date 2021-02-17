@@ -1,16 +1,9 @@
 @charset "UTF-8";
 
 
- 	.content{
-	    margin-top: 100px;
-	    height: max;
-	}
- 
 	#weatherByTimeForm {
     	max-width: 500px;
         height: 650px;
-        padding-left: 15px;
-        padding-right: 15px;
 	}
  	
  	.weatherBT_title {
@@ -25,18 +18,26 @@
  		padding: 5px;
  		border-radius: 10px;
         text-align: center;
+        background-color: white;
+        overflow: hidden;
  	}
  	
  	.weatherBT_content div, weatherBT_content tr, weatherBT_content td {
  		background-color: white;
  	}
- 		
+ 	
+ 	.weatherBT_tableWrap {
+ 		width: 100%;
+ 		height: 300px;
+ 		overflow-x: scroll;
+ 	}
  	
  	.weatherBT_table{
- 		width: 100%;
+ 		width: 50px;
  		height: 50%;
  		padding: 15px 10px;
  		background-color: white;
+ 		float: left;
  	}
  	
  	.weatherBT_table tr, .weatherBT_table td, .weatherBT_detail tr, .weatherBT_detail td {
@@ -46,7 +47,6 @@
  	.weatherBT_table table {
  		width: 50px;
  		height: 100%;
- 		table-layout: fixed;
  	}
  	
  	.weatherBT_table tr {

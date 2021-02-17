@@ -1,9 +1,13 @@
 @charset "UTF-8";
 
 
-	.content{
-	    margin-top: 100px;
-	    height: max;
+	.home_btn {
+		border: 0px;
+	}
+
+	.content_wrap {
+        max-width: 500px;
+        max-height: 650px;
 	}
 
     .mainForm {
@@ -98,11 +102,11 @@
         padding-top: 35px;
     }
     
-    .weather_btn {
+    .weatherBt_btn {
         text-align: right;
     }
     
-    #weatherBtn {
+    #weatherBt_btn {
     	position: absolute;
     	top: 110px;
     	right: 10px;

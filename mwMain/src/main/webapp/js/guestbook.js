@@ -12,9 +12,14 @@
 		}
 		
 		/* 회원 A 방명록의 리스트 출력 --------------------------------------- */
-		$('#gbookBtn').click(function() {
+		
+		function getGbookList() {
+		
+			disappearMainForm();
 			
- 			$.ajax({
+			showGbookList();
+			
+			$.ajax({
  				url: myHostUrl + '/main/guestbook/list/' + gbOwnerIdx,
  				type: 'GET',
  				data: gbOwnerIdx,
@@ -22,15 +27,15 @@
  					
  					console.log(data);
  					
- 					$(".mainForm").remove();
  					
- 					var listhtml = '<div class="listTitle">';
- 					listhtml += 		'<button type="button" onclick="backBtn" class="gb_back"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
+ 					
+ 					var listhtml = '<div class="gblist_title">';
+ 					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
  					listhtml += 		'00님의 GuestBook(15)';
  					listhtml += 		'<button type="button" onclick="openModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
  					listhtml += 	'</div>'; 		
- 					listhtml += 	'<div class="list">';
- 					listhtml += 		'<table class="listTable">';
+ 					listhtml += 	'<div class="gblist">';
+ 					listhtml += 		'<table class="gblist_table">';
  						
  					for(var i=0; i<data.length; i++) {
 
@@ -51,27 +56,27 @@
 	 					listhtml +=					'</tr> ';
  					}
  					
- 					
  					listhtml +=			'</table>';
+ 					listhtml +=		'</div>';
  					
-
  					$('#gblistForm').html(listhtml);
- 					
 	 			}, 
  				error: function(e) {
  					console.log("방명록 리스트 ajax 에러 : "+e);
  				}
- 				
+
  			})
-			
-			
-		});                                        
+	
+		
+		}
+		
+    	                           
 		
 		
 		
-        /* 방명록 등록 (모달 창) ----------------------------------------------- */
-		const modal = document.querySelector('.regModal_wrapper');
+        /* 방명록 등록 모달 ----------------------------------------------- */
 		
+		// 모달 창 만들기
         function setModal() {
             
         	var reghtml = '<table class="regModal_table">';
@@ -82,8 +87,8 @@
 			reghtml +=					'<tr><td class="tableExp2">00님에게 인사를 남겨보세요:)</td></tr>';
 			reghtml +=					'<tr class="insertArea">';
 			reghtml +=						'<td class="tableInsert" colspan="2">';
-			reghtml +=							'<input type="text" name="gb_content" class="input_text" value="00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요." onfocus="clearInput()" onblur="putDefaultVal()"></td>';
-			reghtml +=						'<td class="tableInsertPhoto"><button id="photo_submit_btn" onclick="regGuestbook()"><img width="20" src="http://localhost:8080/main/image/camera.png"></button></td>';
+			reghtml +=							'<input type="text" id="gb_content" class="input_text" value="00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요." onfocus="clearInput()" onblur="putDefaultVal()"></td>';
+			reghtml +=						'<td class="tableInsertPhoto"><button id="photo_submit_btn"><img width="20" src="http://localhost:8080/main/image/camera.png"></button></td>';
 			reghtml +=					'</tr>';
 			reghtml +=				'</table>';
             
@@ -92,6 +97,8 @@
         }
         
         setModal();
+
+		const modal = document.querySelector('.regModal_wrapper');
         
         // 모달 창 열기
         function openModal() {
@@ -116,6 +123,23 @@
         // 방명록 등록 함수
         function regGuestbook() {
         	
+        	// DB로 넘겨주기 위한 객체 (입력 정보)
+        	var gbinfo = {
+        		writerNo : memIdx,
+        		writerName : memNic,
+        		writerLoc : memLoc,
+        		gbContent : $('#gb_content').val()
+        	};
+        	
+        	console.log(gbinfo);
+        
+
+        }
+        
+        
+        // 프로필사진으로 이동 (추후 추가*)
+        function backToPreview() {
+        
         }
         
  

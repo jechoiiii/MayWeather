@@ -11,7 +11,7 @@
       <table border="0" class="footer_menu_table">
          <tr>
             <td><img src="<c:url value="/image/icon/home2.png"/>" width="30"
-               class="menuicons"></td>
+               class="menuicons" onclick="setMainPage()"></td>
             <td><img src="<c:url value="/image/icon/ootd.png"/>" width="30" class="menuicons">
             </td>
             <td><img src="<c:url value="/image/icon/closet.png"/>" width="23"
