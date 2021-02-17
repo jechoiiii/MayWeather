@@ -20,14 +20,12 @@
 			showGbookList();
 			
 			$.ajax({
- 				url: myHostUrl + '/main/guestbook/list/' + gbOwnerIdx,
+ 				url: myHostUrl + '/guestbook/list/' + gbOwnerIdx,
  				type: 'GET',
  				data: gbOwnerIdx,
  				success:function(data){
  					
  					console.log(data);
- 					
- 					
  					
  					var listhtml = '<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
@@ -74,66 +72,16 @@
 		
 		
 		
-        /* 방명록 등록 모달 ----------------------------------------------- */
-		
-		// 모달 창 만들기
-        function setModal() {
-            
-        	var reghtml = '<table class="regModal_table">';
-			reghtml +=					'<tr class="">';
-			reghtml +=						'<td class="tableExp1">잘 보셨나요?</td>';
-			reghtml +=						'<td table="tableImg" rowspan="2" colspan="2"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>';
-			reghtml +=					'</tr>';
-			reghtml +=					'<tr><td class="tableExp2">00님에게 인사를 남겨보세요:)</td></tr>';
-			reghtml +=					'<tr class="insertArea">';
-			reghtml +=						'<td class="tableInsert" colspan="2">';
-			reghtml +=							'<input type="text" id="gb_content" class="input_text" value="00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요." onfocus="clearInput()" onblur="putDefaultVal()"></td>';
-			reghtml +=						'<td class="tableInsertPhoto"><button id="photo_submit_btn"><img width="20" src="http://localhost:8080/main/image/camera.png"></button></td>';
-			reghtml +=					'</tr>';
-			reghtml +=				'</table>';
-            
-            $('.regModal_body').html(reghtml);
-            
-        }
         
-        setModal();
-
-		const modal = document.querySelector('.regModal_wrapper');
         
-        // 모달 창 열기
-        function openModal() {
-        	modal.style.display = 'flex';
-        }
         
-        // 모달 창 닫기 
-        function closeModal() {
-        	modal.style.display = 'none';
-        }
         
-        // 입력폼 focus 시 내용 제거 
-        function clearInput() {
-        	$('.input_text').val('');
-        }
         
-        // 입력폭 focus 안할시 디폴트값 입력 
-        function putDefaultVal() {
-        	$('.input_text').val('00님의 스타일은 어떤가요?<br> 하고 싶은 말을 여기에 적어보세요.');
-        }
         
-        // 방명록 등록 함수
-        function regGuestbook() {
-        	
-        	// DB로 넘겨주기 위한 객체 (입력 정보)
-        	var gbinfo = {
-        		writerNo : memIdx,
-        		writerName : memNic,
-        		writerLoc : memLoc,
-        		gbContent : $('#gb_content').val()
-        	};
-        	
-        	console.log(gbinfo);
+        // 사진 첨부 함수
+        function insertPhoto() {
         
-
+        
         }
         
         

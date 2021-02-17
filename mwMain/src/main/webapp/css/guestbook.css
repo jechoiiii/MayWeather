@@ -3,6 +3,10 @@
  
 	/* ---------------------- GUESTBOOK 리스트 ---------------------- */
 
+	#gblist_btn {
+		border: 0px;
+	}
+
 	.gblistForm {
 		max-width: 500px;
         height: 650px;
@@ -11,17 +15,22 @@
         overflow: auto;
 	}
 	
-	.listTitle {
+	.gblist_title {
+		width: 300px;
+		height: 10%;
 		padding: 10px 0;
 	}
-	
-	.gbwrite_modal {
-		position: absolute;
-		top: 105px;
-		right: 30px;
+		
+	.gb_back_btn {
+		border: 0px;
 	}
 	
-	.list {
+	.reg_modal_open_btn {
+		border: 0px;
+	}
+	
+	.gblist {
+		width: 300px;
 		height: 90%;
 		padding: 10px;
 		background-color: white;
@@ -29,11 +38,11 @@
 		overflow: auto;
 	}
 	
-	.list tr, .list td {
+	.gblist tr, .gblist td {
 		background-color: white;	
 	}
 	
-	.listTable {
+	.gblist_table {
 		width: 100%;
 	}
  
@@ -121,6 +130,7 @@
     
     /* 방명록 등록 모달창 헤더 */
     .regModal_header {
+    	border-radius: 10px 10px 0 0;
     }
     
     .reg_modal_close_btn {
@@ -148,24 +158,24 @@
     	padding: 10px;
     }
     
-    .tableExp1 {
-        width: 75%;
-        height: 30px;
-        font-weight: 0.8em;
+    .greetArea {
+    	height: 100px;
     }
     
-    .tableExp2 {
-        width: 75%;
-        height: 50px;
-        font-weight: 0.5em;
+    .tableExp {
+        width: 70%;
+        height: 30px;
+        padding-left: 20px;
     }
     
     .tableImg {
-        width: 25%;
+        width: 30%;
+        padding: 20px;
     }
     
     .insertArea {
         vertical-align: top;
+        height: 250px;
     }
     
     .tableInsert {
@@ -177,6 +187,11 @@
         height: 100%;
         border: 0px;
         padding: 10px;
+        line-height: 10px;
+    }
+    
+    input::placeholder {
+    	text-align: top;
     }
     
     .tableInsertPhoto {
@@ -184,8 +199,19 @@
         padding-top: 50px;
     }
     
-    #photo_submit_btn {
-        border: 0px;
+    
+    .secretArea {
+    	width: 100%;
+    	hegiht: 50px;
+    	padding-left: 50%;
+    }
+    
+    .secretArea td {
+    	text-align: left;
+    }
+    
+    .regModal_footer {
+    	border-radius: 0px 10px;
     }
     
     /* 방명록 등록 모달창 Footer */

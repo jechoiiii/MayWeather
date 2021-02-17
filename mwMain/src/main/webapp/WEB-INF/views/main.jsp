@@ -2,8 +2,10 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
+	session.setAttribute("ownidx", "20");
 	session.setAttribute("memidx", "10");
 	session.setAttribute("memnic", "메이웨더");
+	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
 %>
 <!DOCTYPE html>
@@ -38,44 +40,43 @@
 	
 		<div class="content" id="content" name="content">
 	
-			<!-- 메인 wrap -->
-			<div class="content_wrap">
-				
-				<!-- 메인 -->
-				<div class="mainForm" id="mainForm"></div>
-				
-				<!-- 방명록 리스트 -->
-	    		<div class="gblistForm" id="gblistForm" style="display: none;"></div>
-
-				<!-- 방명록 등록 (모달 창) -->
-		    	<form id="gbregForm" method="post" enctype="multipart/form-data">
-		    		<div class="regModal_wrapper" style="display: none;">
-		    			<div class="regModal">
-		    			
-		    				<div class="regModal_header">
-	                             <div class="regModal_back">
-	                                 <button type="button" onclick="closeModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
-	                             </div>
-	                             <div class="regModal_title">방명록 남기기</div>
-	                         </div>
-		    					
-		    				<div class="regModal_body"></div>
-		    				
-		    				<div class="regModal_footer">
-	                           <button id="reg_submit_btn" type="button" onclick="regGuestbook()">보내기</button>
-	                       </div>
-	                       
-		    			</div>
-		    		</div>
-		    	</form>	    
-				
-			</div>
+				<!-- 메인 wrap -->
+				<div class="content_wrap">
+					
+					<!-- 메인 -->
+					<div class="mainForm" id="mainForm"></div>
+					
+					<!-- 방명록 리스트 -->
+		    		<div class="gblistForm" id="gblistForm" style="display: none;" ></div>
+	
+					<!-- 방명록 등록 (모달 창) -->
+			    	<form id="gbregForm">	
+			    		<div class="regModal_wrapper" style="display: none;">
+			    			<div class="regModal">
+			    			
+			    				<div class="regModal_header">
+		                             <div class="regModal_back">
+		                                 <button type="button" onclick="closeModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                             </div>
+		                             <div class="regModal_title">방명록 남기기</div>
+		                         </div>
+			    					
+			    				<div class="regModal_body"></div>
+			    				
+			    				<div class="regModal_footer">
+		                           <button id="reg_submit_btn" type="button" class="regBtnSuccess" onclick="regGuestbook()">보내기</button>
+		                       </div>
+		                       
+			    			</div>
+			    		</div>
+			    	</form>    
+					
+				</div>
 			
 
-	    	
+	    	 
 	    </div>
 	    	
-	</div>
 
 
  	<%@ include file="/WEB-INF/views/include/footer.jsp"%>
@@ -84,13 +85,17 @@
 
 <script>
 
-		var myHostUrl = 'http://localhost:8080';
+		var myHostUrl = 'http://localhost:8080/main';
 		
 		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
+		var ownIdx = '<%=(String)session.getAttribute("ownidx")%>';
 		var memIdx = '<%=(String)session.getAttribute("memidx")%>';
 		var memNic = '<%=(String)session.getAttribute("memnic")%>';
+		var memPhoto = '<%=(String)session.getAttribute("memphoto")%>';
 		var memLoc = '<%=(String)session.getAttribute("memloc")%>';
-
+		
+		var file;				// 방명록 첨부 사진 
+		var secret_check = 'N';		// 방명록 등록 체크여부
 
  		var latitude;			// GPS 위도 
 		var longitude;			// GPS 경도
@@ -120,6 +125,8 @@
 		
 		})
 		
+		
+		/* 메인 ---------------------------------------------------------------------------------------------------------------------  */
 		
 		// 메인 페이지 구성 함수 
 		function setMainPage() {
@@ -227,6 +234,7 @@
 			$('.mainForm').height('0');
 		}
 		
+		/* 게스트북 리스트 display 함수 */
 		function showGbookList() {
 			document.querySelector(".gblistForm").style.display = 'flex';
 		}
@@ -293,8 +301,99 @@
 
 			
 		}
+
 		
 		
+		
+		
+		/* 방명록 -------------------------------------------------------------------------------------------------------------------------------------------  */
+		
+		
+        /* 방명록 등록 모달 ----------------------------------------------- */
+		
+		// 모달 창 만들기
+        function setModal() {
+            
+        	var reghtml = '<table class="regModal_table">'
+						+	'<tr class="greetArea" height="100">'
+						+		'<td class="tableExp"><span class="font3">잘 보셨나요?</span><br><span class="font5">00님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td table="tableImg" colspan="2"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>'
+						+	'</tr>'
+						+	'<tr class="insertArea" height="300">'
+						+		'<td class="tableInsert" colspan="2">'
+						+			'<input type="text" id="gbContent" name="gbContent" placeholder="00님의 스타일은 어떤가요?<br>하고 싶은 말을 여기에 적어보세요."></td>'
+						+		'<td class="tableInsertPhoto"><label for="gbContentPhoto"><img width="20" src="http://localhost:8080/main/image/camera.png"></label><input type="file" id="gbContentPhoto" name="gbContentPhoto" style="display:none;"></td>'
+						+	'</tr>'
+						+	'<tr class="secretArea" height="50">'
+						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbSecret" name="gbSecret" value="N" onclick="checkSecret()"></td>'
+						+ 	'</tr>'
+						+ '</table>';
+            
+            $('.regModal_body').html(reghtml);
+            
+            
+        }
+        
+        setModal();
+
+        // 모달 창 열기
+        function openModal() {
+        	$('.regModal_wrapper').css('display', 'flex');
+        }
+        
+        // 모달 창 닫기 
+        function closeModal() {
+        	$('.regModal_wrapper').css('display', 'none');
+        }
+
+		
+		
+		
+        // 방명록 등록
+        function regGuestbook() {
+        	
+        	// 로그인 체크
+        	//fnLoginChk();
+      
+ 			
+        	var form = $('#gbregForm')[0];
+        	var formData = new FormData(form);
+        	
+        	//formData.append('gbSecret', $('#gbSecret').val());
+        	 
+        	
+        	$.ajax({
+        		
+        		type: 'POST',
+           		enctype : 'multipart/form-data',
+	            processData : false,
+	            contentType : false,
+	            cache : false,
+	            timeout : 600000,
+            	url: myHostUrl + '/guestbook/reg',
+            	data: formData,
+	           	success: function (data) {
+	           		
+	           		alert('등록 데이터 ajax 전송 성공');
+	           		console.log(formData);
+	           		console.log($('#gbSecret').val());
+	           		console.log($('#gbContent').val());
+	           		console.log($('#gbContentPhoto').val());
+	           	
+	           	
+	            },
+	            error: function (e) {
+	                alert('등록 데이터 ajax 에러' + e);
+	            }
+       		})
+        	
+
+        }
+
+        // 비밀글 체크박스 클릭 시 -> 'Y'
+        function checkSecret() {
+        	$('#gbSecret').val('Y');
+        }
 		
 
 </script>

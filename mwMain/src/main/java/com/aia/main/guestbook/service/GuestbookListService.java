@@ -24,14 +24,14 @@ public class GuestbookListService {
 	private SqlSessionTemplate template;
 	
 	// 회원 A의 방명록 게시판 조회 
-	public List<Guestbook> getGbookList(int memberNo) {
+	public List<Guestbook> getMemberGbookList(int memberNo) {
 		
 		List<Guestbook> list = null;
 		
 		try {
 			dao = template.getMapper(GuestbookDao.class);
 			
-			list = dao.selectGuestbookByMemberNo(memberNo);
+			list = dao.selectMemberGuestbook(memberNo);
 			
 			log.info(list);
 		
@@ -44,14 +44,14 @@ public class GuestbookListService {
 	}
 	
 	// 회원 A의 방명록 게시판의 게시물 수 조회 
-	public int getGbookCntByMemNo(int memberNo) {
+	public int getMemberGbookCount(int memberNo) {
 		
 		int gbookCnt = 0;
 		
 		try {
 			dao = template.getMapper(GuestbookDao.class);
 			
-			gbookCnt = dao.selectTotalCntByMemberNo(memberNo);
+			gbookCnt = dao.selectMemberGuestbookCount(memberNo);
 			
 			log.info(gbookCnt);
 		} catch(Exception e) {
