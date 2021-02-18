@@ -47,7 +47,7 @@
 					<div class="mainForm" id="mainForm"></div>
 					
 					<!-- 방명록 리스트 -->
-		    		<div class="gblistForm" id="gblistForm" style="display: none;" ></div>
+		    		<div class="gblistForm" id="gblistForm" style="display: none;"></div>
 	
 					<!-- 방명록 등록 (모달 창) -->
 			    	<form id="gbregForm">	
@@ -351,8 +351,13 @@
 		
         // 방명록 등록
         function regGuestbook() {
+        	
+        	// 로그인 체크 추가 **
 
-      		
+        	var form = $('#gbregForm')[0];
+        	var formData = new FormData(form);
+        	
+			// 체크박스 값 전역함수 secret_check에 넣기       		
         	$('input:checkbox[name="gbcheck"]').each(function(){
         		if($(this).is(":checked") == true) {
         			secret_check = 'Y';
@@ -361,19 +366,11 @@
         		}
         	})
         	
- 			
-        	var form = $('#gbregForm')[0];
-        	var formData = new FormData(form);
-        	
-        	console.log(form);
-        	console.log(formData);
-        	console.log(secret_check);
-        	
+        	// gbSecret를 FormData에 추가 
         	formData.append('gbSecret', secret_check);
-        	 
+        	
         	
         	$.ajax({
-        		
         		type: 'POST',
            		enctype : 'multipart/form-data',
 	            processData : false,
@@ -385,7 +382,11 @@
 	           	success: function (data) {
 	           		
 	           		console.log('등록 데이터 ajax 전송 성공');
-	           	
+	           		
+	           		// 리스트 출력  
+	           		getGbookList();
+	           		// 모달창 닫기
+	           		closeModal();
 	           	
 	            },
 	            error: function (e) {

@@ -16,8 +16,9 @@
 		function getGbookList() {
 		
 			disappearMainForm();
-			
 			showGbookList();
+			
+			var uploadFileUrl = '/fileupload/guestbook/';
 			
 			$.ajax({
  				url: myHostUrl + '/guestbook/list/' + gbOwnerIdx,
@@ -26,10 +27,11 @@
  				success:function(data){
  					
  					console.log(data);
+ 					console.log(typeof(data));
  					
  					var listhtml = '<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
- 					listhtml += 		'00님의 GuestBook(15)';
+ 					listhtml += 		'<span>'+ memIdx +'님의 GuestBook(15)</span>';
  					listhtml += 		'<button type="button" onclick="openModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
  					listhtml += 	'</div>'; 		
  					listhtml += 	'<div class="gblist">';
@@ -41,9 +43,9 @@
 	 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
 	 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 	 					listhtml += 					'</td>';
-	 					listhtml += 					'<td class="gblist_info">'+data[i].writerName+'('+data[i].writerNo+')'+'-'+data[i].memberNo+'</td>';
+	 					listhtml += 					'<td class="gblist_info">'+data[i].writerName+'('+data[i].writerNo+')'+'-'+data[i].ownerNo+'</td>';
 	 					listhtml +=						'<td rowspan="3" class="gblist_uploadPhoto">';
-	 					listhtml +=							'<img height="60" src="http://localhost:8080/main/image/ootdTest.jpg">';
+	 					listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data[i].contentPhoto +'">';
 	 					listhtml +=						'</td>';
 	 					listhtml +=					'</tr>';
 	 					listhtml +=					'<tr class="gblist_info">';

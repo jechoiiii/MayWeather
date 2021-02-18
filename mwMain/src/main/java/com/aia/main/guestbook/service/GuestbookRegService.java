@@ -46,23 +46,24 @@ public class GuestbookRegService {
 			// 시스템의 실제 경로 
 			String saveDirPath = request.getSession().getServletContext().getRealPath(uploadPath);
 			// 새로운 파일 이름 
-			newFileName = String.valueOf( System.currentTimeMillis());
-			newFile = new File(saveDirPath, newFileName);
+			newFileName = (String)request.getSession().getAttribute("ownidx") + "_"
+						+ (String)request.getSession().getAttribute("memidx") + "_" 
+						+ String.valueOf(System.nanoTime());
+			
+			System.out.println("파일이름: " + newFileName);
 			
 			// 파일 저장 
 			try {
+				newFile = new File(saveDirPath, newFileName);
 				gbRegReq.getGbContentPhoto().transferTo(newFile);
 				
-			} catch (IllegalStateException e) {
+			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} 
 			
 		}
 		
-		
-		
+	
 		try {
 			
 			// test : request의 session에서 가져오기 			
@@ -81,15 +82,7 @@ public class GuestbookRegService {
 
 			// GuestbookRegRequest -> Guestbook으로 형변환
 			Guestbook guestbook = gbRegReq.toGuestbook();
-			
-			
-			System.out.println("ownerNo:"+gbRegReq.getGbOwnerNo());
-			System.out.println("writerNo:"+gbRegReq.getGbWriterNo());
-			System.out.println("writerName:"+gbRegReq.getGbWriterName());
-			System.out.println("writerPhoto:"+gbRegReq.getGbWriterPhoto());
-			System.out.println("writerLoc:"+gbRegReq.getGbWriterLoc());			
-			System.out.println("gbSecret:"+gbRegReq.getGbSecret());
-			System.out.println("gbContent:"+gbRegReq.getGbContent());
+			System.out.println("게스트북 toString : " + gbRegReq.toString());
 			
 			if(newFileName != null) {
 				guestbook.setContentPhoto(newFileName);
@@ -108,11 +101,11 @@ public class GuestbookRegService {
 		
 		
 		} catch(Exception e) {
-			e.printStackTrace();
 			// 현재 저장한 파일이 있는 경우 -> 삭제 
-//			if(newFile != null && newFile.exists()) {
-//				newFile.delete();
-//			}
+			if(newFile != null && newFile.exists()) {
+				newFile.delete();
+			}
+			e.printStackTrace();
 		}
 			
 		return result;

@@ -35,9 +35,7 @@ public class GuestbookRestController {
 	// 전체 리스트 조회 
 	@GetMapping("/list")	// /main/guestbook/list
 	@CrossOrigin
-	public List<Guestbook> guestbookAllList(Model model) {
-		
-		model.addAttribute("list", listService.getAllGbookList());
+	public List<Guestbook> guestbookAllList() {
 		
 		return listService.getAllGbookList();
 	}
@@ -45,12 +43,14 @@ public class GuestbookRestController {
 	// 회원 A의 게시판 리스트 조회
 	@GetMapping("/list/{gbOwnerIdx}")	// /main/guestbook/list/gbOwnerIdx
 	@CrossOrigin
-	public List<Guestbook> guestbookList(@PathVariable("gbOwnerIdx") int memberNo, Model model) {
+	public List<Guestbook> guestbookList(@PathVariable("gbOwnerIdx") int ownerNo, GuestbookListPage listpage) {
 		
-		System.out.println(memberNo);
-		model.addAttribute("list", listService.getMemberGbookList(memberNo));
+		System.out.println("ownerNo:"+ ownerNo);
+		System.out.println(listService.getMemberGbookList(ownerNo));
+		//gbookCnt = listService.getMemberGbookCount(ownerNo);
 		
-		return listService.getMemberGbookList(memberNo);
+		return listService.getMemberGbookList(ownerNo);
+		
 	}
 	
 	// 회원 A의 게시판 게시물의 수 
@@ -60,9 +60,8 @@ public class GuestbookRestController {
 	@CrossOrigin
 	public int guestbookReg(GuestbookRegRequest gbRegReq, HttpServletRequest request) {
 		
-		
-		System.out.println("request:" +request);
-		System.out.println("gbRegReq : " + gbRegReq);
+		//System.out.println("request:" +request);
+		//System.out.println("gbRegReq : " + gbRegReq);
 		return regService.insertGbookRegRequest(gbRegReq, request);
 	}
 

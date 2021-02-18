@@ -27,6 +27,7 @@ public class GuestbookRegRequest {
 		gbook.setWriterLoc(gbWriterLoc);
 		gbook.setContent(gbContent);
 		gbook.setSecret(gbSecret);
+		// gbContentPhoto는 서비스에서 처리 
 
 		return gbook;
 	}
