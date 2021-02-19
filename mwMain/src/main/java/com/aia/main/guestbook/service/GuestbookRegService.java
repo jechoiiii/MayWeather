@@ -66,15 +66,13 @@ public class GuestbookRegService {
 	
 		try {
 			
-			// test : request의 session에서 가져오기 			
-			int ownerNo = Integer.valueOf((String)request.getSession().getAttribute("ownidx"));
+			// test : request의 session에서 가져오기 
 			int writerNo = Integer.valueOf((String)request.getSession().getAttribute("memidx"));
 			String writerName = (String) request.getSession().getAttribute("memnic");
 			String writerPhoto = (String)request.getSession().getAttribute("memphoto");
 			String writerLoc = (String)request.getSession().getAttribute("memloc");
 			
 			// GuestbookRegRequest에 test 값 넣기
-			gbRegReq.setGbOwnerNo(ownerNo);
 			gbRegReq.setGbWriterNo(writerNo);
 			gbRegReq.setGbWriterName(writerName);
 			gbRegReq.setGbWriterPhoto(writerPhoto);

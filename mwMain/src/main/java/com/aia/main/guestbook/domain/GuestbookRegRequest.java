@@ -31,13 +31,5 @@ public class GuestbookRegRequest {
 
 		return gbook;
 	}
-
-	@Override
-	public String toString() {
-		return "GuestbookRegRequest [gbOwnerNo=" + gbOwnerNo + ", gbWriterNo=" + gbWriterNo + ", gbWriterName="
-				+ gbWriterName + ", gbWriterPhoto=" + gbWriterPhoto + ", gbWriterLoc=" + gbWriterLoc + ", gbContent="
-				+ gbContent + ", gbContentPhoto=" + gbContentPhoto + ", gbSecret=" + gbSecret + "]";
-	}
-
 		
 }

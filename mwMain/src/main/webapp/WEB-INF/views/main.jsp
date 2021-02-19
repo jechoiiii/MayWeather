@@ -2,8 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("ownidx", "20");
-	session.setAttribute("memidx", "10");
+	session.setAttribute("memidx", "40");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -45,6 +44,9 @@
 					
 					<!-- 메인 -->
 					<div class="mainForm" id="mainForm"></div>
+					
+					<!-- 방명록 버튼 -->
+					<div class="moveToGb" id="moveToGb" style="display: none;"></div>
 					
 					<!-- 방명록 리스트 -->
 		    		<div class="gblistForm" id="gblistForm" style="display: none;"></div>
@@ -88,7 +90,9 @@
 		var myHostUrl = 'http://localhost:8080/main';
 		
 		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
-		var ownIdx = '<%=(String)session.getAttribute("ownidx")%>';
+		<%-- var ownIdx = '<%=(String)session.getAttribute("ownidx")%>'; --%>
+		var gbOwnerIdx = 0;
+		
 		var memIdx = '<%=(String)session.getAttribute("memidx")%>';
 		var memNic = '<%=(String)session.getAttribute("memnic")%>';
 		var memPhoto = '<%=(String)session.getAttribute("memphoto")%>';
@@ -96,6 +100,13 @@
 		
 		var file;				// 방명록 첨부 사진 
 		var secret_check;		// 방명록 등록 체크여부
+		var page = 1;			// 방명록 페이지
+		
+		var ownerChk = false;	// 로그인한 계정 != 방명록주인 
+		var writerChk = false;	// 로그인한 계정 != 작성자
+		
+		// gbList에서만 무한스크롤이 작동하도록 만드는 변수
+		var gblistScroll = false;	
 
  		var latitude;			// GPS 위도 
 		var longitude;			// GPS 경도
@@ -116,6 +127,7 @@
 		var wbt_tmp;			// 3시간 기온
 		var wbt_rain;			// 3시간 강수확률
 		var wbt_sky;			// 하늘상태 
+	
 
 		
 
@@ -133,7 +145,7 @@
 			
 			showMainForm();
 			
-			var mainhtml = 	  '<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getGbookList()"> '
+			var mainhtml = 	  '<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()"> '
 							+ '<div class="weather">'
 							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
@@ -216,28 +228,46 @@
 							+ 		'</div>'
 							+ '</div>';
 							
-		    $('.mainForm').html(mainhtml);
+		    $('#mainForm').html(mainhtml);
 		    
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocation();
 			
 		}
 		
-		/* 메인 폼 display 함수  */
+		/* 메인 폼 보이게 하는 함수  */
 		function showMainForm() {
 			$('.mainForm').height('650');
+			//$('#mainForm').css('display', 'flex');
 		}
 		
 		/* 메인 폼 안보이게 하는 함수 */
-		function disappearMainForm() {
+		function hideMainForm() {
 			$(".mainForm").empty();
 			$('.mainForm').height('0');
+			//$('#mainForm').css('display', 'none');
 		}
 		
-		/* 게스트북 리스트 display 함수 */
+		/* moveToGb 보이게 하는 함수 */
+		function hideMoveToGb() {
+			$('#moveToGb').css('display', 'none');
+		}
+		
+		/* moveToGb 안보이게 하는 함수 */
+		function showMoveToGb() {
+			$('#moveToGb').css('display', 'flex');
+		}
+		
+		/* 게스트북 리스트 보이게 하는 함수 */
 		function showGbookList() {
 			document.querySelector(".gblistForm").style.display = 'flex';
 		}
+		
+		/* 게스트북 리스트 안보이게 하는 함수 */
+		function hideGbookList() {
+			document.querySelector(".gblistForm").style.display = 'none';
+		}
+		
 		
 		/* 시간대별 Button 클릭 함수 */
 		function getWeatherBT() {
@@ -308,20 +338,25 @@
 		
 		/* 방명록 -------------------------------------------------------------------------------------------------------------------------------------------  */
 		
+		// 무한 스크롤 
+		$(document).scroll()
+		
+
+		
 		
         /* 방명록 등록 모달 ----------------------------------------------- */
 		
 		// 모달 창 만들기
         function setModal() {
             
-        	var reghtml = '<table class="regModal_table">'
+        	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
 						+	'<tr class="greetArea" height="100">'
-						+		'<td class="tableExp"><span class="font3">잘 보셨나요?</span><br><span class="font5">00님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td class="tableExp"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td table="tableImg" colspan="2"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>'
 						+	'</tr>'
 						+	'<tr class="insertArea" height="300">'
 						+		'<td class="tableInsert" colspan="2">'
-						+			'<input type="text" id="gbContent" name="gbContent" placeholder="00님의 스타일은 어떤가요?<br>하고 싶은 말을 여기에 적어보세요."></td>'
+						+			'<input type="text" id="gbContent" name="gbContent" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요?<br>하고 싶은 말을 여기에 적어보세요."></td>'
 						+		'<td class="tableInsertPhoto"><label for="gbContentPhoto"><img width="20" src="http://localhost:8080/main/image/camera.png"></label><input type="file" id="gbContentPhoto" name="gbContentPhoto" style="display:none;"></td>'
 						+	'</tr>'
 						+	'<tr class="secretArea" height="50">'
@@ -330,14 +365,13 @@
 						+ '</table>';
             
             $('.regModal_body').html(reghtml);
-            
-            
         }
         
-        setModal();
+		
 
         // 모달 창 열기
         function openModal() {
+        	setModal();
         	$('.regModal_wrapper').css('display', 'flex');
         }
         
@@ -357,7 +391,7 @@
         	var form = $('#gbregForm')[0];
         	var formData = new FormData(form);
         	
-			// 체크박스 값 전역함수 secret_check에 넣기       		
+			// gbSecret 값 전역함수 secret_check에 넣기       		
         	$('input:checkbox[name="gbcheck"]').each(function(){
         		if($(this).is(":checked") == true) {
         			secret_check = 'Y';
@@ -369,6 +403,20 @@
         	// gbSecret를 FormData에 추가 
         	formData.append('gbSecret', secret_check);
         	
+			console.log(formData);
+			
+			for (var key of formData.keys()) {
+
+				  console.log(key);
+
+				}
+
+				for (var value of formData.values()) {
+
+				  console.log(value);
+
+				}
+			
         	
         	$.ajax({
         		type: 'POST',
@@ -382,6 +430,7 @@
 	           	success: function (data) {
 	           		
 	           		console.log('등록 데이터 ajax 전송 성공');
+	           		console.log(data);
 	           		
 	           		// 리스트 출력  
 	           		getGbookList();
