@@ -21,14 +21,5 @@ public class Guestbook {
 	private Timestamp regDate;		// 작성 날짜
 	private Timestamp updateDate;	// 수정 날짜 
 	private String secret;			// 비밀글 여부
-
-	
-	@Override
-	public String toString() {
-		return "Guestbook [gbookNo=" + gbookNo + ", ownerNo=" + ownerNo + ", writerNo=" + writerNo + ", writerName="
-				+ writerName + ", writerPhoto=" + writerPhoto + ", writerLoc=" + writerLoc + ", content=" + content
-				+ ", contentPhoto=" + contentPhoto + ", regDate=" + regDate + ", updateDate=" + updateDate + ", secret="
-				+ secret + "]";
-	}
-	
+		
 }

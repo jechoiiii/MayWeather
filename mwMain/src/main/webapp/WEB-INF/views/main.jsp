@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("memidx", "40");
+	session.setAttribute("memidx", "30");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -260,7 +260,7 @@
 		
 		/* 게스트북 리스트 보이게 하는 함수 */
 		function showGbookList() {
-			document.querySelector(".gblistForm").style.display = 'flex';
+			document.querySelector(".gblistForm").style.display = '';
 		}
 		
 		/* 게스트북 리스트 안보이게 하는 함수 */
@@ -360,7 +360,7 @@
 						+		'<td class="tableInsertPhoto"><label for="gbContentPhoto"><img width="20" src="http://localhost:8080/main/image/camera.png"></label><input type="file" id="gbContentPhoto" name="gbContentPhoto" style="display:none;"></td>'
 						+	'</tr>'
 						+	'<tr class="secretArea" height="50">'
-						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
+						+		'<td colspan="3">비밀 글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
 						+ 	'</tr>'
 						+ '</table>';
             

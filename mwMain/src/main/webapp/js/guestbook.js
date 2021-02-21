@@ -80,6 +80,9 @@
  				url: myHostUrl + '/guestbook/list/' + gbOwnerIdx + '/' + page,
  				type: 'GET',
  				success:function(data){
+ 				
+ 					// 비밀글 수
+ 					var secretNum = 0;
  					
  					// 방명록 목록
  					var listhtml = '<div class="gblist_title">';
@@ -93,7 +96,7 @@
  					for(var i=0; i<data.guestbookList.length; i++) {
 	 							
 	 					// 방명록 주인이거나 작성자인 경우에만, 비밀글 열람			
-	 					if(memIdx == gbOwnerIdx || memIdx !== data.guestbookList[i].writerNo){
+	 					if(memIdx == gbOwnerIdx || memIdx == data.guestbookList[i].writerNo){
 	 					
 							listhtml +=					'<input type="hidden" name="gbookNo" id="gbookNo" value="'+ data.guestbookList[i].gbookNo +'">';
 		 					listhtml += 				'<tr class="gblist_width">';
@@ -156,13 +159,13 @@
 	 					
 							} else {
 							
+								// 비밀글 수 +1
+	 							secretNum += 1;
 							}
 	 					
 	 					}				
 	 										
 	 				
-	 					
-	 					
  					}
  					
  					listhtml +=			'</table>';
@@ -170,7 +173,7 @@
  					
  					$('#gblistForm').html(listhtml);
  					
- 					
+ 					console.log('비밀글수:' +secretNum);
  					
 	 			}, 
  				error: function(e) {

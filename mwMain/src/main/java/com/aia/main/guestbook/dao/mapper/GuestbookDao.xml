@@ -6,9 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.aia.main.guestbook.dao.GuestbookDao">
 	
 	<!-- Guestbook 타입의 resultMap : 방명록 게시판 (A의 방명록) -->
-	<resultMap id="guestbookResultList"
+	<resultMap id="guestbookResult"
 				type="com.aia.main.guestbook.domain.Guestbook">
-		<id column="ownerNo" property="ownerNo"></id>
+		<id column="gbookNo" property="gbookNo"></id>
 		<result column="gbookNo" property="gbookNo"/>
 		<result column="writerNo" property="writerNo"/>
 		<result column="writerName" property="writerName"/>
@@ -21,8 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="secret" property="secret"/>
 	</resultMap>
 	
-	<!-- Guestbook 타입의 resultMap : 방명록 게시물 (B가 남긴 방명록 1개) -->
-	<resultMap id="guestbookResult"
+	<!-- Guestbook 타입의 resultMap : 페이징한 리스트  -->
+	<resultMap id="guestbookResultList"
 				type="com.aia.main.guestbook.domain.Guestbook">
 		<id column="gbookNo" property="gbookNo"></id>
 		<result column="ownerNo" property="ownerNo"/>
@@ -52,12 +52,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 회원 A의 방명록 게시판 조회 : ownerNo로 조회 -->
 	<select id="selectMemberGuestbook"
 			parameterType="int"
-			resultMap="guestbookResultList">
+			resultMap="guestbookResult">
 		select * from guestbook where ownerNo=#{ownerNo}
 	</select>
 	
 	<!-- 회원 A의 방명록 게시판의 게시물 총 수 -->
-	<select id="selectMemberGuestbookCount" resultType="int">
+	<select id="selectMemGbookCount" 
+			parameterType="int" 
+			resultType="int">
 		select count(*) from guestbook where ownerNo=#{ownerNo}
 	</select>
 	
@@ -68,6 +70,52 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	
+	
+	
+	<!-- 회원 A의 방명록 게시판 리스트 출력 : ownerNo로 조회 + 페이징 -->
+	<select id="selectMGbListPage"  resultMap="guestbookResultList">
+		select * from guestbook 
+			where ownerNo=#{param1}
+			order by gbookNo desc
+			limit #{param2}, #{param3}
+	</select>	
+	
+	
+	<!--  방명록 검색 결과 리스트 출력 -->
+	<select id="selectGBSearchResult"
+			parameterType="com.aia.main.guestbook.domain.SearchParam"
+			resultMap="guestbookResultList">
+		select * from guestbook
+		
+		<where>
+			<if test="searchParam != null">
+				<if test="searchParam.searchType == 'name'">
+					<include refid="searchName"/>
+				</if>
+				<if test="searchParam.searchType == 'content'">
+					<include refid="searchContent"/>
+				</if>
+				<if test="searchParam.searchType == 'both'">
+					<include refid="searchName"/>
+					<include refid="searchContent"/>
+				</if>
+			</if>
+			and ownerNo=#{ownerNo}
+		</where>
+		
+	</select>
+	
+	<sql id="searchName">
+		or writerName like concat('%', #{searchParam.keyword},'%')
+	</sql>
+	
+	<sql id="searchContent">
+		or content like concat('%', #{searchParam.keyword},'%')
+	</sql>
+	
+	
+	
+		
 	
 	<!-- 게시물 등록 -->
 	<insert id="insertGuestbook"
@@ -91,7 +139,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</insert>
 
 	<!-- 회원 A의 방명록 게시판의 게시물 수 +1  -->
-	<update id="">
+	<update id="memberGbookCountUpdate">
 		update guestbook_count set guestbookCount = guestbookCount+1;
 	</update>
 

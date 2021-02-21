@@ -2,21 +2,24 @@ package com.aia.main.guestbook.domain;
 
 import java.util.List;
 
+import lombok.Data;
+
+@Data
 public class GuestbookListPage {
 
-	private int currentPage;				// 현재 페이지 번호 
+	private int pageNumber;					// 현재 페이지 번호 
 	private int totalPageCount;				// 전체 페이지의 수
 	private int totalGuestbookCount;		// 전체 게시물의 수 
 	private int cntPerPage;					// 페이지당 게시물의 수  -> 변하지 않음
 	private List<Guestbook> guestbookList;	// 페이지에 노출할 게시물의 정보를 담은 List
 	private int startRow;					// 페이징 시작 번호 
-	private int endRow;						// 페이징 마지막 번호 
+	private int endRow;						// 페이징 마지막 번호 (mysql에서는 사용하지 않음)
 	
 	
 	// 생성자 
-	public GuestbookListPage(int currentPage, int totalGuestbookCount, int cntPerPage, List<Guestbook> guestbookList,
+	public GuestbookListPage(int pageNumber, int totalGuestbookCount, int cntPerPage, List<Guestbook> guestbookList,
 			int startRow, int endRow) {
-		this.currentPage = currentPage;
+		this.pageNumber = pageNumber;
 		this.totalGuestbookCount = totalGuestbookCount;
 		this.cntPerPage = cntPerPage;
 		this.guestbookList = guestbookList;
@@ -38,39 +41,8 @@ public class GuestbookListPage {
 			totalPageCount++;
 				// 3+1 = 4
 		}
+		System.out.println("totalPageCount :"+ totalPageCount);
 	}
 	
-	
-	// getter
-	public int getCurrentPage() {
-		return currentPage;
-	}
-	public int getTotalPageCount() {
-		return totalPageCount;
-	}
-	public int getTotalGuestbookCount() {
-		return totalGuestbookCount;
-	}
-	public int getCntPerPage() {
-		return cntPerPage;
-	}
-	public List<Guestbook> getGuestbookList() {
-		return guestbookList;
-	}
-	public int getStartRow() {
-		return startRow;
-	}
-	public int getEndRow() {
-		return endRow;
-	}
-	
-	
-	@Override
-	public String toString() {
-		return "GuestbookListPage [currentPage=" + currentPage + ", totalPageCount=" + totalPageCount
-				+ ", totalGuestbookCount=" + totalGuestbookCount + ", cntPerPage=" + cntPerPage + ", guestbookList="
-				+ guestbookList + ", startRow=" + startRow + ", endRow=" + endRow + "]";
-	}
-
 	
 }

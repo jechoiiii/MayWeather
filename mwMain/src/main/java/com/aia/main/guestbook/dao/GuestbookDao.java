@@ -13,11 +13,16 @@ public interface GuestbookDao {
 	// 전체 게시물 조회
 	List<Guestbook> selectAllGuestbook();
 	
-	// 회원 A의 방명록 게시판 조회 : ownerNo로 조회
+	// 회원 A의 방명록 리스트 조회 : ownerNo로 조회
 	List<Guestbook> selectMemberGuestbook(int ownerNo);
-
+	
+	
+	// 회원 A의 방명록 리스트 조회 (페이징) 
+	List<Guestbook> selectMGbListPage(int ownerNo, int startRow, int cntPerPage);
+	
+	
 	// 회원 A 방명록 게시판의 게시물 수 
-	int selectMemberGuestbookCount(int ownerNo);
+	int selectMemGbookCount(int gbookNo);
 	
 	// 1개의 게시물에 담긴 정보 조회 
 	Guestbook selectGuestbookByGbookNo(int gbookNo);
@@ -27,7 +32,7 @@ public interface GuestbookDao {
 	// 방명록 등록
 	int insertGuestbook(Guestbook guestbook);
 	
-	// 회원 A의 방명록 게시판의 count 업데이트 
+	// 회원 A의 방명록 게시판의 count +1
 	int memberGbookCountUpdate();
 	
 
