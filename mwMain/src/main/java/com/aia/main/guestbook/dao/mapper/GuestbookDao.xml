@@ -137,17 +137,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	
 	</insert>
-
-	<!-- 회원 A의 방명록 게시판의 게시물 수 +1  -->
-	<update id="memberGbookCountUpdate">
-		update guestbook_count set guestbookCount = guestbookCount+1;
-	</update>
-
-	
-	<!-- 게시물 삭제  -->
-	<delete id="deleteGuestbookByGbookNo">
-		delete from guestbook where gbookNo=#{gbookNo}
-	</delete>
 	
 	
 	
@@ -175,5 +164,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			resultType="String">
 		select contentPhoto from guestbook where gbookNo=#{gbookNo}
 	</select>
+	
+	
+	<!-- 게시물 삭제  -->
+	<delete id="deleteGuestbook">
+		delete from guestbook where gbookNo=#{gbookNo}
+	</delete>
 	
 </mapper> 

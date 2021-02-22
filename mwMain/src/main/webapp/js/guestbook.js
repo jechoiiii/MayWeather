@@ -110,7 +110,9 @@
 		 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 		 					listhtml += 					'</td>';
 		 					listhtml += 					'<td class="gblist_info">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
-		 					listhtml +=						'<td class="gblist_btns"><button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button><button type="button" class="gb_delete_btn" onclick="">삭</button>';
+		 					listhtml +=						'<td class="gblist_btns">';
+		 					listhtml +=							'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
+		 					listhtml +=							'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
 		 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'"></td>';
 		 					listhtml +=					'</tr>';
 		 					
@@ -155,8 +157,10 @@
 			 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 			 					listhtml += 					'</td>';
 			 					listhtml += 					'<td class="gblist_info">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
-			 					listhtml +=						'<td class="gblist_btns"><button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo +')">수</button><button type="button" class="gb_delete_btn" onclick="">삭</button></td>';
-								listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'">';
+			 					listhtml +=						'<td class="gblist_btns">';
+		 						listhtml +=							'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
+		 						listhtml +=							'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';			 					
+			 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'">';
 			 					listhtml +=					'</tr>';
 			 					
 		

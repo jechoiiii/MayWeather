@@ -28,7 +28,7 @@ public class GuestbookUpdateService {
 	String newGbFileName = null;
 	
 	int result = 0;
-	boolean chk = false; 	// 수정전 사진 삭제 여부
+	boolean chk = false; 	// DB 저장 여부
 	
 	
 	// 게시물 수정 : 파일 삭제, 파일 업로드, DB 저장 

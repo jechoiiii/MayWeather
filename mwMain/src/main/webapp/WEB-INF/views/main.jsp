@@ -93,7 +93,29 @@
 		                       
 			    			</div>
 			    		</div>
-			    	</form>   
+			    	</form>  
+			    	
+			    	<!-- 방명록 삭제 (모달 창) -->
+			    	<form id="gbDeleteForm">	
+			    		<div class="deleteModal_wrapper" style="display: none;">
+			    			<div class="deleteModal">
+			    			
+			    				<div class="regModal_header">
+		                             <div class="regModal_back">
+		                                 <button type="button" onclick="closeDeleteModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                             </div>
+		                             <div class="regModal_title">방명록 삭제하기</div>
+		                         </div>
+			    					
+			    				<div class="deleteModal_body"></div>
+			    				
+			    				<div class="regModal_footer">
+		                           <button id="reg_submit_btn" type="button" onclick="deleteGuestbook()">삭제하기</button>
+		                       </div>
+		                       
+			    			</div>
+			    		</div>
+			    	</form> 
 					
 				</div>
 			
@@ -395,7 +417,7 @@
         // 등록 모달 창 열기
         function openRegModal() {
         	setRegModal();
-        	$('.regModal_wrapper').css('display', 'flex');
+        	$('.regModal_wrapper').css('display', '');
         }
         
         // 등록 모달 창 닫기 
@@ -469,7 +491,6 @@
         function setUpdateModal(gbNo) {
             
 			console.log(gbNo);
-			console.log(wrNo);
 			
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
         				+ 	'<input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
@@ -491,17 +512,14 @@
         }
  		
         var gbNo = 0;	// 게시글 번호 
-        var wrNo = 0;	// 작성자 번호
         
         // 수정 모달 창 열기
         function openUpdateModal(num) {
         	
         	gbNo = num;
         	
-        	console.log(gbNo);
-        	
         	setUpdateModal(gbNo);
-        	$('.updateModal_wrapper').css('display', 'flex');
+        	$('.updateModal_wrapper').css('display', '');
         }
         
         // 수정 모달 창 닫기 
@@ -549,7 +567,7 @@
             	data: formData,
 	           	success: function (data) {
 	           		
-	           		console.log('등록 데이터 ajax 전송 성공');
+	           		console.log('수정 데이터 ajax 전송 성공');
 	           		console.log(data);
 	           		
 	           		// 리스트 출력  
@@ -566,15 +584,76 @@
         	
         }
 
-        // 오늘 날짜 구하기
-        function getToday() {
+        
+        
+ 		/* 방명록 삭제 모달 ----------------------------------------------- */
+		
+		// 삭제 모달 창 만들기
+        function setDeleteModal(gbNo) {
+            
+			console.log(gbNo);
+			
+        	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
+        				+ 	'<input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
+						+	'<tr class="greetArea" height="100">'
+						+		'<td class="tableExp"><span class="font3">정말 삭제하시겠어요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td table="tableImg"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>'
+						+	'</tr>'
+						+ '</table>';
+            
+            $('.deleteModal_body').html(reghtml);
+        }
 
+     	// 삭제 모달 창 열기
+        function openDeleteModal(num) {
+        	
+        	gbNo = num;
+        	
+        	setDeleteModal(gbNo);
+        	$('.deleteModal_wrapper').css('display', '');
+        }
+        
+        // 수정 모달 창 닫기 
+        function closeDeleteModal() {
+        	$('.deleteModal_wrapper').css('display', 'none');
         }
         
         // 방명록 삭제 -> 방명록 주인 & 작성자만 가능
        	function deleteGuestbook() {
        		
+        	console.log(gbNo);
+        	
+        	$.ajax({
+        		type: 'POST',
+	            processData : false,
+	            contentType : false,
+	            cache : false,
+	            timeout : 600000,
+            	url: myHostUrl + '/guestbook/delete/' + gbNo,
+	           	success: function () {
+	           		
+	           		console.log('삭제 데이터 ajax 전송 성공');
+	           		console.log(gbNo);
+	           		
+	           		// 리스트 출력  
+	           		getGbookList();
+	           		// 모달창 닫기
+	           		closeDeleteModal();
+	           	
+	            },
+	            error: function (e) {
+	                alert('삭제 데이터 ajax 에러' + e);
+	            }
+       		})
        	}
+        
+        
+        
+        
+        // 오늘 날짜 구하기
+        function getToday() {
+
+        }
         
         
         

@@ -9,6 +9,8 @@ import com.aia.main.guestbook.domain.Guestbook;
 
 public interface GuestbookDao {
 
+	/* ---------- 조회 ---------- */
+	
 	// 전체 방명록 게시물 수 
 	int selectGuestbookTotalCount(); 
 	
@@ -30,14 +32,13 @@ public interface GuestbookDao {
 	Guestbook selectGuestbookByGbookNo(int gbookNo);
 	
 	
+	/* ---------- 등록 ---------- */
 	
 	// 방명록 등록
 	int insertGuestbook(Guestbook guestbook);
 	
-	// 회원 A의 방명록 게시판의 count +1
-	int memberGbookCountUpdate();
 	
-	
+	/* ---------- 수정 ---------- */
 	
 	// 방명록 수정 : 내용/비밀여부
 	int updateNoPhotoGuestbook(Guestbook guestbook);
@@ -45,8 +46,14 @@ public interface GuestbookDao {
 	// 방명록 수정 : 사진 
 	int updatePhotoGuestbook(Guestbook guestbook);
 	
-	// 삭제할 첨부 파일명 받기 
+	// 수정(삭제)할 첨부 파일명 받기 
 	String deleteFileName(int gbookNo);
+	
+	
+	/* ---------- 삭제 ---------- */
+	
+	// 방명록 삭제
+	int deleteGuestbook(int gbookNo);
 	
 
 	
