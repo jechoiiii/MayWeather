@@ -46,9 +46,7 @@ public class GuestbookRegService {
 			// 시스템의 실제 경로 
 			String saveDirPath = request.getSession().getServletContext().getRealPath(uploadPath);
 			// 새로운 파일 이름 
-			newFileName = (String)request.getSession().getAttribute("ownidx") + "_"
-						+ (String)request.getSession().getAttribute("memidx") + "_" 
-						+ String.valueOf(System.nanoTime());
+			newFileName = (String)request.getSession().getAttribute("memidx") + "_" + String.valueOf(System.nanoTime());
 			
 			System.out.println("파일이름: " + newFileName);
 			

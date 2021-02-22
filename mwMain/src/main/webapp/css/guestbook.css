@@ -64,24 +64,18 @@
 	.gblist_table {
 		width: 100%;
 	}
+	
+	.secretGb {
+		border: 2px solid #aaa;
+		background-color: #f5f5f5;
+	}
  
  	.gblist_width {
  		width: 100%;
  	}
  	
- 	.gblist_con {
- 		width: 100%;
- 		height: 60px;
- 	}
- 	
- 	 .gblist_content {
- 	 	padding-left: 20px;
- 		border-bottom: 1px solid #eee;
- 		font-weight: 0.7em;
- 	}
- 	
  	.gblist_memImgR {
- 		width: 40px;
+ 		width: 10%;
  		padding: 10px;
  		padding-top: 15px;
  	}
@@ -90,14 +84,43 @@
  		border-radius: 50px;
  	}
  	
+ 	 .gblist_info {
+ 		width: 65%;
+ 		padding-top: 10px;
+ 	}
+ 	 	
+ 	.gblist_btns {
+ 		width: 40%;
+ 		background-color: red;
+ 		padding: 5px 0;
+ 	}
+ 	
+ 	.gblist_width button {
+ 		width: 30px;
+ 		height: 20px;
+ 		float: left;
+ 	}
+ 	
+ 	.gblist_con {
+ 		width: 100%;
+ 		height: 60px;
+ 	}
+ 	
+ 	.gblist_content {
+ 	 	width: 100%;
+ 	 	padding-top: 10px;
+ 	 	padding-bottom: 10px;
+ 	 	padding-right: 10px;
+ 	 	padding-left: 20px;
+ 		border-bottom: 1px solid #eee;
+ 		font-weight: 0.7em;
+ 	}
+ 	
  	.gblist_uploadPhoto {
  		border-bottom: 1px solid #eee; 	
  	}
  	
- 	.gblist_info {
- 		width: 190px;
- 		padding-top: 10px;
- 	}
+
  	
  	/* ---------------------- GUESTBOOK 리스트 끝 ---------------------- */
  	
@@ -128,6 +151,20 @@
         justify-content: center;
         align-items: center;
     }
+    
+    .updateModal_wrapper {
+    	position: fixed;
+    	top: 0px;
+    	left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+    
         
     .regModal_wrapper tr, .regModal_wrapper td {
         /* border: 1px solid; */

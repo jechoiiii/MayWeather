@@ -151,16 +151,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	
-	<!-- 게시물 수정 -->
-	<update id="updateGuestbook"
+	<!-- 게시물 내용, 비밀여부만 수정 -->
+	<update id="updateNoPhotoGuestbook"
 			parameterType="com.aia.main.guestbook.domain.Guestbook">
 		update guestbook
 		set content=#{content},
-			contentPhoto=#{contentPhoto},
-			updateDate=#{updateDate},
 			secret=#{secret}
 		where gbookNo=#{gbookNo}
+	</update>
 	
-	</update>	
+	<!-- 게시물 내용, 비밀여부, 사진 수정 -->
+	<update id="updatePhotoGuestbook"
+			parameterType="com.aia.main.guestbook.domain.Guestbook">
+		update guestbook
+		set content=#{content},
+			secret=#{secret},
+			contentPhoto=#{contentPhoto}
+		where gbookNo=#{gbookNo} 
+	</update>
+	
+	<!-- 게시물 수정하기 전 파일이름 받기 -->
+	<select id="deleteFileName" parameterType="int" 
+			resultType="String">
+		select contentPhoto from guestbook where gbookNo=#{gbookNo}
+	</select>
 	
 </mapper> 

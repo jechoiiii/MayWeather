@@ -58,7 +58,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" onclick="closeModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                                 <button type="button" onclick="closeRegModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 남기기</div>
 		                         </div>
@@ -66,12 +66,34 @@
 			    				<div class="regModal_body"></div>
 			    				
 			    				<div class="regModal_footer">
-		                           <button id="reg_submit_btn" type="button" class="regBtnSuccess" onclick="regGuestbook()">보내기</button>
+		                           <button id="reg_submit_btn" type="button" onclick="regGuestbook()">보내기</button>
 		                       </div>
 		                       
 			    			</div>
 			    		</div>
-			    	</form>    
+			    	</form>  
+			    	
+			    	<!-- 방명록 수정 (모달 창) -->
+			    	<form id="gbUpdateForm">	
+			    		<div class="updateModal_wrapper" style="display: none;">
+			    			<div class="regModal">
+			    			
+			    				<div class="regModal_header">
+		                             <div class="regModal_back">
+		                                 <button type="button" onclick="closeUpdateModal()" class="reg_modal_close_btn"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                             </div>
+		                             <div class="regModal_title">방명록 수정하기</div>
+		                         </div>
+			    					
+			    				<div class="updateModal_body"></div>
+			    				
+			    				<div class="regModal_footer">
+		                           <button id="reg_submit_btn" type="button" onclick="updateGuestbook()">수정하기</button>
+		                       </div>
+		                       
+			    			</div>
+			    		</div>
+			    	</form>   
 					
 				</div>
 			
@@ -101,6 +123,7 @@
 		var file;				// 방명록 첨부 사진 
 		var secret_check;		// 방명록 등록 체크여부
 		var page = 1;			// 방명록 페이지
+		var gbNo = 0;			// 방명록 번호
 		
 		var ownerChk = false;	// 로그인한 계정 != 방명록주인 
 		var writerChk = false;	// 로그인한 계정 != 작성자
@@ -346,8 +369,8 @@
 		
         /* 방명록 등록 모달 ----------------------------------------------- */
 		
-		// 모달 창 만들기
-        function setModal() {
+		// 등록 모달 창 만들기
+        function setRegModal() {
             
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
 						+	'<tr class="greetArea" height="100">'
@@ -369,14 +392,14 @@
         
 		
 
-        // 모달 창 열기
-        function openModal() {
-        	setModal();
+        // 등록 모달 창 열기
+        function openRegModal() {
+        	setRegModal();
         	$('.regModal_wrapper').css('display', 'flex');
         }
         
-        // 모달 창 닫기 
-        function closeModal() {
+        // 등록 모달 창 닫기 
+        function closeRegModal() {
         	$('.regModal_wrapper').css('display', 'none');
         }
 
@@ -403,19 +426,12 @@
         	// gbSecret를 FormData에 추가 
         	formData.append('gbSecret', secret_check);
         	
-			console.log(formData);
-			
 			for (var key of formData.keys()) {
-
 				  console.log(key);
-
 				}
-
-				for (var value of formData.values()) {
-
-				  console.log(value);
-
-				}
+			for (var value of formData.values()) {
+			  console.log(value);
+			}
 			
         	
         	$.ajax({
@@ -435,7 +451,7 @@
 	           		// 리스트 출력  
 	           		getGbookList();
 	           		// 모달창 닫기
-	           		closeModal();
+	           		closeRegModal();
 	           	
 	            },
 	            error: function (e) {
@@ -445,7 +461,123 @@
  
         }
 		
+        
+        
+ 		/* 방명록 수정 모달 ----------------------------------------------- */
+		
+		// 수정 모달 창 만들기
+        function setUpdateModal(gbNo) {
+            
+			console.log(gbNo);
+			console.log(wrNo);
+			
+        	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
+        				+ 	'<input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
+						+	'<tr class="greetArea" height="100">'
+						+		'<td class="tableExp"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td table="tableImg" colspan="2"><img width="60" src="http://localhost:8080/main/image/guestbook.png"></td>'
+						+	'</tr>'
+						+	'<tr class="insertArea" height="300">'
+						+		'<td class="tableInsert" colspan="2">'
+						+			'<input type="text" id="gbContent" name="gbContent" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요?<br>하고 싶은 말을 여기에 적어보세요."></td>'
+						+		'<td class="tableInsertPhoto"><label for="gbContentPhoto"><img width="20" src="http://localhost:8080/main/image/camera.png"></label><input type="file" id="gbContentPhoto" name="gbContentPhoto" style="display:none;"></td>'
+						+	'</tr>'
+						+	'<tr class="secretArea" height="50">'
+						+		'<td colspan="3">비밀 글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
+						+ 	'</tr>'
+						+ '</table>';
+            
+            $('.updateModal_body').html(reghtml);
+        }
+ 		
+        var gbNo = 0;	// 게시글 번호 
+        var wrNo = 0;	// 작성자 번호
+        
+        // 수정 모달 창 열기
+        function openUpdateModal(num) {
+        	
+        	gbNo = num;
+        	
+        	console.log(gbNo);
+        	
+        	setUpdateModal(gbNo);
+        	$('.updateModal_wrapper').css('display', 'flex');
+        }
+        
+        // 수정 모달 창 닫기 
+        function closeUpdateModal() {
+        	$('.updateModal_wrapper').css('display', 'none');
+        }
+      
+        
+        // 방명록 수정
+        function updateGuestbook() {
+        	
+        	console.log(gbNo);
+        	
+        	var form = $('#gbUpdateForm')[0];
+        	var formData = new FormData(form);
+        	
+			// gbSecret 값 전역함수 secret_check에 넣기       		
+        	$('input:checkbox[name="gbcheck"]').each(function(){
+        		if($(this).is(":checked") == true) {
+        			secret_check = 'Y';
+        		} else  {
+        			secret_check = 'N';
+        		}
+        	})
+        	
+        	// gbSecret를 FormData에 추가 
+        	formData.append('gbSecret', secret_check);
+        	
+			for (var key of formData.keys()) {
+				  console.log(key);
+				}
+			for (var value of formData.values()) {
+			  console.log(value);
+			}
+			
+        	
+        	$.ajax({
+        		type: 'POST',
+           		enctype : 'multipart/form-data',
+	            processData : false,
+	            contentType : false,
+	            cache : false,
+	            timeout : 600000,
+            	url: myHostUrl + '/guestbook/update/' + gbNo,
+            	data: formData,
+	           	success: function (data) {
+	           		
+	           		console.log('등록 데이터 ajax 전송 성공');
+	           		console.log(data);
+	           		
+	           		// 리스트 출력  
+	           		getGbookList();
+	           		// 모달창 닫기
+	           		closeUpdateModal();
+	           	
+	            },
+	            error: function (e) {
+	                alert('수정 데이터 ajax 에러' + e);
+	            }
+       		})
+        	
+        	
+        }
 
+        // 오늘 날짜 구하기
+        function getToday() {
+
+        }
+        
+        // 방명록 삭제 -> 방명록 주인 & 작성자만 가능
+       	function deleteGuestbook() {
+       		
+       	}
+        
+        
+        
 </script>
 
  </body>

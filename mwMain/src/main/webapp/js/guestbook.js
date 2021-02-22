@@ -88,7 +88,7 @@
  					var listhtml = '<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
  					listhtml += 		'<span>'+ gbOwnerIdx +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
- 					listhtml += 		'<button type="button" onclick="openModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
+ 					listhtml += 		'<button type="button" onclick="openRegModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
  					listhtml += 	'</div>';	
  					listhtml += 	'<div class="gblist">';
  					listhtml += 		'<table class="gblist_table">';
@@ -97,65 +97,96 @@
 	 							
 	 					// 방명록 주인이거나 작성자인 경우에만, 비밀글 열람			
 	 					if(memIdx == gbOwnerIdx || memIdx == data.guestbookList[i].writerNo){
-	 					
-							listhtml +=					'<input type="hidden" name="gbookNo" id="gbookNo" value="'+ data.guestbookList[i].gbookNo +'">';
+	 						
+	 						// 비밀글은 css 처리
+	 						if(data.guestbookList[i].secret == 'Y') {
+	 							listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'" class="secretGb">'
+	 						} else {
+	 							listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
+	 						}
+	 						
 		 					listhtml += 				'<tr class="gblist_width">';
 		 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
 		 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 		 					listhtml += 					'</td>';
 		 					listhtml += 					'<td class="gblist_info">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
+		 					listhtml +=						'<td class="gblist_btns"><button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button><button type="button" class="gb_delete_btn" onclick="">삭</button>';
+		 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'"></td>';
+		 					listhtml +=					'</tr>';
+		 					
+		 					
 	
 							// 첨부 사진 없는 경우, 이미지 출력 X
 		 					if(data.guestbookList[i].contentPhoto != null) {
-			 					listhtml +=						'<td rowspan="3" class="gblist_uploadPhoto">';
-			 					listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
-			 					listhtml +=						'</td>';
-							} else {
-								listhtml +=						'<td rowspan="3" class="gblist_uploadPhoto">';
-								listhtml +=						'</td>';
-							}
 		 					
-		 					listhtml +=					'</tr>';
-		 					listhtml +=					'<tr class="gblist_info">';
-		 					listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd." /></td>';
-		 					listhtml +=					'</tr>';
-		 					listhtml +=					'<tr class="gblist_con">';
-		 					listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
-		 					listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
-		 					listhtml +=					'</tr> ';
-	
-	 					
-	 					
+		 						listhtml +=					'<tr class="gblist_info">';
+								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+								listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
+								listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
+								listhtml +=						'</td>';
+								listhtml +=					'</tr>';
+								listhtml +=					'<tr class="gblist_con">';
+								listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
+								listhtml +=					'</tr> ';	
+								listhtml +=				'</tbody>';
+		 					
+							} else {
+							
+								listhtml +=					'<tr class="gblist_info">';
+								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+								listhtml +=					'</tr>';
+								listhtml +=					'<tr class="gblist_con">';
+								listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
+								listhtml +=					'</tr> ';
+								listhtml +=				'</tbody>';
+							
+							}
+		 				
 	 					} else {
 							
 							// 공개글만 출력
 							if(data.guestbookList[i].secret != 'Y'){
 							
-								listhtml +=					'<input type="hidden" name="gbookNo" id="gbookNo" value="'+ data.guestbookList[i].gbookNo +'">';
+								listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
 			 					listhtml += 				'<tr class="gblist_width">';
 			 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
 			 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 			 					listhtml += 					'</td>';
 			 					listhtml += 					'<td class="gblist_info">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
+			 					listhtml +=						'<td class="gblist_btns"><button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo +')">수</button><button type="button" class="gb_delete_btn" onclick="">삭</button></td>';
+								listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'">';
+			 					listhtml +=					'</tr>';
+			 					
 		
 								// 첨부 사진 없는 경우, 이미지 출력 X
 			 					if(data.guestbookList[i].contentPhoto != null) {
-				 					listhtml +=						'<td rowspan="3" class="gblist_uploadPhoto">';
-				 					listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
-				 					listhtml +=						'</td>';
-								} else {
-									listhtml +=						'<td rowspan="3" class="gblist_uploadPhoto">';
-									listhtml +=						'</td>';
-								}
 			 					
-			 					listhtml +=					'</tr>';
-			 					listhtml +=					'<tr class="gblist_info">';
-			 					listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd." /></td>';
-			 					listhtml +=					'</tr>';
-			 					listhtml +=					'<tr class="gblist_con">';
-			 					listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
-			 					listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
-			 					listhtml +=					'</tr> ';	 					
+			 						listhtml +=					'<tr class="gblist_info">';
+									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+									listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
+									listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
+									listhtml +=						'</td>';
+									listhtml +=					'</tr>';
+									listhtml +=					'<tr class="gblist_con">';
+									listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+									listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
+									listhtml +=					'</tr> ';	
+									listhtml +=				'</tbody>';
+			 					
+								} else {
+								
+									listhtml +=					'<tr class="gblist_info">';
+									listhtml +=						'<td colspan="2" class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+									listhtml +=					'</tr>';
+									listhtml +=					'<tr class="gblist_con">';
+									listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+									listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
+									listhtml +=					'</tr> ';
+									listhtml +=				'</tbody>';
+							
+							}
 	 					
 							} else {
 							
@@ -163,7 +194,9 @@
 	 							secretNum += 1;
 							}
 	 					
-	 					}				
+	 					}			
+	 					
+	 					
 	 										
 	 				
  					}
@@ -173,7 +206,6 @@
  					
  					$('#gblistForm').html(listhtml);
  					
- 					console.log('비밀글수:' +secretNum);
  					
 	 			}, 
  				error: function(e) {

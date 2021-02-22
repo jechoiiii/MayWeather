@@ -3,6 +3,8 @@ package com.aia.main.guestbook.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.aia.main.guestbook.domain.Guestbook;
 
 public interface GuestbookDao {
@@ -34,6 +36,17 @@ public interface GuestbookDao {
 	
 	// 회원 A의 방명록 게시판의 count +1
 	int memberGbookCountUpdate();
+	
+	
+	
+	// 방명록 수정 : 내용/비밀여부
+	int updateNoPhotoGuestbook(Guestbook guestbook);
+	
+	// 방명록 수정 : 사진 
+	int updatePhotoGuestbook(Guestbook guestbook);
+	
+	// 삭제할 첨부 파일명 받기 
+	String deleteFileName(int gbookNo);
 	
 
 	
