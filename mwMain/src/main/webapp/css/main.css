@@ -10,6 +10,8 @@
         min-height: 650px;
         max-height: 650px;
 		margin: auto;
+		overflow-y:auto; 
+		overflow-x:hidden;
 	}
 
     .mainForm {

@@ -29,7 +29,7 @@ public interface GuestbookDao {
 	int selectMemGbookCount(int gbookNo);
 	
 	// 1개의 게시물에 담긴 정보 조회 
-	Guestbook selectGuestbookByGbookNo(int gbookNo);
+	Guestbook selectOneGuestbook(int gbookNo);
 	
 	
 	/* ---------- 등록 ---------- */

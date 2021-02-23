@@ -60,11 +60,27 @@ public class GuestbookListService {
 		return listPage;
 	}
 	
-	// 회원 A의 게시판 게시물의 수 
-//	
-//		public int selectGBCnt(int ownerNo) {
-//			return ownerNo;
-//		}
+	
+	
+	// 게시물 1개 조회
+	public Guestbook getGuestbookInfo(int gbookNo) {
+		
+		Guestbook gbinfo = null;
+		
+		try {
+			dao = template.getMapper(GuestbookDao.class);
+			gbinfo = dao.selectOneGuestbook(gbookNo);
+			
+			log.info(gbinfo);
+			System.out.println("게스트북 정보 : "+ gbinfo);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return gbinfo;
+	}
 
 	
 	

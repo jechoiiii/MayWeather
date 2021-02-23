@@ -163,6 +163,7 @@
 		
 		
 		var myHostUrl = 'http://localhost:8080/main';
+		var uploadFileUrl = '/fileupload/guestbook/';
 		
 		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
 		<%-- var ownIdx = '<%=(String)session.getAttribute("ownidx")%>'; --%>
@@ -537,30 +538,53 @@
 		
 		// 수정 모달 창 만들기
         function setUpdateModal(gbNo) {
+ 			
+        	console.log(gbNo);
+ 			
+        	// 수정할 게시물 정보 가져와서 수정 폼에 넣기
+        	$.ajax({
+        		type: 'GET',
+	            cache : false,
+	            timeout : 600000,
+            	url: myHostUrl + '/guestbook/update/' + gbNo + '/form',
+	           	success: function (gbInfo) {
+	           		
+	           		console.log('수정할 게시판 데이터 ajax로 받기 성공');
+	           		console.log(gbInfo);
+	           		
+	           		var uformhtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'"><input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
+								+		'<tr class="gbGreetArea" height="100">'
+								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요 :)</span></td>'
+								+			'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
+								+		'</tr>'
+								+		'<tr class="gbInsertArea1" height="80">'
+								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
+								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif,image/jpg" style="display:none;" onchange="changeImage(event)"></td>'
+								+			'<td class="gbInsertText" colspan="2" rowspan="2">'
+								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
+								+		'</tr>'
+								+		'<tr class="gbInsertArea2" height="220">'
+								+			'<td id="gbPreview" class="gbPreview">'
+								+				'<img height="60" id="gbBeforePhoto" src="' + myHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">'
+								+			'</td>'
+								+		'</tr>'
+								+		'<tr class="gbSecretArea" height="50">'
+								+			'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+ gbInfo.secret +'"></td>'
+								+ 		'</tr>'
+								+ 	'</table>';
+        			
+					$('.updateModal_body').html(uformhtml);
+	           	
+	           	
+	            },
+	            error: function (e) {
+	                alert('수정 데이터 ajax 에러' + e);
+	            }
+       		})
             
-			console.log(gbNo);
-			
-        	var updatehtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'"><input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
-						+		'<tr class="gbGreetArea" height="100">'
-						+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요 :)</span></td>'
-						+			'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
-						+		'</tr>'
-						+		'<tr class="gbInsertArea1" height="80">'
-						+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
-						+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif,image/jpg" style="display:none;" onchange="readImage(event)"></td>'
-						+			'<td class="gbInsertText" colspan="2" rowspan="2">'
-						+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
-						+		'</tr>'
-						+		'<tr class="gbInsertArea2" height="220">'
-						+			'<td id="gbPreview" class="gbPreview"></td>'
-						+		'</tr>'
-						+		'<tr class="gbSecretArea" height="50">'
-						+			'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
-						+ 		'</tr>'
-						+ 	'</table>';
-            
-            $('.updateModal_body').html(updatehtml);
         }
+ 		
+ 		
  		
         var gbNo = 0;	// 게시글 번호 
         
@@ -580,9 +604,12 @@
       
         
         
-     	// 이미지 미리보기 
-		function readImage(event){
+     	// 파일 업로드 시, 이미지 미리보기 변경 
+		function changeImage(event){
 			
+     		// 이전 이미지 미리보기 삭제
+     		$('#gbBeforePhoto').remove();
+     		
 			var gbPreview = document.querySelector('#gbPreview');
 			
 			console.log(gbPreview);

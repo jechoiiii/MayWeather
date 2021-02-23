@@ -5,11 +5,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="com.aia.main.guestbook.dao.GuestbookDao">
 	
-	<!-- Guestbook 타입의 resultMap : 방명록 게시판 (A의 방명록) -->
-	<resultMap id="guestbookResult"
+	<!-- Guestbook 타입의 resultMap : 방명록 게시물 정보 -->
+	<resultMap id="guestbookInfo"
 				type="com.aia.main.guestbook.domain.Guestbook">
 		<id column="gbookNo" property="gbookNo"></id>
-		<result column="gbookNo" property="gbookNo"/>
 		<result column="writerNo" property="writerNo"/>
 		<result column="writerName" property="writerName"/>
 		<result column="writerPhoto" property="writerPhoto"/>
@@ -45,14 +44,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- 방명록 게시물 전체 리스트 조회 -->
 	<select id="selectAllGuestbook"
 			parameterType="map"
-			resultMap="guestbookResult">
+			resultMap="guestbookResultList">
 		select * from guestbook
 	</select>
 
 	<!-- 회원 A의 방명록 게시판 조회 : ownerNo로 조회 -->
 	<select id="selectMemberGuestbook"
 			parameterType="int"
-			resultMap="guestbookResult">
+			resultMap="guestbookResultList">
 		select * from guestbook where ownerNo=#{ownerNo}
 	</select>
 	
@@ -63,13 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select count(*) from guestbook where ownerNo=#{ownerNo}
 	</select>
 	
-	<!-- 1개의 방명록 게시물 조회 -->
-	<select id="selectGuestbookByGbookNo"
-			resultMap="guestbookResult">
-		select * from guestbook where gbookNo=?
-	</select>
-	
-	
+
 	
 	
 	<!-- 회원 A의 방명록 게시판 리스트 출력 : ownerNo로 조회 + 페이징 -->
@@ -164,6 +157,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			resultType="String">
 		select contentPhoto from guestbook where gbookNo=#{gbookNo}
 	</select>
+	
+		<!-- 1개의 방명록 게시물 조회 -->
+	<select id="selectOneGuestbook"
+			resultMap="guestbookInfo">
+		select * from guestbook where gbookNo=#{gbookNo}
+	</select>
+	
+	
 	
 	
 	<!-- 게시물 삭제  -->

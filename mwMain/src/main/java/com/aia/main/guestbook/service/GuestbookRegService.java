@@ -1,6 +1,7 @@
 package com.aia.main.guestbook.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.aia.main.guestbook.domain.GuestbookListPage;
 import com.aia.main.guestbook.domain.GuestbookRegRequest;
 
 import lombok.extern.log4j.Log4j;
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Service
 public class GuestbookRegService {
@@ -54,6 +56,14 @@ public class GuestbookRegService {
 			try {
 				newFile = new File(saveDirPath, newFileName);
 				gbRegReq.getGbContentPhoto().transferTo(newFile);
+				
+				//FileOutputStream thumbnail = new FileOutputStream(newFile);
+				
+				// 썸네일 저장 60x60
+				//Thumbnailator.createThumbnail(gbRegReq.getGbContentPhoto().getInputStream(), thumbnail, 60, 60);
+				
+				//thumbnail.close();
+				
 				
 			} catch (IllegalStateException | IOException e) {
 				e.printStackTrace();
