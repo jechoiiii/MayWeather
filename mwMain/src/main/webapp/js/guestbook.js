@@ -88,7 +88,7 @@
  					var listhtml = '<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
  					listhtml += 		'<span>'+ gbOwnerIdx +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
- 					listhtml += 		'<button type="button" onclick="openRegModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write.png"></button>';
+ 					listhtml += 		'<button type="button" onclick="openRegModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write2.png"></button>';
  					listhtml += 	'</div>';	
  					listhtml += 	'<div class="gblist">';
  					listhtml += 		'<table class="gblist_table">';
@@ -128,7 +128,7 @@
 								listhtml +=						'</td>';
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
-								listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+								listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>')+'</td>';
 								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 								listhtml +=					'</tr> ';	
 								listhtml +=				'</tbody>';
@@ -139,7 +139,7 @@
 								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
-								listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+								listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</td>';
 								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 								listhtml +=					'</tr> ';
 								listhtml +=				'</tbody>';
@@ -174,7 +174,7 @@
 									listhtml +=						'</td>';
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
-									listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+									listhtml +=						'<td colspan="2" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</td>';
 									listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 									listhtml +=					'</tr> ';	
 									listhtml +=				'</tbody>';
@@ -185,7 +185,7 @@
 									listhtml +=						'<td colspan="2" class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
-									listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content +'</td>';
+									listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</td>';
 									listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 									listhtml +=					'</tr> ';
 									listhtml +=				'</tbody>';
@@ -208,7 +208,16 @@
  					listhtml +=			'</table>';
  					listhtml +=		'</div>';
  					
+ 					// 데이터가 없으면 
+ 					if(data.guestbookList.length == 0) {
+ 						$('.gblist').css('min-height','500px');
+ 						listhtml +=	'<div>'+gbOwnerIdx+'님에게 첫 방명록을 남겨보세요!</div>';
+ 					}
+ 					
+ 					
  					$('#gblistForm').html(listhtml);
+ 					
+ 					
  					
  					
 	 			}, 

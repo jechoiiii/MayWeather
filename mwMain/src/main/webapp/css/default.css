@@ -41,13 +41,13 @@ body {
 }
 
 header {
-    background-color: #64c2eb;
-    height: 90px;
-    float: left;
-    width: 100%;
-    position: fixed;
-    top : 0px;
-
+   background-color: #64c2eb;
+   height: 90px;
+   float: left;
+   width: 100%;
+   position: fixed;
+   top: 0px;
+   z-index: 1000;
 }
 
 footer {

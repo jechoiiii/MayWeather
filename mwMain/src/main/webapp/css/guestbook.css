@@ -38,7 +38,7 @@
 	}
 	
 	.gblist_title span {
-		padding: 0px 70px;
+		padding: 0px 75px;
 	}
 		
 	.gb_back_btn {
@@ -108,12 +108,12 @@
  	
  	.gblist_content {
  	 	width: 100%;
- 	 	padding-top: 10px;
- 	 	padding-bottom: 10px;
+ 	 	padding-top: 20px;
+ 	 	padding-bottom: 20px;
  	 	padding-right: 10px;
  	 	padding-left: 20px;
  		border-bottom: 1px solid #eee;
- 		font-weight: 0.7em;
+ 		font-size: 0.9em;
  	}
  	
  	.gblist_uploadPhoto {
@@ -193,6 +193,7 @@
     }
     
     .regModal_back {
+    	border-radius: 10px 0 0 0;
         float: left;
     }
     
@@ -209,80 +210,103 @@
     .regModal_title {
         text-align: center;
         padding: 10px;
+        padding-right: 5px;
+        border-radius: 10px 10px 0 0;
     }
     
     /* 방명록 등록 모달창 내용 */
     .regModal_body {
     	width: 100%;
     	height: 86%;
+    	padding: 10px;
     }
     
     .regModal_table {
         width: 100%;
-        height: 480px;
+        height: 460px;
+    }
+    
+    /* testtest */
+    .regModal_table tr, .regModal_table td {
+       /*  border: 1px solid; */
     }
     
     .regModal_table td {
-    	padding: 20px;
+    	/* padding: 10px; */
     }
     
-    .greetArea {
+    .gbGreetArea {
     	height: 100px;
     }
     
-    .tableExp {
-        width: 70%;
-        height: 30px;
+    .gbTableExp {
+        width: 180px;
+        padding-left: 15px;
+        padding-bottom: 10px;
     }
     
-    .tableImg {
-        width: 30%;
-        padding: 20px;
+    .gbTableImg {
+        width: 110px;
+        text-align: center;
+        padding-bottom: 10px;
     }
     
-    .insertArea {
-        vertical-align: top;
-        height: 250px;
+    .gbInsertArea1 {
+   		height: 80px;
+   		background-color: white;
     }
     
-    .tableInsert {
-        vertical-align: top;
+    .gbInsertArea2 {
+    	height: 220px;
+    	background-color: white;
     }
     
-    .tableInsert input[type=text]{
-        width: 100%;
+    .gbInsertPhoto {
+    	width: 80px;
+        padding: 25px;
+    }
+    
+    .gbInsertText {
+    	width: 215px;
+    }
+    
+    textarea[name=gbContent] {
+        width: 95%;
         height: 100%;
         border: 0px;
+        border-radius: 10px;
         padding: 10px;
-        line-height: 10px;
+        padding-top: 20px;
+        background-color: white;
+        font-size: 0.9em;
     }
     
-    input::placeholder {
-    	text-align: top;
+	.gbInsertText input::placeholder {
+		color: grey;
+		vertical-align: baseline;
+	}
+    
+    .gbPreview {
+    	text-align: center;
+    	vertical-align: top;
     }
+   
     
-    .tableInsertPhoto {
-        width: 50px;
-        padding-top: 50px;
-    }
-    
-    
-    .secretArea {
+    .gbSecretArea {
     	width: 100%;
-    	hegiht: 50px;
+    	height: 50px;
     	padding-left: 50%;
     }
     
-    .secretArea td {
-    	padding-left: 230px;
+    .gbSecretArea td {
+    	padding-left: 220px;
     }
     
     .regModal_footer {
-    	backgournd-color: white;
+    	background-color: white;
     	border-radius: 0px 10px;
     }
     
-    /* 방명록 등록 모달창 Footer */
     #reg_submit_btn {
         width: 100%;
         height: 35px;
@@ -290,13 +314,28 @@
         color: white;
         border: 0px;
         border-radius: 0 0 20px 20px;
+       	font-size: 1.1em;
+       	font-weight: bold;
     }
     
+    /* 방명록 수정 모달 */
     .updateModal {
-    	width: 100%;
-    	height: 86%;
+        position: relative;
+        width: 400px;
+        height: 570px;
+        background-color: white;
+        margin: 20px;
+        padding: 10px;
+        border-radius: 10px;
     }
     
+    .updateModal_body {
+        width: 100%;
+    	height: 86%;
+    	padding: 10px;
+    }
+    
+    /* 방명록 삭제 모달 */
     .deleteModal {
     	position: relative;
     	width: 350px;
@@ -312,13 +351,9 @@
     	height: 95%;
     }
     
-    .deleteModal_body {
-    	
-    }
-    
-    .deleteModal .tableExp {
-    	width: 65%;
-    	height: 90%;
-    	padding: 10px;
+  	.gbDelChk {
+        width: 100%;
+    	height: 95px;
+    	text-align: center;
     }
     
