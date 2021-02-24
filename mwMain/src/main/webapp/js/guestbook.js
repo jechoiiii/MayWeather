@@ -96,12 +96,14 @@
 	 					// 방명록 주인이거나 작성자인 경우에만, 비밀글 열람			
 	 					if(memIdx == gbOwnerIdx || memIdx == data.guestbookList[i].writerNo){
 	 						
+	 						
 	 						// 비밀글은 css 처리
 	 						if(data.guestbookList[i].secret == 'Y') {
 	 							listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'" class="secretGb">'
 	 						} else {
 	 							listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
 	 						}
+	 						
 	 						
 		 					listhtml += 				'<tr class="gblist_width">';
 		 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
@@ -110,18 +112,31 @@
 		 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
 		 					listhtml +=						'<td class="gblist_btns">';
 		 					
+		 					
+                        
+                        
+                    		listhtml +=						'<div class="gbDropdown">';
+                    		listhtml += 						'<label for="gbDropBtn"><img height="15" src="http://localhost:8080/main/image/icon/usefulbutton.png"></label>';
+                    		listhtml +=								'<button id="gbDropBtn" style="display:none;" onclick="dropMenu()"></button>';
+                    		listhtml += 						'<div id="gbDropContent" class="gbDropdownContent">';
+                    		
+                    		
 		 					// 방명록 주인 -> 삭제 버튼만 보이게
 		 					if(memIdx == gbOwnerIdx){
-		 						listhtml +=						'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
+		 						listhtml += 							'<li class="dropdown"  id="gbdelete" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭제</li>';
 		 					
 		 					// 방명록 작성자 -> 수정/삭제 버튼 모두 보이게 
 		 					} else {
-		 						listhtml +=						'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
-		 						listhtml +=						'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
-		 					}
+		 						listhtml += 							'<li class="dropdown" id="gbupdate" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수정</li>';
+		 						listhtml += 							'<li class="dropdown"  id="gbdelete" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭제</li>';
 		 					
+		 					}
+		 		
+		 					listhtml += 						'</div>';
+		 					listhtml += 					'</div>';
 		 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'"></td>';
 		 					listhtml +=					'</tr>';
+		 					
 		 					
 		 					
 	
@@ -217,6 +232,24 @@
  					
  					
  					$('#gblistForm').html(listhtml);
+ 					
+ 					
+ 					function dropMenu() {
+				        $('.gbDropdownContent').css('display','');
+				        
+				    }
+				    
+				    window.onclick = function(event){
+				        if(!event.target.matches('gbDropBtn')) {
+				            var dropdowns = document.getElementsByClassName('gbDropdownContent');
+				            for (var i=0; i< dropdowns.length; i++){
+				                var openDropdown = dropdowns[i];
+				                if(openDropdown.classList.contains('show')){
+				                    openDropdown.classList.remove('show');
+				                }
+				            }
+				        }
+				    }
  					
  					
  					
