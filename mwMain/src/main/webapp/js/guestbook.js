@@ -109,8 +109,17 @@
 		 					listhtml += 					'</td>';
 		 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
 		 					listhtml +=						'<td class="gblist_btns">';
-		 					listhtml +=							'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
-		 					listhtml +=							'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
+		 					
+		 					// 방명록 주인 -> 삭제 버튼만 보이게
+		 					if(memIdx == gbOwnerIdx){
+		 						listhtml +=						'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
+		 					
+		 					// 방명록 작성자 -> 수정/삭제 버튼 모두 보이게 
+		 					} else {
+		 						listhtml +=						'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
+		 						listhtml +=						'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';
+		 					}
+		 					
 		 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'"></td>';
 		 					listhtml +=					'</tr>';
 		 					
@@ -118,11 +127,10 @@
 	
 							// 첨부 사진 없는 경우, 이미지 출력 X
 		 					if(data.guestbookList[i].contentPhoto != null) {
-		 					
 		 						listhtml +=					'<tr class="gblist_info">';
 								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 								listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-								listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
+								listhtml +=							'<div><img src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'"></div>';
 								listhtml +=						'</td>';
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
@@ -130,9 +138,7 @@
 								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 								listhtml +=					'</tr> ';	
 								listhtml +=				'</tbody>';
-		 					
 							} else {
-							
 								listhtml +=					'<tr class="gblist_info">';
 								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 								listhtml +=					'</tr>';
@@ -141,12 +147,12 @@
 								listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 								listhtml +=					'</tr> ';
 								listhtml +=				'</tbody>';
-							
 							}
+		 				
 		 				
 	 					} else {
 							
-							// 공개글만 출력
+							// 공개글만 출력 & 수정/삭제 버튼 숨기기
 							if(data.guestbookList[i].secret != 'Y'){
 							
 								listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
@@ -155,20 +161,17 @@
 			 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
 			 					listhtml += 					'</td>';
 			 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
-			 					listhtml +=						'<td class="gblist_btns">';
-		 						listhtml +=							'<button type="button" class="gb_update_btn" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수</button>';
-		 						listhtml +=							'<button type="button" class="gb_delete_btn" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭</button>';			 					
+			 					listhtml +=						'<td class="gblist_btns">';	 					
 			 					listhtml +=						'<input type="hidden" name="gbookNo" id="'+ data.guestbookList[i].gbookNo +'" value="'+ data.guestbookList[i].gbookNo +'">';
 			 					listhtml +=					'</tr>';
 			 					
 		
 								// 첨부 사진 없는 경우, 이미지 출력 X
 			 					if(data.guestbookList[i].contentPhoto != null) {
-			 					
 			 						listhtml +=					'<tr class="gblist_info">';
 									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 									listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-									listhtml +=							'<img height="60" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'">';
+									listhtml +=							'<div><img src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'"></div>';
 									listhtml +=						'</td>';
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
@@ -178,7 +181,6 @@
 									listhtml +=				'</tbody>';
 			 					
 								} else {
-								
 									listhtml +=					'<tr class="gblist_info">';
 									listhtml +=						'<td colspan="2" class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 									listhtml +=					'</tr>';
@@ -187,8 +189,7 @@
 									listhtml +=							'<input type="hidden" name="secret" id="secret" value="'+ data.guestbookList[i].secret +'">';
 									listhtml +=					'</tr> ';
 									listhtml +=				'</tbody>';
-							
-							}
+								}
 	 					
 							} else {
 							
@@ -211,6 +212,8 @@
  						$('.gblist').css('min-height','500px');
  						listhtml +=	'<div>'+gbOwnerIdx+'님에게 첫 방명록을 남겨보세요!</div>';
  					}
+ 					
+ 					
  					
  					
  					$('#gblistForm').html(listhtml);

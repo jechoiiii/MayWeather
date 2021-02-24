@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("memidx", "10");
+	session.setAttribute("memidx", "20");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -212,7 +212,10 @@
 		// 메인 페이지 구성  
 		function setMainPage() {
 			
+			hideGbookList();
+			hideMoveToGb();
 			showMainForm();
+			
 			
 			var mainhtml = 	  '<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()"> '
 							+ '<div class="weather">'
@@ -394,7 +397,7 @@
 						+	'</tr>'
 						+	'<tr class="gbInsertArea1" height="80">'
 						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
-						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif,image/jpg" style="display:none;" onchange="readImage(event)"></td>'
+						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="readImage(event)"></td>'
 						+		'<td class="gbInsertText" colspan="2" rowspan="2">'
 						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
@@ -559,14 +562,19 @@
 								+		'</tr>'
 								+		'<tr class="gbInsertArea1" height="80">'
 								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
-								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif,image/jpg" style="display:none;" onchange="changeImage(event)"></td>'
+								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="changeImage(event)"></td>'
 								+			'<td class="gbInsertText" colspan="2" rowspan="2">'
 								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
 								+		'</tr>'
 								+		'<tr class="gbInsertArea2" height="220">'
-								+			'<td id="gbPreview" class="gbPreview">'
-								+				'<img height="60" id="gbBeforePhoto" src="' + myHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">'
-								+			'</td>'
+								+			'<td id="gbPreview" class="gbPreview">';
+							
+					if(gbInfo.contentPhoto != null) {
+						uformhtml +=			'<img height="60" id="gbBeforePhoto" src="' + myHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">';
+					}
+							
+								
+					uformhtml +=			'</td>'
 								+		'</tr>'
 								+		'<tr class="gbSecretArea" height="50">'
 								+			'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+ gbInfo.secret +'"></td>'
@@ -625,6 +633,7 @@
 				var img = document.createElement('img');
 				img.setAttribute('src', event.target.result);
 				img.setAttribute('width', 60);
+				img.setAttribute('height', 'auto');
 				gbPreview.appendChild(img);
 			};
 			

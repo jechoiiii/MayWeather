@@ -122,6 +122,19 @@
  	
  	.gblist_uploadPhoto {
  		border-bottom: 1px solid #eee; 	
+ 		overflow: hidden;
+ 	}
+ 	
+ 	.gblist_uploadPhoto div {
+ 		height: 60px;
+ 		width: 60px;
+ 		overflow: hidden;
+ 		text-align: center;
+ 	}
+ 	
+ 	.gblist_uploadPhoto img {
+ 		height: 60px;
+ 		width: auto;
  	}
  	
 
@@ -276,11 +289,11 @@
     
     textarea[name=gbContent] {
         width: 95%;
-        height: 100%;
+        height: 95%;
         border: 0px;
         border-radius: 10px;
-        padding: 10px;
-        padding-top: 20px;
+        padding: 20px;
+        padding-top: 25px;
         background-color: white;
         font-size: 0.9em;
     }
