@@ -113,13 +113,10 @@
 		 					listhtml +=						'<td class="gblist_btns">';
 		 					
 		 					
-                        
-                        
                     		listhtml +=						'<div class="gbDropdown">';
                     		listhtml += 						'<label for="gbDropBtn"><img height="15" src="http://localhost:8080/main/image/icon/usefulbutton.png"></label>';
                     		listhtml +=								'<button id="gbDropBtn" style="display:none;" onclick="dropMenu()"></button>';
                     		listhtml += 						'<div id="gbDropContent" class="gbDropdownContent">';
-                    		
                     		
 		 					// 방명록 주인 -> 삭제 버튼만 보이게
 		 					if(memIdx == gbOwnerIdx){
@@ -129,7 +126,6 @@
 		 					} else {
 		 						listhtml += 							'<li class="dropdown" id="gbupdate" onclick="openUpdateModal('+data.guestbookList[i].gbookNo + ')">수정</li>';
 		 						listhtml += 							'<li class="dropdown"  id="gbdelete" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭제</li>';
-		 					
 		 					}
 		 		
 		 					listhtml += 						'</div>';
@@ -145,7 +141,7 @@
 		 						listhtml +=					'<tr class="gblist_info">';
 								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 								listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-								listhtml +=							'<div><img src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'"></div>';
+								listhtml +=							'<div><img id="gblist_Photo" src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)" ></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 								listhtml +=						'</td>';
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
@@ -186,7 +182,7 @@
 			 						listhtml +=					'<tr class="gblist_info">';
 									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
 									listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-									listhtml +=							'<div><img src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'"></div>';
+									listhtml +=							'<div><img src="' + myHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)"></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 									listhtml +=						'</td>';
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
@@ -222,6 +218,7 @@
  					listhtml +=			'</table>';
  					listhtml +=		'</div>';
  					
+ 					
  					// 데이터가 없으면 
  					if(data.guestbookList.length == 0) {
  						$('.gblist').css('min-height','500px');
@@ -229,30 +226,9 @@
  					}
  					
  					
- 					
- 					
  					$('#gblistForm').html(listhtml);
  					
- 					
- 					function dropMenu() {
-				        $('.gbDropdownContent').css('display','');
-				        
-				    }
-				    
-				    window.onclick = function(event){
-				        if(!event.target.matches('gbDropBtn')) {
-				            var dropdowns = document.getElementsByClassName('gbDropdownContent');
-				            for (var i=0; i< dropdowns.length; i++){
-				                var openDropdown = dropdowns[i];
-				                if(openDropdown.classList.contains('show')){
-				                    openDropdown.classList.remove('show');
-				                }
-				            }
-				        }
-				    }
- 					
- 					
- 					
+
  					
 	 			}, 
  				error: function(e) {
@@ -266,8 +242,42 @@
 		}
 
 		
-        
-        
+		/* 수정/삭제 드롭다운 메뉴 */
+        function dropMenu() {
+	       $('.gbDropdownContent').css('display','');
+	       
+	       window.onclick = function(e){
+		        if(!event.target.matches('gbDropBtn')) {
+		            var dropdowns = document.getElementsByClassName('gbDropdownContent');
+		            for (var i=0; i< dropdowns.length; i++){
+		                var openDropdown = dropdowns[i];
+		                if(openDropdown.classList.contains('show')){
+		                    openDropdown.classList.remove('show');
+		                }
+		            }
+		        }
+		    }
+	       
+	    }
+	     
+	    
+	    /* 이미지 팝업 */
+        function gbPopImage(url){
+	        $('.gbOriginalImage').css('display', 'flex');
+	        
+	        $('.gbBigImg').html('<img src="'+url+'">').animate({width: 'max', height:'max'}, 1000);
+	        $('.gbBigImg img').css('width', '300');
+	        $('.gbBigImg img').css('height', 'auto');
+	 
+        }
+
+		/* 이미지 팝업 숨김처리 */
+		function closeGbPopup() {
+			$('.gbOriginalImage').css('display', 'none');
+		}
+		
+		
+		
         // 프로필사진으로 이동 (추후 추가*)
         function backToPreview() {
         

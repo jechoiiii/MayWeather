@@ -133,9 +133,11 @@
  		overflow: hidden;
  	}
  	
- 	.gblist_uploadPhoto div {
- 		height: 70px;
- 		width: 70px;
+ 	.gblist_uploadPhoto~div {
+ 		min-heigt: 70px;
+ 		max-height: 70px;
+ 		min-width: 70px;
+ 		max-width: 70px;
  		overflow: hidden;
  		text-align: center;
  	}
@@ -143,6 +145,29 @@
  	.gblist_uploadPhoto img {
  		height: 70px;
  		width: auto;
+ 	}
+ 	
+ 	/* 사진 크게 보기 */
+ 	.gbOriginalImage {
+ 		position: fixed;
+    	top: 0px;
+    	left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+ 	}
+ 	
+ 	.gbBigImg {
+ 		width: auto;
+ 		height: auto;
+ 		position: relative;
+        background-color: white;
+        padding: 10px;
+        border-radius: 10px;
  	}
  	
  	/*  수정/삭제 메뉴 드롭다운 */    

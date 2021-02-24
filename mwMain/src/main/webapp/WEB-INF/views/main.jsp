@@ -32,7 +32,7 @@
     
  </style>
 </head>
- <body bgcolor="#f5f5f5">
+ <body>
      
  	<%@ include file="/WEB-INF/views/include/headerWithLoc.jsp"%>
 
@@ -185,6 +185,7 @@
 		// gbList에서만 무한스크롤이 작동하도록 만드는 변수
 		var gblistScroll = false;	
 
+		
  		var latitude;			// GPS 위도 
 		var longitude;			// GPS 경도
 		var x;					// X 좌표 (기상청 기준)
@@ -387,7 +388,7 @@
 		
         /* 방명록 등록 모달 ----------------------------------------------- */
 		
-		// 등록 모달 창 만들기
+		/* 등록 모달 창 만들기 */
         function setRegModal() {
             
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
@@ -397,7 +398,7 @@
 						+	'</tr>'
 						+	'<tr class="gbInsertArea1" height="80">'
 						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
-						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="readImage(event)"></td>'
+						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 						+		'<td class="gbInsertText" colspan="2" rowspan="2">'
 						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
@@ -411,23 +412,41 @@
             
             
     		 $('.regModal_body').html(reghtml);
-            
-        	
+
         }
 		
+
 		
-		// 이미지 미리보기 
+		var maxFileSize = 1024 * 1024 * 2;	// 파일 용량 제한: 2MB
+		
+		/* 파일 용량 체크 */ 
+		function chkImage(el) {
+			
+			console.log(el);
+			
+			// files로 해당 파일 정보 얻기 
+			var imgfile = el.files;
+			
+			if(imgfile[0].size > maxFileSize) {
+				// 용량 초과시 
+				alert('2MB 이하의 파일만 등록할 수 있습니다.\n현재파일 용량 : '+ (Math.round(file[0].size / 1024 / 1024*100) / 100)+ 'MB');
+				
+			} else {
+				console.log('용량 이하입니다.');
+				readImage(event);
+			}
+		}
+		
+		
+		/* 첨부 파일 미리보기 */ 
 		function readImage(event){
+			
+			console.log(event);
 			
 			var gbPreview = document.querySelector('#gbPreview');
 			
-			console.log(gbPreview);
-			
 			// FileReader 객체 생성
 			var reader = new FileReader();
-			
-				
-			// 이미지 파일인지 검사 (생략)
 			
 			// 이미지가 로드가 된 경우
 			reader.onload = function(event) {
@@ -437,6 +456,8 @@
 				gbPreview.appendChild(img);
 			};
 			
+			console.log(gbPreview);
+			
 			// reader 가 이미지 읽도록 하기 
 			reader.readAsDataURL(event.target.files[0]);
 			
@@ -445,20 +466,20 @@
 		
 		
 
-        // 등록 모달 창 열기
+        /* 등록 모달 창 열기 */
         function openRegModal() {
         	setRegModal();
         	$('.regModal_wrapper').css('display', '');
         }
         
-        // 등록 모달 창 닫기 
+        /* 등록 모달 창 닫기 */ 
         function closeRegModal() {
         	$('.regModal_wrapper').css('display', 'none');
         }
 
 		
         
-        // 방명록 등록
+        /* 방명록 등록 */
         function regGuestbook() {
         	
         	
@@ -539,7 +560,7 @@
         
  		/* 방명록 수정 모달 ----------------------------------------------- */
 		
-		// 수정 모달 창 만들기
+		/* 수정 모달 창 만들기 */
         function setUpdateModal(gbNo) {
  			
         	console.log(gbNo);
@@ -562,7 +583,7 @@
 								+		'</tr>'
 								+		'<tr class="gbInsertArea1" height="80">'
 								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
-								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="changeImage(event)"></td>'
+								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 								+			'<td class="gbInsertText" colspan="2" rowspan="2">'
 								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
 								+		'</tr>'
@@ -596,7 +617,7 @@
  		
         var gbNo = 0;	// 게시글 번호 
         
-        // 수정 모달 창 열기
+        /* 수정 모달 창 열기 */
         function openUpdateModal(num) {
         	
         	gbNo = num;
@@ -605,22 +626,45 @@
         	$('.updateModal_wrapper').css('display', '');
         }
         
-        // 수정 모달 창 닫기 
+        /* 수정 모달 창 닫기 */ 
         function closeUpdateModal() {
         	$('.updateModal_wrapper').css('display', 'none');
         }
       
         
         
-     	// 파일 업로드 시, 이미지 미리보기 변경 
+        
+        
+		var maxFileSize = 1024 * 1024 * 2;	// 파일 용량 제한: 2MB
+		
+		/* 파일 용량 체크 */ 
+		function chkImage(el) {
+			
+			console.log(el);
+			
+			// files로 해당 파일 정보 얻기 
+			var imgfile = el.files;
+			
+			if(imgfile[0].size > maxFileSize) {
+				// 용량 초과시 
+				alert('2MB 이하의 파일만 등록할 수 있습니다.\n현재파일 용량 : '+ (Math.round(file[0].size / 1024 / 1024*100) / 100)+ 'MB');
+				
+			} else {
+				console.log('용량 이하입니다.');
+				readImage(event);
+			}
+		}
+		
+        
+     	/* 파일 변경 시, 미리보기 파일 변경 */ 
 		function changeImage(event){
 			
-     		// 이전 이미지 미리보기 삭제
+			console.log(event);
+     		
+     		// 이전 이미지 삭제
      		$('#gbBeforePhoto').remove();
      		
 			var gbPreview = document.querySelector('#gbPreview');
-			
-			console.log(gbPreview);
 			
 			// FileReader 객체 생성
 			var reader = new FileReader();
@@ -637,13 +681,16 @@
 				gbPreview.appendChild(img);
 			};
 			
+			console.log(gbPreview);
+			
 			// reader 가 이미지 읽도록 하기 
 			reader.readAsDataURL(event.target.files[0]);
-			
 		} 
         
         
-        // 방명록 수정
+     	
+     	
+        /* 방명록 수정 */
         function updateGuestbook() {
         	
         	console.log(gbNo);
@@ -703,7 +750,7 @@
         
  		/* 방명록 삭제 모달 ----------------------------------------------- */
 		
-		// 삭제 모달 창 만들기
+		/* 삭제 모달 창 만들기 */
         function setDeleteModal(gbNo) {
             
 			console.log(gbNo);
@@ -718,7 +765,7 @@
             $('.deleteModal_body').html(reghtml);
         }
 
-     	// 삭제 모달 창 열기
+     	/* 삭제 모달 창 열기 */
         function openDeleteModal(num) {
         	
         	gbNo = num;
@@ -727,12 +774,12 @@
         	$('.deleteModal_wrapper').css('display', '');
         }
         
-        // 수정 모달 창 닫기 
+        /* 수정 모달 창 닫기  */
         function closeDeleteModal() {
         	$('.deleteModal_wrapper').css('display', 'none');
         }
         
-        // 방명록 삭제 -> 방명록 주인 & 작성자만 가능
+        /* 방명록 삭제 */
        	function deleteGuestbook() {
        		
         	console.log(gbNo);
