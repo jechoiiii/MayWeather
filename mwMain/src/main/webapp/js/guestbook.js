@@ -219,7 +219,7 @@
  					listhtml +=		'</div>';
  					
  					
- 					// 데이터가 없으면 
+ 					// 데이터가 없으면 출력
  					if(data.guestbookList.length == 0) {
  						$('.gblist').css('min-height','500px');
  						listhtml +=	'<div>'+gbOwnerIdx+'님에게 첫 방명록을 남겨보세요!</div>';
@@ -228,6 +228,12 @@
  					
  					$('#gblistForm').html(listhtml);
  					
+ 					
+ 					
+ 					// 방명록 주인인 경우, 등록 버튼 비활성화
+ 					if(memIdx == gbOwnerIdx) {
+ 						$('.reg_modal_open_btn').attr('disabled', 'disabled');
+ 					}
 
  					
 	 			}, 
@@ -237,6 +243,7 @@
 
  			})
 	
+			
 	
 		
 		}

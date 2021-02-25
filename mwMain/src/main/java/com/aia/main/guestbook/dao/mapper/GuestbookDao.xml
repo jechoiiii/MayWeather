@@ -134,7 +134,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	
 	<!-- 게시물 내용, 비밀여부만 수정 -->
-	<update id="updateNoPhotoGuestbook"
+	<update id="updateGuestbookWithoutPhoto"
 			parameterType="com.aia.main.guestbook.domain.Guestbook">
 		update guestbook
 		set content=#{content},
@@ -143,12 +143,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</update>
 	
 	<!-- 게시물 내용, 비밀여부, 사진 수정 -->
-	<update id="updatePhotoGuestbook"
+	<update id="updateGuestbookWithPhoto"
 			parameterType="com.aia.main.guestbook.domain.Guestbook">
 		update guestbook
 		set content=#{content},
 			secret=#{secret},
 			contentPhoto=#{contentPhoto}
+		where gbookNo=#{gbookNo} 
+	</update>
+	
+	<!-- 게시물 사진명 null로 변경, 내용, 비밀여부 수정 -->
+	<update id="updateGuestbookNullifyOriginalFile"
+			parameterType="com.aia.main.guestbook.domain.Guestbook">
+		update guestbook
+		set content=#{content},
+			secret=#{secret},
+			contentPhoto=null
 		where gbookNo=#{gbookNo} 
 	</update>
 	

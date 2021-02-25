@@ -38,7 +38,7 @@
 	}
 	
 	.gblist_title span {
-		padding: 0px 75px;
+		padding: 0px 65px;
 	}
 		
 	.gb_back_btn {
@@ -362,6 +362,7 @@
     
     .gbInsertText {
     	width: 215px;
+    	margin: 0 auto;
     }
     
     textarea[name=gbContent] {
@@ -381,10 +382,30 @@
 	}
     
     .gbPreview {
-    	text-align: center;
-    	vertical-align: top;
+    	
+    }
+    
+    .deletePreviewImg {
+    	position: relative;
+    	top: 0;
+    	right: 0;
+    	width: auto;
+    	height: auto;
+    	background-color: white;
+    	padding: 5px;
+    	text-align: right;
+    	float: left;
+    }
+    
+    .deletePreviewImg img:nth-child(2) {
+    	position: relative;
+    	top: 0;
+    	right: 0;
     }
    
+   #deletePreview_btn {
+   		
+   }
     
     .gbSecretArea {
     	width: 100%;

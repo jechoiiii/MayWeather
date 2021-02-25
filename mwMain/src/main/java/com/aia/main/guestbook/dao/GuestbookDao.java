@@ -40,14 +40,19 @@ public interface GuestbookDao {
 	
 	/* ---------- 수정 ---------- */
 	
-	// 방명록 수정 : 내용/비밀여부
-	int updateNoPhotoGuestbook(Guestbook guestbook);
+	// 방명록 수정 1 : 내용/비밀여부만 수정
+	int updateGuestbookWithoutPhoto(Guestbook guestbook);
+
+	// 방명록 수정 2 : 사진까지 모두 수정
+	int updateGuestbookWithPhoto(Guestbook guestbook);
 	
-	// 방명록 수정 : 사진 
-	int updatePhotoGuestbook(Guestbook guestbook);
+	// 방명록 수정 3 : 사진을 null로 수정 & 내용/비밀여부 수정
+	int updateGuestbookNullifyOriginalFile(Guestbook guestbook);
 	
 	// 수정(삭제)할 첨부 파일명 받기 
 	String deleteFileName(int gbookNo);
+	
+
 	
 	
 	/* ---------- 삭제 ---------- */

@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("memidx", "20");
+	session.setAttribute("memidx", "60");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -135,7 +135,7 @@
 		window.onload = function() {
 			
 			setMainPage();
-			
+	        
 			// gbList에서만 무한 스크롤이 작동하도록 만드는 변수
 			
 		}
@@ -218,7 +218,7 @@
 			showMainForm();
 			
 			
-			var mainhtml = 	  '<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()"> '
+			var mainhtml = 	  '<div class="header_time"></div><input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()">'
 							+ '<div class="weather">'
 							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
@@ -306,10 +306,13 @@
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocation();
 			
+			clock();
+			
 		}
 		
-
 		
+		
+	
 		
 		/* 시간대별 Button 클릭 함수 */
 		function getWeatherBT() {
@@ -581,21 +584,24 @@
 								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요 :)</span></td>'
 								+			'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
 								+		'</tr>'
-								+		'<tr class="gbInsertArea1" height="80">'
+								+		'<tr class="gbInsertArea1" height="90">'
 								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
 								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
-								+			'<td class="gbInsertText" colspan="2" rowspan="2">'
-								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
-								+		'</tr>'
-								+		'<tr class="gbInsertArea2" height="220">'
-								+			'<td id="gbPreview" class="gbPreview">';
-							
-					if(gbInfo.contentPhoto != null) {
-						uformhtml +=			'<img height="60" id="gbBeforePhoto" src="' + myHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">';
-					}
-							
+								+			'<td id="gbPreview" class="gbPreview" colspan="2">'
+								+				'<div class="deletePreviewImg">';
+					
+								if(gbInfo.contentPhoto != null) {
+									uformhtml +=				'<img height="60" id="gbBeforePhoto" src="' + myHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">';
+									uformhtml +=				'<img width="8" id="deletePreview_btn" width="30" src="http://localhost:8080/main/image/icon/x.png" onclick="deletePreview()">';
+								}			
 								
-					uformhtml +=			'</td>'
+								
+					uformhtml +=				'</div>'
+								+			'</td>'
+								+		'</tr>'
+								+		'<tr class="gbInsertArea2" height="210">'
+								+			'<td class="gbInsertText" colspan="3">'
+								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
 								+		'</tr>'
 								+		'<tr class="gbSecretArea" height="50">'
 								+			'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+ gbInfo.secret +'"></td>'
@@ -633,14 +639,13 @@
       
         
         
-        
-        
-		var maxFileSize = 1024 * 1024 * 2;	// 파일 용량 제한: 2MB
 		
 		/* 파일 용량 체크 */ 
 		function chkImage(el) {
 			
 			console.log(el);
+			
+			var maxFileSize = 1024 * 1024 * 2;	// 파일 용량 제한: 2MB
 			
 			// files로 해당 파일 정보 얻기 
 			var imgfile = el.files;
@@ -651,7 +656,7 @@
 				
 			} else {
 				console.log('용량 이하입니다.');
-				readImage(event);
+				changeImage(event);
 			}
 		}
 		
@@ -660,40 +665,48 @@
 		function changeImage(event){
 			
 			console.log(event);
-     		
-     		// 이전 이미지 삭제
-     		$('#gbBeforePhoto').remove();
-     		
-			var gbPreview = document.querySelector('#gbPreview');
 			
+			var deletePreviewImg = document.querySelector('.deletePreviewImg');
+			
+     		// 이전 이미지 삭제
+     		$('.deletePreviewImg').empty();
+     		
 			// FileReader 객체 생성
 			var reader = new FileReader();
 			
-				
-			// 이미지 파일인지 검사 (생략)
-			
 			// 이미지가 로드가 된 경우
-			reader.onload = function(event) {
-				var img = document.createElement('img');
-				img.setAttribute('src', event.target.result);
-				img.setAttribute('width', 60);
-				img.setAttribute('height', 'auto');
-				gbPreview.appendChild(img);
+			reader.onload = function(event) {			
+				
+				previewhtml = '<img width="60" height="auto" id="gbBeforePhoto" src="' + event.target.result +'">'
+							+ '<img width="10" id="deletePreview_btn" width="30" src="http://localhost:8080/main/image/icon/x.png" onclick="deletePreview()">';
+				
+				$('.deletePreviewImg').html(previewhtml);
+		
 			};
 			
-			console.log(gbPreview);
+			console.log(deletePreviewImg);
 			
 			// reader 가 이미지 읽도록 하기 
 			reader.readAsDataURL(event.target.files[0]);
 		} 
         
-        
+     	
+     	/* 미리보기 삭제 버튼 클릭 시 -> 미리보기 삭제 */
+		function deletePreview() {
+			$('.deletePreviewImg').empty();
+		}
      	
      	
         /* 방명록 수정 */
         function updateGuestbook() {
         	
         	console.log(gbNo);
+        	
+        	// .deletePreviewImg가 비어있으면 file input도 지우기
+        	if(!$('#gbBeforePhoto').length) {
+    			$('.gbInsertPhoto input[type=file]').remove();
+        		console.log('저장할 파일 없음');
+        	} 
         	
         	var form = $('#gbUpdateForm')[0];
         	var formData = new FormData(form);
@@ -809,12 +822,6 @@
        	}
         
         
-        
-        
-        // 오늘 날짜 구하기
-        function getToday() {
-
-        }
         
         
 		/* 메인 폼 */

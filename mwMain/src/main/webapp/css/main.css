@@ -69,7 +69,7 @@
 	
 	.header_loc {
     	position: absolute;
-    	top: 35px;
+    	top: 40px;
     	left: 145px;
     }
     
@@ -82,11 +82,11 @@
     }
     
     .header_time {
-    	width: 100px;
-    	position: absolute;
-    	background-color: #64c2eb;
-    	color: grey;
-    	border: 0px;
+    	width: 100%;
+    	height: 5%;
+    	background-color: #f5f5f5;
+    	color: black;
+    	border: 1px solid;
     	text-align: center;
     }
     
