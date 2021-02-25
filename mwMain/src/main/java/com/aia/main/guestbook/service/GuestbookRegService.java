@@ -23,15 +23,15 @@ import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnailator;
 
 @Service
+@Log4j
 public class GuestbookRegService {
 
 	private GuestbookDao dao;
 	
 	@Autowired
 	private SqlSessionTemplate template;
-
 	
-	// 게시물 등록 : 파일 업로드, DB 저장
+	// 게시물 등록 : 이미지 업로드, DB 저장
 	@Transactional
 	public int insertGbookRegRequest(GuestbookRegRequest gbRegReq, HttpServletRequest request) {
 		
@@ -52,17 +52,17 @@ public class GuestbookRegService {
 			
 			System.out.println("파일이름: " + newFileName);
 			
-			// 파일 저장 
+			// 이미지 저장 
 			try {
 				newFile = new File(saveDirPath, newFileName);
-				gbRegReq.getGbContentPhoto().transferTo(newFile);
+				//gbRegReq.getGbContentPhoto().transferTo(newFile);
 				
-				//FileOutputStream thumbnail = new FileOutputStream(newFile);
+				FileOutputStream thumbnail = new FileOutputStream(newFile);
 				
-				// 썸네일 저장 60x60
-				//Thumbnailator.createThumbnail(gbRegReq.getGbContentPhoto().getInputStream(), thumbnail, 60, 60);
+				// 썸네일로 파일 용량 조절 600x600
+				Thumbnailator.createThumbnail(gbRegReq.getGbContentPhoto().getInputStream(), thumbnail, 600, 600);
 				
-				//thumbnail.close();
+				thumbnail.close();
 				
 				
 			} catch (IllegalStateException | IOException e) {
