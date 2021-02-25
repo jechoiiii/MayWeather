@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("memidx", "60");
+	session.setAttribute("memidx", "40");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -136,6 +136,8 @@
 			
 			setMainPage();
 	        
+			
+			clock();
 			// gbList에서만 무한 스크롤이 작동하도록 만드는 변수
 			
 		}
@@ -175,7 +177,6 @@
 		var memLoc = '<%=(String)session.getAttribute("memloc")%>';
 		
 		var file;				// 방명록 첨부 사진 
-		var secret_check;		// 방명록 등록 체크여부
 		var page = 1;			// 방명록 페이지
 		var gbNo = 0;			// 방명록 번호
 		
@@ -306,15 +307,44 @@
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocation();
 			
-			clock();
+			
 			
 		}
 		
 		
 		
-	
+		/* 실시간 날짜 시계 구하기 */
+        var clockTarget = $('.header_time');
+        
+        function getTime() {
+			var date = new Date(); 
+		    var month = date.getMonth() + 1;
+		    var clockDate = date.getDate();
+		    var day = date.getDay();
+		    var week = ['일', '월', '화', '수', '목', '금', '토'];
+		    var hours = date.getHours();
+		    var minutes = date.getMinutes();
+		    
+		    hours = hours < 10 ? '0' + hours : hours;
+		    minutes = minutes < 10 ? '0' + minutes : minutes;
+		    
+				// 월은 0부터 1월이기때문에 +1일을 해주고 
+			    // 시간 분은 10보다 작으면 앞에0을 붙혀주기 
+		    clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
+		    
+		    clockTarget.html(clockhtml);
+        }
+        
+        
+       	function clock() {
+       		setInterval(getTime, 3 * 1000);
+       	}
+        
+
 		
-		/* 시간대별 Button 클릭 함수 */
+		
+		/* 시간대별 날씨  ------------------------------------------------------------------------------------------------------------------------------------ */
+		
 		function getWeatherBT() {
 			
 			var wbtHtml = '<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
@@ -371,10 +401,8 @@
 						+	'</div>'
 						+ '</form>';
 						
-		 
 			$('#mainForm').html(wbtHtml);
 
-			
 		}
 
 		
@@ -384,11 +412,9 @@
 		/* 방명록 -------------------------------------------------------------------------------------------------------------------------------------------  */
 		
 		// 무한 스크롤 
-		$(document).scroll()
 		
 
-		
-		
+
         /* 방명록 등록 모달 ----------------------------------------------- */
 		
 		/* 등록 모달 창 만들기 */
@@ -399,17 +425,20 @@
 						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
 						+	'</tr>'
-						+	'<tr class="gbInsertArea1" height="80">'
+						+	'<tr class="gbInsertArea1" height="90">'
 						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
 						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
-						+		'<td class="gbInsertText" colspan="2" rowspan="2">'
+						+		'<td id="gbPreview" class="gbPreview" colspan="2">'
+						+			'<div class="deletePreviewImg">'
+						+			'</div>'
+						+		'</td>'
+						+	'</tr>'
+						+	'<tr class="gbInsertArea2" height="210">'
+						+		'<td class="gbInsertText" colspan="3">'
 						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerIdx+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
-						+	'<tr class="gbInsertArea2" height="220">'
-						+		'<td id="gbPreview" class="gbPreview"></td>'
-						+	'</tr>'
 						+	'<tr class="gbSecretArea" height="50">'
-						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+secret_check+'"></td>'
+						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck"></td>'
 						+ 	'</tr>'
 						+ '</table>';
             
@@ -481,10 +510,8 @@
         }
 
 		
-        
         /* 방명록 등록 */
         function regGuestbook() {
-        	
         	
         	// 로그인 체크 추가 **
 
@@ -500,57 +527,55 @@
 			}
 			
 			var content = $('#gbContent');
+			var secret_check;		// 비밀글 체크여부
         	
         	// 내용은 필수로 받기
          	if(!content.val()) {
         		alert('내용을 입력해주세요');
         		
-        	} else { 
-        	
-        		// gbSecret 값 전역함수 secret_check에 넣기       		
+        	} else {    		
             	$('input:checkbox[name="gbcheck"]').each(function(){
             		if($(this).is(":checked") == true) {
             			secret_check = 'Y';
+            			console.log('비밀글');
             		} else  {
             			secret_check = 'N';
+            			console.log('공개글');
             		}
             	})
             	
-            	// gbSecret를 FormData에 추가 
-            	formData.append('gbSecret', secret_check);
+           	// gbSecret를 FormData에 추가 
+           	formData.append('gbSecret', secret_check);
             	
             	
-            	$.ajax({
-            		type: 'POST',
-               		enctype : 'multipart/form-data',
-    	            processData : false,
-    	            contentType : false,
-    	            cache : false,
-    	            timeout : 600000,
-                	url: myHostUrl + '/guestbook/reg',
-                	data: formData,
-    	           	success: function (data) {
-    	           		
-    	           		console.log('등록 데이터 ajax 전송 성공');
-    	           		console.log(data);
-    	           		
-    	           		// 리스트 출력  
-    	           		getGbookList();
-    	           		// 모달창 닫기
-    	           		closeRegModal();
-    	           	
-    	            },
-    	            error: function (e) {
-    	                alert('등록 데이터 ajax 에러' + e);
-    	            }
-           		})
-        		
+           	$.ajax({
+           		type: 'POST',
+              		enctype : 'multipart/form-data',
+   	            processData : false,
+   	            contentType : false,
+   	            cache : false,
+   	            timeout : 600000,
+               	url: myHostUrl + '/guestbook/reg',
+               	data: formData,
+   	           	success: function (data) {
+   	           		
+   	           		console.log('등록 데이터 ajax 전송 성공');
+   	           		console.log(data);
+   	           		
+   	           		// 리스트 출력  
+   	           		getGbookList();
+   	           		// 모달창 닫기
+   	           		closeRegModal();
+   	           	
+   	            },
+   	            error: function (e) {
+   	                alert('등록 데이터 ajax 에러' + e);
+   	            }
+          		})
         		
         		
         	}
         	
-			
- 
         }
 		
         
@@ -595,7 +620,6 @@
 									uformhtml +=				'<img width="8" id="deletePreview_btn" width="30" src="http://localhost:8080/main/image/icon/x.png" onclick="deletePreview()">';
 								}			
 								
-								
 					uformhtml +=				'</div>'
 								+			'</td>'
 								+		'</tr>'
@@ -603,14 +627,19 @@
 								+			'<td class="gbInsertText" colspan="3">'
 								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
 								+		'</tr>'
-								+		'<tr class="gbSecretArea" height="50">'
-								+			'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" value="'+ gbInfo.secret +'"></td>'
-								+ 		'</tr>'
+								+		'<tr class="gbSecretArea" height="50">';
+								
+								if(gbInfo.secret == 'Y') {
+									uformhtml += '<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck" checked="'+ gbInfo.secret +'" ></td>';
+								} else {
+									uformhtml += '<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck"></td>';
+								}
+	
+					uformhtml +=		'</tr>'
 								+ 	'</table>';
         			
 					$('.updateModal_body').html(uformhtml);
-	           	
-	           	
+	           		
 	            },
 	            error: function (e) {
 	                alert('수정 데이터 ajax 에러' + e);
@@ -711,7 +740,8 @@
         	var form = $('#gbUpdateForm')[0];
         	var formData = new FormData(form);
         	
-			// gbSecret 값 전역함수 secret_check에 넣기       		
+        	var secret_check;		// 비밀글 체크여부
+        	    		
         	$('input:checkbox[name="gbcheck"]').each(function(){
         		if($(this).is(":checked") == true) {
         			secret_check = 'Y';
