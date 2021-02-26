@@ -136,8 +136,8 @@
 			
 			setMainPage();
 	        
-			
 			clock();
+			
 			// gbList에서만 무한 스크롤이 작동하도록 만드는 변수
 			
 		}
@@ -219,7 +219,7 @@
 			showMainForm();
 			
 			
-			var mainhtml = 	  '<div class="header_time"></div><input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()">'
+			var mainhtml = 	  '<div class="header_time">a</div>'
 							+ '<div class="weather">'
 							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
@@ -308,13 +308,14 @@
 			getLocation();
 			
 			
+		 	
+			
 			
 		}
 		
 		
 		
 		/* 실시간 날짜 시계 구하기 */
-        var clockTarget = $('.header_time');
         
         function getTime() {
 			var date = new Date(); 
@@ -332,14 +333,16 @@
 			    // 시간 분은 10보다 작으면 앞에0을 붙혀주기 
 		    clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
 		    
-		    clockTarget.html(clockhtml);
+		    $('.header_time').html(clockhtml);
         }
         
-        
        	function clock() {
-       		setInterval(getTime, 3 * 1000);
+       		getTime();
+       		setInterval(getTime, 3 * 1000);	// 3초마다 함수 반복
        	}
         
+       	
+       	
 
 		
 		
