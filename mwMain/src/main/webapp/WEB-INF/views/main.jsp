@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <% 
-	session.setAttribute("memidx", "40");
+	session.setAttribute("memidx", "50");
 	session.setAttribute("memnic", "메이웨더");
 	session.setAttribute("memphoto", "mw.jpg");
 	session.setAttribute("memloc", "0.00,0.00");
@@ -167,6 +167,8 @@
 		var myHostUrl = 'http://localhost:8080/main';
 		var uploadFileUrl = '/fileupload/guestbook/';
 		
+		var ootdHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/ootd';
+		
 		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
 		<%-- var ownIdx = '<%=(String)session.getAttribute("ownidx")%>'; --%>
 		var gbOwnerIdx = 0;
@@ -194,24 +196,12 @@
 		
 		var wn_data;			// 초단기실황 데이터
 		var wbt_data;			// 동네예보 데이터
-		
-		var tmp_min;			// 일일 최저 기온
-		var tmp_max;			// 일일 최고 기온 
-		var tmp_now;			// 현재 기온
-		var rain_now;			// 현재 강수량 
-		var pty_now;			// 현재 강수형태
-		var sky_now;			// 현재 강수형태(한글)
-		
-		var wbt_fcstTime;		// 예보시간
-		var wbt_tmp;			// 3시간 기온
-		var wbt_rain;			// 3시간 강수확률
-		var wbt_sky;			// 하늘상태 
 	
 		
 		
 		/* 메인 ---------------------------------------------------------------------------------------------------------------------  */
 		
-		// 메인 페이지 구성  
+		/* 메인 페이지 구성 */  
 		function setMainPage() {
 			
 			hideGbookList();
@@ -219,7 +209,7 @@
 			showMainForm();
 			
 			
-			var mainhtml = 	  '<div class="header_time">a</div>'
+			var mainhtml = '<div class="header_time"></div>'
 							+ '<div class="weather">'
 							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
@@ -229,7 +219,6 @@
 							+ 			'<table>'
 							+ 				'<tr><td colspan="2" class="font4" id="sky_now">약한 비</td></tr>	'
 							+ 				'<tr><td colspan="2" class="font0" id="tmp_now">0°</td></tr>	'
-							+ 				'<tr><td colspan="2" class="font4" id="rain_now">0%</td></tr>'
 							+ 				'<tr><td class="font5" id="tmp_max">0° /</td><td class="font5" id="tmp_min"> -0°</td></tr>'
 							+			'</table>'
 							+ 		'</div>'
@@ -251,56 +240,58 @@
 							+ 					'<tr><td class="font_left">00님 <br>오늘 000과 0000 어때요? :)</td></tr>'
 							+ 				'</table>'
 							+ 			'</div>'
-							+ 			'<div class="todayCodi_item_img">'
-							+ 				'<div class="todayCodi_item_img1"><img width="45" src="<c:url value="/image/codiRecTest.png"/>"></div>'
-							+ 				'<div class="todayCodi_item_img2"><img width="45" src="<c:url value="/image/codiRecTest.png"/>"></div>'
-							+ 				'<div class="todayCodi_item_img3"><img width="45" src="<c:url value="/image/codiRecTest.png"/>"></div>'
-							+ 			'</div>'
+							+ 			'<div class="todayCodi_item_img">';
+							
+				for(i=0; i<3; i++){
+					mainhtml +=				'<div class="todayCodi_item_img1"><img width="45" src="<c:url value="/image/codiRecTest.png"/>"></div>';
+				}
+							
+				mainhtml 	+= 			'</div>'
 							+ 		'</div>'
 							+ 		'<div class="todayCodi_btn"><input type="button" value="코디할래요 >" id="btnToCloset"></div>'
 							+ '</div>'
 							
 							+ '<div class="todayPick">'
 							+ 		'<div class="todayPick_title"><h5>Todays PICK</h5></div>'
-							+ 		'<div class="top3_ootd">'
-							+ 			'<div class="top3_ootd1">'
-							+ 				'<div class="top3_ootd_border">'
-							+ 					'<table>'
-							+ 						'<tr><td colspan="3"><img width="70" src="<c:url value="/image/ootdTest.jpg"/>"></td></tr>'
-							+ 						'<tr>'
-							+							'<td class="font7">00님</td>'
-							+ 							'<td><img width="10" src="<c:url value="/image/icon/heart.png"/>"></td>'
-							+ 							'<td class="font7">00</td>'
-							+ 						'</tr>'
-							+ 					'</table>'
-							+ 				'</div>'
-							+ 			'</div>'
-							+ 			'<div class="top3_ootd2">'
-							+ 				'<div class="top3_ootd_border">'
-							+ 					'<table>'
-							+ 						'<tr><td colspan="3"><img width="70" src="<c:url value="/image/ootdTest.jpg"/>"></td></tr>'
-							+ 						'<tr>'
-							+							'<td class="font7">00님</td>'
-							+ 							'<td><img width="10" src="<c:url value="/image/icon/heart.png"/>"></td>'
-							+ 							'<td class="font7">00</td>'
-							+ 						'</tr>'
-							+ 					'</table>'
-							+ 				'</div>'
-							+ 			'</div>'
-							+ 			'<div class="top3_ootd3">'
-							+				'<div class="top3_ootd_border">'
-							+ 					'<table>'
-							+ 						'<tr><td colspan="3"><img width="70" src="<c:url value="/image/ootdTest.jpg"/>"></td></tr>'
-							+ 						'<tr>'
-							+							'<td class="font7">00님</td>'
-							+ 							'<td><img width="10" src="<c:url value="/image/icon/heart.png"/>"></td>'
-							+ 							'<td class="font7">00</td>'
-							+ 						'</tr>'
-							+ 					'</table>'
-							+ 				'</div>'
-							+ 			'</div>'
-							+ 		'</div>'
-							+ '</div>';
+							+ 			'<div class="top3_ootd">';
+						
+							
+			// 좋아요 순으로 OOTD 게시물 Top3 가져오기
+		 	$.ajax({
+	    		url: ootdHostUrl + '/req/liketopthree',
+	    		type: 'GET',
+	    		async: false,
+	    		success: function(pickData) {
+	    			alert('ootd 게시물 호출 성공');
+	    			console.log(pickData);
+	    			
+	    			for(i=0; i<3; i++){
+	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3()">'
+	    						+ 			'<div class="top3_ootd_border">'
+	    						+ 				'<table>'
+	    						+ 					'<tr><td colspan="3"><img width="75" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+	    						+ 					'<tr>'
+	    						+						'<td class="font7">'+ pickData[i].ootdnic +'님</td>'
+	    						+ 						'<td><img width="10" src="<c:url value="/image/icon/heart.png"/>"></td>'
+	    						+ 						'<td class="font7">'+ pickData[i].ootdlikecnt +'</td>'
+	    						+ 					'</tr>'
+	    						+ 				'</table>'
+	    						+ 			'</div>'
+	    						+ 		'</div>';
+	    			}
+	    			
+	    			
+	    		}, 
+	    		error: function(){
+	        		alert('주소 호출 실패');
+	        	}
+	    	
+	    	});		 	
+					
+			
+			mainhtml += 	'</div>'
+						+ '</div>';
+							
 							
 		    $('#mainForm').html(mainhtml);
 		    
@@ -308,9 +299,13 @@
 			getLocation();
 			
 			
-		 	
-			
-			
+		}
+		
+		
+		/* Top3 OOTD ajax로 보여주기 */
+		function moveToOotdTop3(ootdidx) {
+			console.log(ootdidx);
+			alert('ootd 게시물 보여주기');
 		}
 		
 		
@@ -331,80 +326,139 @@
 		    
 				// 월은 0부터 1월이기때문에 +1일을 해주고 
 			    // 시간 분은 10보다 작으면 앞에0을 붙혀주기 
-		    clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
+		    //clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
+		    clockhtml = '지금, '+ hours + ':' + minutes;
 		    
 		    $('.header_time').html(clockhtml);
         }
         
        	function clock() {
        		getTime();
-       		setInterval(getTime, 3 * 1000);	// 3초마다 함수 반복
+       		setInterval(getTime, 30 * 1000);	// 30초마다 함수 반복
        	}
         
        	
-       	
+       	/* 동네 선택 */
+       	function btnLoc_click() {
+       		console.log(address);
+       		
+       	}
 
 		
 		
 		/* 시간대별 날씨  ------------------------------------------------------------------------------------------------------------------------------------ */
 		
+		
 		function getWeatherBT() {
 			
+			var wbt_fcstTime = [3,6,9,12,15,18,21,0,3,6,9,12,15,18,21];	// 예보시간
+			var wbt_tmp = [];		// 3시간 기온
+			var wbt_rain = [];		// 3시간 강수확률
+			var wbt_sky = [];		// 하늘상태 
+			
 			var wbtHtml = '<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
-				+ 	'<div class="weatherBT_title"><span class="font5">시간대별 일기 예보</span></div>'
-				+ 	'<div class="weatherBT_content">';
-				+		'<div class="weatherBT_tableWrap">'
+						+ 	'<div class="weatherBT_title"><span class="font5">시간대별 일기 예보</span></div>'
+						+ 	'<div class="weatherBT_content">';
+						+		'<div class="weatherBT_tableWrap">';
 				
 			for(var i=0; i<wbt_data.length; i++){
+				
 				var wbt_category = wbt_data[i].category;
 				var wbt_fcstValue = wbt_data[i].fcstValue;
 				var wbt_fcstDate = wbt_data[i].fcstDate;
-				wbt_fcstTime = wbt_data[i].fcstTime;
 				
 				// 3시간 기온
-				if(wbt_category=='T3H') {
-					wbt_tmp = wbt_fcstValue;
+				if(wbt_category == 'T3H') {
+					wbt_tmp.push(wbt_fcstValue);
 				}
 				
 				// 3시간 강수확률
-				if(wbt_category=='POP') {
-					wbt_rain = wbt_fcstValue;
+				if(wbt_category == 'POP') {
+					wbt_rain.push(wbt_fcstValue);
 				}
 				
 				// 하늘상태 --------> 이미지 변환 처리 필요 * 
-				if(wbt_category='SKY') {
-					wbt_sky = wbt_fcstValue;
+				if(wbt_category == 'SKY') {
+					wbt_sky.push(wbt_fcstValue);
 				}
+			}	
 				
-				wbtHtml += 		'<div class="weatherBT_table">' // 테이블 삽입 반복 
-							+ 			'<table>'
-							+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+wbt_fcstTime+'시</td></tr>'
-							+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/weatherTest.png"/>"></td></tr>'
-							+				'<tr style="height:100px;"><td id="weatherTable_tmp" class="font5">'+wbt_tmp+'°</td></tr>'
-							+ 				'<tr style="height:40px;"><td id="weatherTable_rain" class="font7">'+wbt_rain+'%</td></tr>'
-							+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button"></td></tr>'
-							+ 			'</table>'
-							+ 		'</div>';
-			}			
+			
+			for(var j=0; j<wbt_fcstTime.length; j++){
+				wbtHtml += 	'<div class="weatherBT_table">' // 테이블 삽입 반복 
+					+ 			'<table>'
+					+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+ wbt_fcstTime[j] +'시</td></tr>'
+					+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/weatherTest.png"/>"></td></tr>'
+					+				'<tr style="height:100px;"><td id="weatherTable_tmp" class="font5">'+ wbt_tmp[j] +'°</td></tr>'
+					+ 				'<tr style="height:40px;"><td id="weatherTable_rain" class="font7">'+ wbt_rain[j] +'%</td></tr>'
+					+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button" id="rainPercentBar"></td></tr>'
+					+ 			'</table>'
+					+ 		'</div>';
+					
+				$('#rainPercentBar').css('width', wbt_rain[j] * 5);
+			}
+				
+				console.log('wbt_tmp: '+ wbt_tmp);
+              	console.log('wbt_rain: '+ wbt_rain);
+              	console.log('wbt_sky: '+ wbt_sky);
+              	console.log('wbt_fcstTime: '+ wbt_fcstTime);
+              	console.log(wbt_tmp.length);
+              	console.log(wbt_rain.length);
+              	console.log(wbt_sky.length);
+              	console.log(wbt_fcstTime.length);
+              	
+              	var rain_now;	// 강수량
+              	var windD_now;	// 풍향
+              	var wind_now;	// 풍속
+              	var humidity_now;	// 습도
+              	
+               	for(var i=0; i< wn_data.length; i++) {
+              		var wn_category = wn_data[i].category;
+        			var wn_obsrValue = wn_data[i].obsrValue;
+            		var wn_baseDate = wn_data[i].baseDate;
+            		var wn_baseTime = wn_data[i].baseTime;
+            		
+            		if(wn_category=='RN1'){	
+	              		rain_now = wn_obsrValue;
+	              	}
+            		
+            		if(wn_category=='VEC'){	
+	              		windD_now = wn_obsrValue;
+	              	}
+            		
+            		if(wn_category=='WSD'){
+	              		wind_now = wn_obsrValue;
+	              	}
+            		
+            		if(wn_category=='WSD'){
+            			humidity_now = wn_obsrValue;
+            		}
+              	} 
+              	
 						
-				wbtHtml += 		'</div>'
+				wbtHtml += 	'</div>'
+						+	'</div>'
 						+		'<div class="weatherBT_detail">'
 						+			'<table>'
-						+				'<tr><td class="onleft">오늘, 오후 00:00</td><td></td></tr>'
-						+				'<tr><td class="onleft">소나기</td>'
+						+				'<tr><td class="onleft" id="wbt_currenttime">오늘, 오후 00:00</td><td></td></tr>'
+						+				'<tr><td class="onleft">'+ (pty_now == 0? sky_now : pty_now) +'</td>'
 						+					'<td class="onright">체감 온도 0°</td></tr>'
 						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">강수량</td>'
-						+					'<td class="onright">0 % </td></tr>'
+						+					'<td class="onright">'+ rain_now +' % </td></tr>'
 						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">비</td>'
-						+					'<td class="onright">0.00 mm</td></tr>'
+						+					'<td class="onright">'+ rain_now +' mm </td></tr>'
+						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">습도</td>'
+						+					'<td class="onright">'+ humidity_now +' %</td></tr>'
 						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">바람</td>'
-						+					'<td class="onright">서남서 0 m/s</td></tr>'
+						+					'<td class="onright">'+ windD_now + wind_now +' m/s</td></tr>'
 						+			'</table>'
 						+		'</div>'
 						+	'</div>'
 						+ '</form>';
 						
 			$('#mainForm').html(wbtHtml);
+			
+			
 
 		}
 
@@ -530,7 +584,7 @@
 			}
 			
 			var content = $('#gbContent');
-			var secret_check;		// 비밀글 체크여부
+			var secret_check = null;		// 비밀글 체크여부
         	
         	// 내용은 필수로 받기
          	if(!content.val()) {
@@ -553,7 +607,7 @@
             	
            	$.ajax({
            		type: 'POST',
-              		enctype : 'multipart/form-data',
+              	enctype : 'multipart/form-data',
    	            processData : false,
    	            contentType : false,
    	            cache : false,
@@ -743,7 +797,7 @@
         	var form = $('#gbUpdateForm')[0];
         	var formData = new FormData(form);
         	
-        	var secret_check;		// 비밀글 체크여부
+        	var secret_check = null;		// 비밀글 체크여부
         	    		
         	$('input:checkbox[name="gbcheck"]').each(function(){
         		if($(this).is(":checked") == true) {

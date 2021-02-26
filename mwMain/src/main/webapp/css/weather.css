@@ -14,27 +14,22 @@
  	
  	.weatherBT_content {
  		width: 100%;
- 		height: 550px;
+ 		height: 330px;
  		padding: 5px;
  		border-radius: 10px;
         text-align: center;
         background-color: white;
-        overflow: hidden;
+		overflow-x: auto; 
+		overflow-y: hidden;
  	}
  	
  	.weatherBT_content div, weatherBT_content tr, weatherBT_content td {
  		background-color: white;
  	}
  	
- 	.weatherBT_tableWrap {
- 		width: 100%;
- 		height: 300px;
- 		overflow-x: scroll;
- 	}
- 	
  	.weatherBT_table{
  		width: 50px;
- 		height: 50%;
+ 		height: 100%;
  		padding: 15px 10px;
  		background-color: white;
  		float: left;
@@ -71,7 +66,7 @@
 
 	.weatherBT_detail {
 		width: 100%;
-		height: 50%;
+		height: 35%;
 		padding: 20px;
 		background-color: white;
 	}

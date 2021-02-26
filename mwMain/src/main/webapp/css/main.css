@@ -4,6 +4,12 @@
 	.home_btn {
 		border: 0px;
 	}
+	
+	#gblist_btn {
+		position: absolute;
+		top: 0;
+		right: 0;
+	}
 
 	.content_wrap {
         max-width: 500px;
@@ -85,8 +91,7 @@
     	width: 100%;
     	height: 5%;
     	background-color: #f5f5f5;
-    	color: black;
-    	border: 1px solid;
+    	color: grey;
     	text-align: center;
     }
     
@@ -101,7 +106,7 @@
     /* 날씨  -----------------------------*/
     .weather {
         width: 100%;
-        height: 30%;
+        height: 25%;
         text-align: center;
         padding-top: 35px;
     }
@@ -149,6 +154,11 @@
     #tmp_min {
     	text-align: left;
     	padding-left: 5px;
+    }
+    
+    #rainPercentBar {
+    	border-radius: 10px;
+    	width: 10px;
     }
     
     /* 오늘의 코디 추천 ----------------------------- */
@@ -267,10 +277,7 @@
         font-size: 0.8em;
     }
     
-   .todayPick img {
-    	border-radius: 15px;
-    	/* box-shadow: 2px 2px 2px #ddd; */
-    }
+   
     
     /* 오늘의 OOTD  -----------------------------*/
     
@@ -280,7 +287,7 @@
     
     .todayPick {
         width: 100%;
-        height: 23%;
+        height: 28%;
         margin-top: 30px;
         text-align: center;
         background-color: #64c2eb;
@@ -293,13 +300,19 @@
     
     .top3_ootd {
     	width: 100%;
-        padding-right: 10px;
-        padding-left: 10px;
+        padding-right: 5px;
+        padding-left: 5px;
         background-color: #64c2eb;
     }
     
-    .top3_ootd td {
+    .top3_ootd_border {
+    	margin: auto;
+    	width: 95px;
+    	height: 110px;
     	background-color: white;
+    	border-radius: 5px;
+    	padding: 1px;
+    	padding-top: 5px;
     }
     
     .todayPick table {
@@ -307,6 +320,10 @@
     	vertical-align: center;
     }
 
+	.top3_ootd td {
+    	background-color: white;
+    }
+    
     .top3_ootd1 {
    		background-color: #64c2eb;
      	float: left;
@@ -324,14 +341,11 @@
      	float: left;
     	width: 33%;
     }
-
-    .top3_ootd_border {
-    	margin: auto;
-    	width: 90px;
-    	height: 100px;
-    	background-color: white;
-    	border-radius: 15px;
-    	padding: 3px;
-    	padding-top: 8px;
+    
+    .todayPick img {
+    	border-radius: 5px;
+    	/* box-shadow: 2px 2px 2px #ddd; */
     }
+
+    
  

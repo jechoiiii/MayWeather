@@ -1,5 +1,13 @@
 
-		var address;	// API 데이터 저장할 배열 변수
+		var address;	// API 데이터 저장할 배열
+		var location;	// 위치좌표를 저장할 객체 
+		
+    	var tmp_min;			// 일일 최저 기온
+		var tmp_max;			// 일일 최고 기온 
+		var tmp_now;			// 현재 기온
+		var rain_now;			// 현재 강수량 
+		var pty_now;			// 현재 강수형태
+		var sky_now;			// 현재 하늘형태
 		
 		
 		function getLocation() {
@@ -31,7 +39,7 @@
 			    	};
 			    	
 			    	
-			    	// xy 좌표로 주소 구하기 -------------------------------
+			    	// xy 좌표로 주소 구하기
 			    	
 			    	$.ajax({
 			    		url: myHostUrl + '/address/' + x + '/' + y,
@@ -54,7 +62,12 @@
 			    	});
 			    	
 			    	
-			    	// 초단기실황 API 데이터 --------------------------------
+			    	// 날씨 ----------------------------------------------
+			    	
+
+			    	
+			    	
+			    	// 초단기실황 API 데이터
 			    	
 			        $.ajax({
 			        	url: myHostUrl + '/weathernow',
@@ -62,7 +75,7 @@
 			        	data : location,
 			        	async: false,	
 			        	success: function(data){
-			        		alert('초단기실황 API 성공');
+			        		alert('초단기실황 API 호출 성공');
 			        		
 			        		var jsonObj = JSON.parse(data);
 			        		wn_data = jsonObj.response.body.items.item;
@@ -78,29 +91,28 @@
 			        			// 현재 기온
 				              	if(wn_category=='T1H') {
 				              		tmp_now = wn_obsrValue;
+				              	
+				              		if((tmp_now*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_now = parseInt(tmp_now);
+				              		}
+				              		//$('#tmp_now').html(tmp_now);
 				              	}
 				              	
-				              	// 현재 강수량 
-				              	if(wn_category=='RN1'){
-				              		rain_now = wn_obsrValue;
-				              	}
-				              	
-				              	// 현재 강수형태 --> 한글 변환 필요 *
+				              	// 현재 강수형태 -> 하늘상태 값과 비교 후 한글로 변환해서 출력 예정
 				              	if(wn_category=='PTY'){
 				              		pty_now = wn_obsrValue;
 				              	}
 			        		
-			        		} // end of For문
-			        		
+			        		}
 			        		
 			        	},
 			        	error: function(){
-			        		alert("초단기실황 API 전송 실패");
+			        		alert("초단기실황 API 호출 실패");
 			        	}
 			        }); 
 			  
 			  
-			  		// 동네예보 API 데이터 --------------------------------
+			  		// 동네예보 API 데이터 
 			  		
 			    	$.ajax({
 			        	url: myHostUrl + '/weatherbytime',
@@ -108,7 +120,7 @@
 			        	data : location,
 			        	async: false,	
 			        	success: function(data){
-			        		alert('동네예보 API 성공');
+			        		alert('동네예보 API 호출 성공');
 			        		
 			        		var jsonObj = JSON.parse(data);
 			        		wbt_data = jsonObj.response.body.items.item;
@@ -119,7 +131,10 @@
 		                		var wbt_fcstDate = wbt_data[i].fcstDate;
 		                		var wbt_fcstTime = wbt_data[i].fcstTime;
 		                		
-		                		//console.log('wbt_category: '+ wbt_category, 'wbt_fcstValue: '+ wbt_fcstValue, 'wbt_fcstDate : '+ wbt_fcstDate, 'wbt_fcstTime: '+ wbt_fcstTime);
+			        			// 현재 하늘형태 -> 하늘상태 값과 비교 후 한글로 변환해서 출력 예정
+				              	if(wbt_category=='SKY'){
+				              		sky_now = wbt_fcstValue;
+				              	}
 			        		
 			        			// 일일 최저 기온
 				              	if(wbt_category=='TMN' && i < wbt_data.length/2){  // 당일 최저 기온만
@@ -141,35 +156,67 @@
 				              		//$('#tmp_max').html(tmp_max +'° /');
 				              	}
 			        		
-			        		} // end of For문
+			        		}
 			        		
 			        	},
 			        	error: function(){
-			        		alert("동네예보 API 전송 실패");
+			        		alert("동네예보 API 호출 실패");
 			        	}
 			        }); 
 			    	
-
-					console.log(wn_data);
+			    	
+			    	
+			    	
+			    	// 한글로 변환
+			    	// PTY 강수형태 : 	없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+				    // SKY 하늘상태 : 	맑음(1), 구름많음(3), 흐림(4)
+				    
+				    if(sky_now == 1) {
+				    	sky_now = '맑음';
+				    } else if(sky_now == 3) {
+				    	sky_now = '구름많음';
+				    } else {
+				   		sky_now = '흐림';
+				    }
+				    
+				    switch(pty_now) {
+				    	case 0 :
+				    		pty_now = 0;
+				    		break;
+				    	case 1 :
+				    		pty_now = '비';
+				    		break;
+				    	case 2 :
+				    		pty_now = '비/눈';
+				    		break;
+				    	case 3 :
+				    		pty_now = '눈';
+				    		break;
+				    	case 4 :
+				    		pty_now = '소나기';
+				    		break;
+				    	case 5 :
+				    		pty_now = '빗방울';
+				    		break;
+				    	case 6 :
+				    		pty_now = '빗방울/눈날림';
+				    		break;
+				    	case 7 :
+				    		pty_now = '눈날림';
+				    		break;
+				    } 
+				    
+				    console.log(wn_data);
 					console.log(wbt_data);
-					console.log(wbt_data[1].category);
-			         	              	
-	              	console.log('tmp_min: '+ tmp_min);
-	              	console.log('tmp_max: '+ tmp_max);	
-	              	console.log('tmp_now: '+ tmp_now);
-	              	console.log('rain_now: '+ rain_now);
-	              	console.log('pty_now: '+ pty_now);
-     	
+					
+				    
 		       		var wnhtml = '<div class="weather_now">';
 		       		wnhtml += 		'<table>';
 		       		wnhtml += 			'<tr>';
-		       		wnhtml += 				'<td colspan="2" class="font4" id="sky_now">'+pty_now+'</td>';
+		       		wnhtml += 				'<td colspan="2" class="font3" id="sky_now">' + (pty_now == 0? sky_now : pty_now) + '</td>';
 		       		wnhtml += 			'</tr>';
 		       		wnhtml += 			'<tr>';
 		       		wnhtml += 				'<td colspan="2" class="font1" id="tmp_now">'+tmp_now+'°</td>';
-		       		wnhtml += 			'</tr>';
-		       		wnhtml += 			'<tr>';
-		       		wnhtml += 				'<td colspan="2" class="font4" id="rain_now">'+rain_now+'%</td>';
 		       		wnhtml += 			'</tr>';
 		       		wnhtml += 			'<tr>';
 		       		wnhtml += 				'<td class="font5" id="tmp_max">최고:'+tmp_max+'° /</td>';
@@ -182,7 +229,7 @@
 				
 			  	}, function(error) {
 							console.error(error);
-							alert('xy좌표 에러');
+							alert('getLocation 에러');
 			  	}, {
 			  		enableHighAccuracy	: false,
 			  		maximumAge			: 0,
@@ -193,7 +240,6 @@
 			}
 		
 		} 
-		
 		
 		
 		
