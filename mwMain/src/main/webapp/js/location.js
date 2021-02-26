@@ -1,4 +1,6 @@
 
+		var address;	// API 데이터 저장할 배열 변수
+		
 		
 		function getLocation() {
 		
@@ -29,14 +31,33 @@
 			    	};
 			    	
 			    	
-			    	// xy 좌표로 주소 구하기 -------------------------------------------
+			    	// xy 좌표로 주소 구하기 -------------------------------
+			    	
+			    	$.ajax({
+			    		url: myHostUrl + '/address/' + x + '/' + y,
+			    		type: 'GET',
+			    		async: false,
+			    		success: function(aData) {
+			    			alert('주소 호출 성공');
+			    			
+			    			address = aData;
+			    			
+			    			console.log(aData);
+			    			console.log(aData[0].gu);
+			    			
+			    			$('#btnLocc').html(aData[0].gu);
+			    		}, 
+			    		error: function(){
+			        		alert('주소 호출 실패');
+			        	}
+			    	
+			    	});
 			    	
 			    	
+			    	// 초단기실황 API 데이터 --------------------------------
 			    	
-			    	
-			    	// 초단기실황 API 데이터 
 			        $.ajax({
-			        	url: myHostUrl + '/main/weathernow',
+			        	url: myHostUrl + '/weathernow',
 			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
@@ -78,9 +99,11 @@
 			        	}
 			        }); 
 			  
-			  		// 동네예보 API 데이터
+			  
+			  		// 동네예보 API 데이터 --------------------------------
+			  		
 			    	$.ajax({
-			        	url: myHostUrl + '/main/weatherbytime',
+			        	url: myHostUrl + '/weatherbytime',
 			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
@@ -170,6 +193,7 @@
 			}
 		
 		} 
+		
 		
 		
 		

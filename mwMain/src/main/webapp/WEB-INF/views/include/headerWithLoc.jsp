@@ -7,9 +7,11 @@
 	    <img src="<c:url value="/image/logo/mwlogo.png"/>" width="119px" class="logoimage">
 
 		<div class="header_loc" id="header_loc">
-    		<button id="btnLocc" onclick="btnLoc_click()" class="font2">종로구</button>
-    		<div class="header_time">오후 3:03</div>
+    		<button id="btnLocc" onclick="btnLoc_click()" class="font2">서울</button>
     	</div>
+    	<!-- TEST -->
+    	<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()">
+    	
     	
 
    </header>
