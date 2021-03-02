@@ -58,7 +58,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="<c:url value="/image/main/back.png"/>"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 남기기</div>
 		                         </div>
@@ -80,7 +80,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="<c:url value="/image/main/back.png"/>"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 수정하기</div>
 		                         </div>
@@ -102,7 +102,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="<c:url value="/image/back.png"/>"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="<c:url value="/image/main/back.png"/>"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 삭제하기</div>
 		                         </div>
@@ -140,6 +140,7 @@
 			
 			// gbList에서만 무한 스크롤이 작동하도록 만드는 변수
 			
+			console.log(nowLoc);
 		}
 		
 		var gbListScroll = false;
@@ -165,6 +166,7 @@
 		
 		
 		var myHostUrl = 'http://localhost:8080/main';
+		var awsHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/main';
 		var uploadFileUrl = '/fileupload/guestbook/';
 		
 		var ootdHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/ootd';
@@ -172,6 +174,9 @@
 		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
 		<%-- var ownIdx = '<%=(String)session.getAttribute("ownidx")%>'; --%>
 		var gbOwnerIdx = 0;
+		
+		
+		
 		
 		var memIdx = '<%=(String)session.getAttribute("memidx")%>';
 		var memNic = '<%=(String)session.getAttribute("memnic")%>';
@@ -213,7 +218,7 @@
 							+ '<div class="weather">'
 							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
-							+ 			'<img width="100" src="<c:url value="/image/weatherTest.png"/>">'
+							+ 			'<img width="100" src="<c:url value="/image/main/weatherTest.png"/>">'
 							+ 		'</div>'
 							+ 		'<div class="weather_now">'
 							+ 			'<table>'
@@ -228,7 +233,7 @@
 							+ 		'<div class="todayCodi_ootd">'
 							+ 			'<div class="todayCodi_ootd_border">'
 							+ 				'<table>'
-							+ 					'<tr><td><img height="90" src="<c:url value="/image/ootdTest.jpg"/>"></td></tr>'
+							+ 					'<tr><td><img height="90" src="<c:url value="/image/main/ootdTest.jpg"/>"></td></tr>'
 							+ 					'<tr><td class="font5">뫄뫄님의 LOOK</td></tr>'
 							+ 				'</table>'
 							+ 			'</div>'
@@ -243,7 +248,7 @@
 							+ 			'<div class="todayCodi_item_img">';
 							
 				for(i=0; i<3; i++){
-					mainhtml +=				'<div class="todayCodi_item_img1"><img width="45" src="<c:url value="/image/codiRecTest.png"/>"></div>';
+					mainhtml +=				'<div class="todayCodi_item_img1"><img width="45" src="<c:url value="/image/main/codiRecTest.png"/>"></div>';
 				}
 							
 				mainhtml 	+= 			'</div>'
@@ -388,7 +393,7 @@
 				wbtHtml += 	'<div class="weatherBT_table">' // 테이블 삽입 반복 
 					+ 			'<table>'
 					+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+ wbt_fcstTime[j] +'시</td></tr>'
-					+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/weatherTest.png"/>"></td></tr>'
+					+ 				'<tr style="height:40px;"><td id="weatherTable_img"><img width="30" src="<c:url value="/image/main/weatherTest.png"/>"></td></tr>'
 					+				'<tr style="height:100px;"><td id="weatherTable_tmp" class="font5">'+ wbt_tmp[j] +'°</td></tr>'
 					+ 				'<tr style="height:40px;"><td id="weatherTable_rain" class="font7">'+ wbt_rain[j] +'%</td></tr>'
 					+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button" id="rainPercentBar"></td></tr>'
@@ -443,13 +448,13 @@
 						+				'<tr><td class="onleft" id="wbt_currenttime">오늘, 오후 00:00</td><td></td></tr>'
 						+				'<tr><td class="onleft">'+ (pty_now == 0? sky_now : pty_now) +'</td>'
 						+					'<td class="onright">체감 온도 0°</td></tr>'
-						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">강수량</td>'
+						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/main/weatherTest.png"/>">강수량</td>'
 						+					'<td class="onright">'+ rain_now +' % </td></tr>'
-						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">비</td>'
+						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/main/weatherTest.png"/>">비</td>'
 						+					'<td class="onright">'+ rain_now +' mm </td></tr>'
-						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">습도</td>'
+						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/main/weatherTest.png"/>">습도</td>'
 						+					'<td class="onright">'+ humidity_now +' %</td></tr>'
-						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/weatherTest.png"/>">바람</td>'
+						+				'<tr><td class="onleft"><img width="15" src="<c:url value="/image/main/weatherTest.png"/>">바람</td>'
 						+					'<td class="onright">'+ windD_now + wind_now +' m/s</td></tr>'
 						+			'</table>'
 						+		'</div>'
@@ -480,10 +485,10 @@
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'">'
 						+	'<tr class="gbGreetArea" height="100">'
 						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요:)</span></td>'
-						+		'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
+						+		'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/main/guestbook.png"></td>'
 						+	'</tr>'
 						+	'<tr class="gbInsertArea1" height="90">'
-						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
+						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/main/camera.png"></label>'
 						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 						+		'<td id="gbPreview" class="gbPreview" colspan="2">'
 						+			'<div class="deletePreviewImg">'
@@ -612,7 +617,7 @@
    	            contentType : false,
    	            cache : false,
    	            timeout : 600000,
-               	url: myHostUrl + '/guestbook/reg',
+               	url: awsHostUrl + '/guestbook/reg',
                	data: formData,
    	           	success: function (data) {
    	           		
@@ -655,7 +660,7 @@
         		type: 'GET',
 	            cache : false,
 	            timeout : 600000,
-            	url: myHostUrl + '/guestbook/update/' + gbNo + '/form',
+            	url: awsHostUrl + '/guestbook/update/' + gbNo + '/form',
 	           	success: function (gbInfo) {
 	           		
 	           		console.log('수정할 게시판 데이터 ajax로 받기 성공');
@@ -664,10 +669,10 @@
 	           		var uformhtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerIdx+'"><input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
 								+		'<tr class="gbGreetArea" height="100">'
 								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerIdx+'님에게 인사를 남겨보세요 :)</span></td>'
-								+			'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/guestbook.png"></td>'
+								+			'<td class="gbTableImg"><img width="65" src="http://localhost:8080/main/image/main/guestbook.png"></td>'
 								+		'</tr>'
 								+		'<tr class="gbInsertArea1" height="90">'
-								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/camera.png"></label>'
+								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="http://localhost:8080/main/image/main/camera.png"></label>'
 								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 								+			'<td id="gbPreview" class="gbPreview" colspan="2">'
 								+				'<div class="deletePreviewImg">';
@@ -825,7 +830,7 @@
 	            contentType : false,
 	            cache : false,
 	            timeout : 600000,
-            	url: myHostUrl + '/guestbook/update/' + gbNo,
+            	url: awsHostUrl + '/guestbook/update/' + gbNo,
             	data: formData,
 	           	success: function (data) {
 	           		
@@ -890,7 +895,7 @@
 	            contentType : false,
 	            cache : false,
 	            timeout : 600000,
-            	url: myHostUrl + '/guestbook/delete/' + gbNo,
+            	url: awsHostUrl + '/guestbook/delete/' + gbNo,
 	           	success: function () {
 	           		
 	           		console.log('삭제 데이터 ajax 전송 성공');

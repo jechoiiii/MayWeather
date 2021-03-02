@@ -75,7 +75,7 @@
 			
 			
 			$.ajax({
- 				url: myHostUrl + '/guestbook/list/' + gbOwnerIdx + '/' + page,
+ 				url: awsHostUrl + '/guestbook/list/' + gbOwnerIdx + '/' + page,
  				type: 'GET',
  				success:function(data){
  				
@@ -84,7 +84,7 @@
  					
  					// 방명록 목록
  					var listhtml = '<div class="gblist_title">';
- 					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/back.png"></button>';
+ 					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="http://localhost:8080/main/image/main/back.png"></button>';
  					listhtml += 		'<span>'+ gbOwnerIdx +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
  					listhtml += 		'<button type="button" onclick="openRegModal()" class="reg_modal_open_btn"><img width="30" src="http://localhost:8080/main/image/icon/write2.png"></button>';
  					listhtml += 	'</div>';	
@@ -107,7 +107,7 @@
 	 						
 		 					listhtml += 				'<tr class="gblist_width">';
 		 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
-		 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
+		 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/main/blue.jpg">';
 		 					listhtml += 					'</td>';
 		 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
 		 					listhtml +=						'<td class="gblist_btns">';
@@ -169,7 +169,7 @@
 								listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
 			 					listhtml += 				'<tr class="gblist_width">';
 			 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
-			 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/blue.jpg">';
+			 					listhtml += 						'<img width="30" class="gblist_memImg" src="http://localhost:8080/main/image/main/blue.jpg">';
 			 					listhtml += 					'</td>';
 			 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'('+ data.guestbookList[i].writerNo +')'+ data.guestbookList[i].secret +'</td>';
 			 					listhtml +=						'<td class="gblist_btns">';	 					

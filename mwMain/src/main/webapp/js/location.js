@@ -2,6 +2,8 @@
 		var address;	// API 데이터 저장할 배열
 		var location;	// 위치좌표를 저장할 객체 
 		
+		var icon_now;
+		
     	var tmp_min;			// 일일 최저 기온
 		var tmp_max;			// 일일 최고 기온 
 		var tmp_now;			// 현재 기온
@@ -9,6 +11,7 @@
 		var pty_now;			// 현재 강수형태
 		var sky_now;			// 현재 하늘형태
 		
+		var nowLoc;				// 현재 위치 
 		
 		function getLocation() {
 		
@@ -42,7 +45,7 @@
 			    	// xy 좌표로 주소 구하기
 			    	
 			    	$.ajax({
-			    		url: myHostUrl + '/address/' + x + '/' + y,
+			    		url: awsHostUrl + '/address/' + x + '/' + y,
 			    		type: 'GET',
 			    		async: false,
 			    		success: function(aData) {
@@ -54,6 +57,8 @@
 			    			console.log(aData[0].gu);
 			    			
 			    			$('#btnLocc').html(aData[0].gu);
+			    			
+			    			nowLoc = aData[0].gu;
 			    		}, 
 			    		error: function(){
 			        		alert('주소 호출 실패');
@@ -70,7 +75,7 @@
 			    	// 초단기실황 API 데이터
 			    	
 			        $.ajax({
-			        	url: myHostUrl + '/weathernow',
+			        	url: awsHostUrl + '/weathernow',
 			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
@@ -115,7 +120,7 @@
 			  		// 동네예보 API 데이터 
 			  		
 			    	$.ajax({
-			        	url: myHostUrl + '/weatherbytime',
+			        	url: awsHostUrl + '/weatherbytime',
 			        	type: 'GET',
 			        	data : location,
 			        	async: false,	
@@ -173,10 +178,13 @@
 				    
 				    if(sky_now == 1) {
 				    	sky_now = '맑음';
+				    	icon_now = 'sunny';
 				    } else if(sky_now == 3) {
 				    	sky_now = '구름많음';
+				    	icon_now = 'cloudy';
 				    } else {
 				   		sky_now = '흐림';
+				   		icon_now = 'cloudy';
 				    }
 				    
 				    switch(pty_now) {
@@ -185,24 +193,31 @@
 				    		break;
 				    	case 1 :
 				    		pty_now = '비';
+				    		icon_now = 'rainy';
 				    		break;
 				    	case 2 :
 				    		pty_now = '비/눈';
+				    		icon_now = 'cloudwithsnow';
 				    		break;
 				    	case 3 :
 				    		pty_now = '눈';
+				    		icon_now = 'snowy';
 				    		break;
 				    	case 4 :
 				    		pty_now = '소나기';
+				    		icon_now = 'rainy';
 				    		break;
 				    	case 5 :
 				    		pty_now = '빗방울';
+				    		icon_now = 'rainy';
 				    		break;
 				    	case 6 :
 				    		pty_now = '빗방울/눈날림';
+				    		icon_now = 'cloudwithsnow';
 				    		break;
 				    	case 7 :
 				    		pty_now = '눈날림';
+				    		icon_now = 'snowy';
 				    		break;
 				    } 
 				    
@@ -226,6 +241,14 @@
 		       		wnhtml += 	'</div>';
 		       		
 		       		$('.weather_now').html(wnhtml);
+		       		
+		       		
+		       		var iconhtml = '<div class="weather_icon">';
+					iconhtml += 		'<img width="100" src="<c:url value="/image/main/weather/'+ icon_now +'.png"/>">';
+					iconhtml += 	'</div>';
+		       		
+		       		$('.weather_icon').html(iconhtml);
+		       		
 				
 			  	}, function(error) {
 							console.error(error);
