@@ -1,17 +1,18 @@
 
-		var address;	// API 데이터 저장할 배열
-		var location;	// 위치좌표를 저장할 객체 
+		var location;		// 위치좌표를 저장할 객체 
+		var address;		// API 데이터 저장할 배열
+		var nowLoc;			// 현재 위치 (종로구)
 		
-		var icon_now;
+		var icon_now;		// 아이콘
+    	var tmp_min;		// 일일 최저 기온
+		var tmp_max;		// 일일 최고 기온 
+		var tmp_now;		// 현재 기온
+		var rain_now;		// 현재 강수량 
+		var pty_now;		// 현재 강수형태
+		var sky_now;		// 현재 하늘형태
 		
-    	var tmp_min;			// 일일 최저 기온
-		var tmp_max;			// 일일 최고 기온 
-		var tmp_now;			// 현재 기온
-		var rain_now;			// 현재 강수량 
-		var pty_now;			// 현재 강수형태
-		var sky_now;			// 현재 하늘형태
 		
-		var nowLoc;				// 현재 위치 
+		
 		
 		function getLocation() {
 		
@@ -244,7 +245,7 @@
 		       		
 		       		
 		       		var iconhtml = '<div class="weather_icon">';
-					iconhtml += 		'<img width="100" src="<c:url value="/image/main/weather/'+ icon_now +'.png"/>">';
+					iconhtml += 		'<img width="100" src="'+awsHostUrl+'/image/main/weather/'+ icon_now +'.png">';
 					iconhtml += 	'</div>';
 		       		
 		       		$('.weather_icon').html(iconhtml);
