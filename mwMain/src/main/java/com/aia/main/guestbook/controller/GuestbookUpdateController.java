@@ -27,6 +27,7 @@ public class GuestbookUpdateController {
 	
 	// 방명록 수정 
 	@PostMapping("/update/{gbNo}")		//main/guestbook/update/gbNo
+	@CrossOrigin
 	public int guestbookUpdate(@PathVariable("gbNo") int gbookNo, GuestbookUpdateRequest updateRequest, HttpServletRequest request) {
 		
 		System.out.println("컨트롤러 도달 성공");
@@ -41,6 +42,7 @@ public class GuestbookUpdateController {
 	
 	// 수정할 방명록 정보 조회 
 	@GetMapping("/update/{gbNo}/form")
+	@CrossOrigin
 	public Guestbook guestbookInfo(@PathVariable("gbNo") int gbookNo) {
 		
 		return listService.getGuestbookInfo(gbookNo);

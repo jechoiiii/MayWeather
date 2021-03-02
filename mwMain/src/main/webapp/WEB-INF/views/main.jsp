@@ -166,7 +166,7 @@
 		
 		
 		var myHostUrl = 'http://localhost:8080/main';
-		var awsHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/main';
+		var awsHostUrl = 'http://ec2-3-36-78-63.ap-northeast-2.compute.amazonaws.com:8080/main/';
 		var uploadFileUrl = '/fileupload/guestbook/';
 		
 		var ootdHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/ootd';
