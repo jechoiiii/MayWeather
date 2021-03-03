@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class AddressController {
 	
 	// x,y 좌표와 동일한 주소 조회
 	@GetMapping("/{x}/{y}")
+	@CrossOrigin
 	public List<Address> getPossibleAddress(@PathVariable("x") int x, @PathVariable("y") int y) {
 		
 		System.out.println("x = " + x);

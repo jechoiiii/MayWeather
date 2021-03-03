@@ -19,18 +19,7 @@
  <link rel="styleSheet" href="<c:url value="/css/guestbook.css"/>">
  
  <%@ include file="/WEB-INF/views/include/basicset.jsp"%>
-  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.15.5/xlsx.full.min.js"></script>
- 
- <!-- 서버실행없이 외부제이슨 파일 읽기 위해 -->
-<script type="text/javascript" src="resources/json/locationXY.json"></script>
 
- 
- <style>
-    
-
-    
- </style>
 </head>
  <body>
      
@@ -58,7 +47,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="/image/main/back.png"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 남기기</div>
 		                         </div>
@@ -80,7 +69,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="/image/main/back.png"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 수정하기</div>
 		                         </div>
@@ -102,7 +91,7 @@
 			    			
 			    				<div class="regModal_header">
 		                             <div class="regModal_back">
-		                                 <button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="/image/main/back.png"></button>
+		                                 <button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>
 		                             </div>
 		                             <div class="regModal_title">방명록 삭제하기</div>
 		                         </div>
