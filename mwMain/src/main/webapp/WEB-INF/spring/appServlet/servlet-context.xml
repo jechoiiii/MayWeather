@@ -29,19 +29,46 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-		<!-- 파일업로드를 위한 MultipartResolver 등록 -->
+	<!-- 파일업로드를 위한 MultipartResolver 등록 -->
 	<beans:bean id="multipartResolver"
 				class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
 				p:defaultEncoding="utf-8"
 				p:maxUploadSize="999999999999"
 	/>
 	
+	
+	<!-- Redis 로그인서버 aws ip -->
+	
+	<beans:bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+							p:usePool="true"
+							p:hostName="52.78.37.31"
+							p:port="6379"	
+	/>
+	<!-- 
+	<beans:bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+							p:usePool="true"
+							p:hostName="localhost"
+							p:port="6379"	
+	/>
+	-->
+	<!-- 로그인서버  local 아이피 -->
+	<!--
+	<beans:bean id="jedisConnFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+							p:usePool="true"
+							p:hostName="192.168.0.35"
+							p:port="6379"					
+	/>
+	-->
+	<beans:bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+							p:connectionFactory-ref="jedisConnFactory"
+	/>
+	
+	
 	<!-- @Transactional 애노테이션 활성화 설정 -->
  	<tx:annotation-driven />
  		<!-- <tx:annotation-driven
  		transaction-manager="transactionManager" /> -->
- 		
-	
+ 		 		
 	<context:component-scan base-package="com.aia.main" />
 	
 	

@@ -46,9 +46,6 @@
 		
 		var ootdHostUrl = 'http://ec2-13-125-232-157.ap-northeast-2.compute.amazonaws.com:8080/ootd';
 		
-		/* 나중에멤버 현재 로그인된 idx 받을 것! 현재 헤더안에 저장한 test용 값으로 하고 있음*/
-		var gbOwnerIdx = 0;
-		
 		
 		var file;				// 방명록 첨부 사진 
 		var page = 1;			// 방명록 페이지
@@ -739,7 +736,8 @@
         /* 방명록 등록 */
         function regGuestbook() {
         	
-        	// 로그인 체크 추가 **
+        	// 로그인 체크 추가
+        	fnLoginChk();   
 
         	var form = $('#gbregForm')[0];
         	var formData = new FormData(form);
@@ -772,6 +770,9 @@
             	
            	// gbSecret를 FormData에 추가 
            	formData.append('gbSecret', secret_check);
+           	
+           	// jsessionId를 FormData에 추가 
+           	formData.append('jsessionId', jsessionId);
             	
             	
            	$.ajax({
@@ -807,10 +808,6 @@
         
         
  
-
-
-        
-        
         
  		/* 방명록 수정 모달 ----------------------------------------------- */
 		

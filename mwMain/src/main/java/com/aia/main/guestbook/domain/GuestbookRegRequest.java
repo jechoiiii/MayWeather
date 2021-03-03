@@ -18,6 +18,9 @@ public class GuestbookRegRequest {
 	private MultipartFile gbContentPhoto;	// 첨부 사진
 	private String gbSecret;				// 비밀글 여부
 	
+	private String jsessionId;				// 세션아이디
+
+	
 	public Guestbook toGuestbook() {
 		Guestbook gbook = new Guestbook();
 		gbook.setOwnerNo(gbOwnerNo);
