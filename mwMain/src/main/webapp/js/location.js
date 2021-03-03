@@ -243,7 +243,7 @@
 		       		$('.weather_now').html(wnhtml);
 		       		
 		       		
-		       		var iconhtml = '<div class="weather_icon">';
+		       		var iconhtml = '<div class="weather_icon_wrap">';
 					iconhtml += 		'<img width="80" src="'+awsHostUrl+'/image/main/weather/'+ icon_now +'.png">';
 					iconhtml += 	'</div>';
 		       		
@@ -359,11 +359,23 @@
 			var wbt_pty = [];		// 강수상태
 			var icon_bt;			// 아이콘
 			
-			var wbtHtml = '<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
-						+ 	'<div class="weatherBT_title"><span class="font5"><b>시간대별 일기 예보</b></span></div>'
-						+ 	'<div class="weatherBT_content">'
-						+		'<div class="weatherBT_tableWrap">'
-						+			'<div class="weatherBT_table">';
+			
+			
+						
+						
+						
+			
+			
+			
+			var wbtHtml = '<!-- 메인 wrap -->'
+						+	'<div class="content_wrap">'
+						+		'<!-- 메인 -->'
+						+		'<div class="mainForm" id="mainForm">'
+						+			'<form id="weatherByTimeForm" method="GET" enctype="multipart/form-data">'
+						+ 				'<div class="weatherBT_title"><span class="font5"><b>시간대별 일기 예보</b></span></div>'
+						+ 				'<div class="weatherBT_content">'
+						+					'<div class="weatherBT_tableWrap">'
+						+						'<div class="weatherBT_table">';
 				
 			for(var i=0; i<wbt_data.length; i++){
 				
@@ -525,9 +537,11 @@
 					+					'<td class="onright">'+ windD_now + wind_now +' m/s</td></tr>'
 					+			'</table>' 
 					+	'</div>'
-					+ '</form>';
+					+ '</form>'
+					+ '</div>'
+					+ '</div>';
 						
-			$('#mainForm').html(wbtHtml);
+			$('#content').html(wbtHtml);
 			
 			
 			
