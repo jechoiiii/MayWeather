@@ -31,8 +31,9 @@ query = """
     values(%s,%s,%s,%s,%s,%s)
     """
 
-for i in range(len(json_data1)):
+for i in range(0, len(json_data1)):
 
+    #print(json_data1[i])
     code = json_data1[i].get('id')
     city = json_data1[i].get('City')
     gu = json_data1[i].get('Gu')

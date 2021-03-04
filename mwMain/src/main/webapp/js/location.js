@@ -1,15 +1,26 @@
 
-		var location;		// 위치좌표를 저장할 객체 
-		var address;		// API 데이터 저장할 배열
-		var nowLoc;			// 현재 위치 (종로구)
+		var location;			// 위치좌표를 저장할 객체 
+		var addressApiData;		// API 주소 데이터 저장할 배열
+		var nowGu;				// 현재 위치 00구 (메인 출력용)
+		var nowLoc = '';		// 현재 위치 00시 00구
 		
-		var icon_now;		// 아이콘
-    	var tmp_min;		// 일일 최저 기온
-		var tmp_max;		// 일일 최고 기온 
-		var tmp_now;		// 현재 기온
-		var rain_now;		// 현재 강수량 
-		var pty_now;		// 현재 강수형태
-		var sky_now;		// 현재 하늘형태
+		var nowWth;				// 현재 날씨
+		
+		var latitude;			// GPS 위도 
+		var longitude;			// GPS 경도
+		var x;					// X 좌표 (기상청 기준)
+		var y;					// Y 좌표 (기상청 기준)
+		
+		var wn_data;			// 초단기실황 데이터
+		var wbt_data;			// 동네예보 데이터
+		
+		var icon_now;			// 아이콘
+    	var tmp_min;			// 일일 최저 기온
+		var tmp_max;			// 일일 최고 기온 
+		var tmp_now;			// 현재 기온
+		var rain_now;			// 현재 강수량 
+		var pty_now;			// 현재 강수형태
+		var sky_now;			// 현재 하늘형태
 		
 		
 		
@@ -42,35 +53,56 @@
 			    			lot : longitude
 			    	};
 			    	
+			    	console.log(location);
 			    	
-			    	// xy 좌표로 주소 구하기
 			    	
-			    	$.ajax({
-			    		url: awsHostUrl + '/address/' + x + '/' + y,
-			    		type: 'GET',
-			    		async: false,
-			    		success: function(aData) {
-			    			console.log('주소 호출 성공');
-			    			
-			    			address = aData;
-			    			
-			    			console.log(aData);
-			    			console.log(aData[0].gu);
-			    			
-			    			$('#btnLocc').html(aData[0].gu);
-			    			
-			    			nowLoc = aData[0].gu;
-			    		}, 
-			    		error: function(){
-			    			console.log('주소 호출 실패');
-			        	}
+			    	setTimeout(function(){
 			    	
-			    	});
+				    	// xy 좌표로 주소 구하기
+				    	$.ajax({
+				    		url: awsHostUrl + '/address/' + x + '/' + y,
+				    		type: 'GET',
+				    		async: false,
+				    		success: function(aData) {
+				    			console.log('주소 호출 성공');
+				    			
+				    			addressApiData = aData;
+				    			
+				    			var defaultCity = aData[0].city;
+				    			var defaultGu = aData[0].gu;
+				    			
+				    			console.log(aData);
+				    			console.log(defaultCity);
+				    			console.log(defaultGu);
+				    			
+				    			$('#btnLocc').html(defaultGu);
+				    			
+				    			nowLoc = defaultCity + ' ' + defaultGu;
+				    			
+				    			console.log(nowLoc);
+				    			console.log(typeof(nowLoc));
+				    			
+				    		}, 
+				    		error: function(){
+				    			console.log('주소 호출 실패');
+				        	}
+				    	
+				    	}).done(function(data){
+				    		console.log('XY좌표 성공');
+				    	}).fail(function(data){
+				    		console.log('XY좌표 실패');
+				    	});
+			    	
+			    	
+			    	}, 1000 * 2);
+			    	
+			    	
+			    	
+			    	
 			    	
 			    	
 			    	/* 메인 화면 날씨 ---------------------------------------------------------------------------- */
 			    	
-
 			    	
 			    	
 			    	// 초단기실황 API 데이터
@@ -82,6 +114,7 @@
 			        	async: false,	
 			        	success: function(data){
 			        		console.log('초단기실황 API 호출 성공');
+			        		//console.log(data);
 			        		
 			        		var jsonObj = JSON.parse(data);
 			        		wn_data = jsonObj.response.body.items.item;
@@ -127,6 +160,7 @@
 			        	async: false,	
 			        	success: function(data){
 			        		console.log('동네예보 API 호출 성공');
+			        		//console.log(data);
 			        		
 			        		var jsonObj = JSON.parse(data);
 			        		wbt_data = jsonObj.response.body.items.item;
@@ -244,11 +278,20 @@
 		       		
 		       		
 		       		var iconhtml = '<div class="weather_icon_wrap">';
-					iconhtml += 		'<img width="80" src="'+awsHostUrl+'/image/main/weather/'+ icon_now +'.png">';
+					iconhtml += 		'<img width="75" src="'+awsHostUrl+'/image/main/weather/'+ icon_now +'.png">';
 					iconhtml += 	'</div>';
 		       		
 		       		$('.weather_icon').html(iconhtml);
 		       		
+		       		// 현재 날씨 (하늘, 평균/최고/최저 기온) 저장
+		       		nowWth = {
+		       			sky : (pty_now == 0? sky_now : pty_now),
+		       			avTemp : tmp_now,
+		       			maxTemp : tmp_max,
+		       			minTemp : tmp_min
+		       		};
+		       		
+		       		console.log(nowWth);
 				
 			  	}, function(error) {
 							console.error(error);
@@ -263,84 +306,6 @@
 			}
 		
 		} 
-		
-		
-		
-		// LCC DFS 좌표변환을 위한 기초 자료 
-		
-		var RE = 6371.00877; // 지구 반경(km)
-		var GRID = 5.0; // 격자 간격(km)
-		var SLAT1 = 30.0; // 투영 위도1(degree)
-		var SLAT2 = 60.0; // 투영 위도2(degree)
-		var OLON = 126.0; // 기준점 경도(degree)
-		var OLAT = 38.0; // 기준점 위도(degree)
-		var XO = 43; // 기준점 X좌표(GRID)
-		var YO = 136; // 기1준점 Y좌표(GRID)
-		var X;
-		var Y;
-		
-		
-		// LCC DFS 좌표변환 ( code : "toXY"(위경도->좌표, v1:위도, v2:경도), "toLL"(좌표->위경도,v1:x, v2:y) )
-		
-		function dfs_xy_conv(code, v1, v2) {
-			
-		    var DEGRAD = Math.PI / 180.0;
-		    var RADDEG = 180.0 / Math.PI;
-		
-		    var re = RE / GRID;
-		    var slat1 = SLAT1 * DEGRAD;
-		    var slat2 = SLAT2 * DEGRAD;
-		    var olon = OLON * DEGRAD;
-		    var olat = OLAT * DEGRAD;
-		
-		    var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
-		    sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
-		    var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
-		    sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
-		    var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
-		    ro = re * sf / Math.pow(ro, sn);
-		    var rs = {};
-		   
-		    if (code == "toXY") {
-		        rs['lat'] = v1;
-		        rs['lng'] = v2;
-		        var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
-		        ra = re * sf / Math.pow(ra, sn);
-		        var theta = v2 * DEGRAD - olon;
-		        if (theta > Math.PI) theta -= 2.0 * Math.PI;
-		        if (theta < -Math.PI) theta += 2.0 * Math.PI;
-		        theta *= sn;
-		        rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
-		        rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
-		    }
-		    else {
-		        rs['x'] = v1;
-		        rs['y'] = v2;
-		        var xn = v1 - XO;
-		        var yn = ro - v2 + YO;
-		        ra = Math.sqrt(xn * xn + yn * yn);
-		        if (sn < 0.0) - ra;
-		        var alat = Math.pow((re * sf / ra), (1.0 / sn));  
-		        alat = 2.0 * Math.atan(alat) - Math.PI * 0.5;
-		
-		        if (Math.abs(xn) <= 0.0) {
-		            theta = 0.0;
-		        } 
-		        else {
-		            if (Math.abs(yn) <= 0.0) {
-		                theta = Math.PI * 0.5;
-		                if (xn < 0.0) - theta;
-		            }
-		            else theta = Math.atan2(xn, yn);
-		        }
-		        var alon = theta / sn + olon;
-		        rs['lat'] = alat * RADDEG;
-		        rs['lng'] = alon * RADDEG;
-		    }
-		   
-		    return rs;
-		}
-		
 		
 		
 		
@@ -360,10 +325,6 @@
 			var icon_bt;			// 아이콘
 			
 			
-			
-						
-						
-						
 			
 			
 			
@@ -402,8 +363,6 @@
 				if(wbt_category == 'PTY') {
 					wbt_pty.push(wbt_fcstValue);
 				}
-				
-				
 				
 			}	
 			
@@ -468,7 +427,7 @@
 					+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+ wbt_fcstTime[j] +'시</td></tr>'
 					+				'<tr style="height:70px;"><td id="weatherTable_img"><img width="30" src="'+awsHostUrl+'/image/main/weather/' + icon_bt + '.png"></td></tr>'
 					+ 				'<tr style="height:20px;"><td id="weatherTable_sky" class="font5">' + (wbt_pty[j] == 0? wbt_sky[j] : wbt_pty[j]) + '</td></tr>'
-					+				'<tr style="height:120px;"><td id="weatherTable_tmp" class="font5">'+ wbt_tmp[j] +'°</td></tr>'
+					+				'<tr style="height:110px;"><td id="weatherTable_tmp" class="font5">'+ wbt_tmp[j] +'°</td></tr>'
 					+ 				'<tr style="height:50px;"><td id="weatherTable_rain" class="font7">'+ wbt_rain[j] +'%</td></tr>'
 					+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button" id="rainPercentBar"></td></tr>'
 					+ 		'</table>';
@@ -565,14 +524,95 @@
 			    clockhtml = '지금, '+ hours + ':' + minutes;
 			    
 			    $('.wbt_currenttime').html(clockhtml);
+			    
+			    console.log(nowWth);
 		    }
 		    
 		   	function clock() {
 		   		getTime();
-		   		setInterval(getTime, 30 * 1000);	// 30초마다 함수 반복
+		   		setInterval(getTime(), 30 * 1000);	// 30초마다 함수 반복
 		   	}
 		    
 
 		}
 
+
+
+
+
+
+		// LCC DFS 좌표변환을 위한 기초 자료 
+		
+		var RE = 6371.00877; // 지구 반경(km)
+		var GRID = 5.0; // 격자 간격(km)
+		var SLAT1 = 30.0; // 투영 위도1(degree)
+		var SLAT2 = 60.0; // 투영 위도2(degree)
+		var OLON = 126.0; // 기준점 경도(degree)
+		var OLAT = 38.0; // 기준점 위도(degree)
+		var XO = 43; // 기준점 X좌표(GRID)
+		var YO = 136; // 기1준점 Y좌표(GRID)
+		var X;
+		var Y;
+		
+		
+		// LCC DFS 좌표변환 ( code : "toXY"(위경도->좌표, v1:위도, v2:경도), "toLL"(좌표->위경도,v1:x, v2:y) )
+		
+		function dfs_xy_conv(code, v1, v2) {
+			
+		    var DEGRAD = Math.PI / 180.0;
+		    var RADDEG = 180.0 / Math.PI;
+		
+		    var re = RE / GRID;
+		    var slat1 = SLAT1 * DEGRAD;
+		    var slat2 = SLAT2 * DEGRAD;
+		    var olon = OLON * DEGRAD;
+		    var olat = OLAT * DEGRAD;
+		
+		    var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+		    sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+		    var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+		    sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+		    var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+		    ro = re * sf / Math.pow(ro, sn);
+		    var rs = {};
+		   
+		    if (code == "toXY") {
+		        rs['lat'] = v1;
+		        rs['lng'] = v2;
+		        var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+		        ra = re * sf / Math.pow(ra, sn);
+		        var theta = v2 * DEGRAD - olon;
+		        if (theta > Math.PI) theta -= 2.0 * Math.PI;
+		        if (theta < -Math.PI) theta += 2.0 * Math.PI;
+		        theta *= sn;
+		        rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+		        rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+		    }
+		    else {
+		        rs['x'] = v1;
+		        rs['y'] = v2;
+		        var xn = v1 - XO;
+		        var yn = ro - v2 + YO;
+		        ra = Math.sqrt(xn * xn + yn * yn);
+		        if (sn < 0.0) - ra;
+		        var alat = Math.pow((re * sf / ra), (1.0 / sn));  
+		        alat = 2.0 * Math.atan(alat) - Math.PI * 0.5;
+		
+		        if (Math.abs(xn) <= 0.0) {
+		            theta = 0.0;
+		        } 
+		        else {
+		            if (Math.abs(yn) <= 0.0) {
+		                theta = Math.PI * 0.5;
+		                if (xn < 0.0) - theta;
+		            }
+		            else theta = Math.atan2(xn, yn);
+		        }
+		        var alon = theta / sn + olon;
+		        rs['lat'] = alat * RADDEG;
+		        rs['lng'] = alon * RADDEG;
+		    }
+		   
+		    return rs;
+		}
 

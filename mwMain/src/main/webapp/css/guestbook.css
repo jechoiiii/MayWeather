@@ -287,8 +287,7 @@
     }
     
     .regModal_back {
-    	border-radius: 10px 0 0 0;
-        float: left;
+    	border-radius: 10px 10px 0 0;
     }
     
     /* 방명록 등록 모달창 헤더 */
@@ -302,11 +301,15 @@
     }
     
     .regModal_title {
+    	width: 86%;
         text-align: center;
-        padding: 10px;
-        padding-right: 5px;
+        padding: 15px;
+        padding-left: 60px;
         border-radius: 10px 10px 0 0;
+        float: left;
+        font-size: 1.2em;
     }
+    
     
     /* 방명록 등록 모달창 내용 */
     .regModal_body {
@@ -391,7 +394,6 @@
     	right: 0;
     	width: auto;
     	height: auto;
-    	background-color: white;
     	padding: 5px;
     	text-align: right;
     	float: left;

@@ -2,11 +2,11 @@
 
         
         window.onload = function() {
-			
-			setMainPage();
+   
+	            setMainPage();
 	        
-			clock();
-			
+				clock();
+	         
 		}
 		
 		
@@ -26,26 +26,10 @@
 		
 		
 		var file;				// 방명록 첨부 사진 
-		var page = 1;			// 방명록 페이지
 		var gbNo = 0;			// 방명록 번호
-		
-		var ownerChk = false;	// 로그인한 계정 != 방명록주인 
-		var writerChk = false;	// 로그인한 계정 != 작성자
-		
-		// gbList에서만 무한스크롤이 작동하도록 만드는 변수
-		var gblistScroll = false;	
 
 		
- 		var latitude;			// GPS 위도 
-		var longitude;			// GPS 경도
-		var x;					// X 좌표 (기상청 기준)
-		var y;					// Y 좌표 (기상청 기준)
-		
-		var wn_data;			// 초단기실황 데이터
-		var wbt_data;			// 동네예보 데이터
-		
-		
-		
+ 		
 		/* 메인 ---------------------------------------------------------------------------------------------------------------------  */
 		
 		/* 메인 페이지 구성 */  
@@ -96,7 +80,7 @@
 							
 				mainhtml 	+= 			'</div>'
 							+ 		'</div>'
-							+ 		'<div class="todayCodi_btn"><input type="button" value="코디할래요 >" id="btnToCloset"></div>'
+							+ 		'<div class="todayCodi_btn" onclick="list(page)"><input type="button" value="코디할래요  >" id="btnToCloset"></div>'
 							+ '</div>'
 							
 							+ '<div class="todayPick">'
@@ -117,20 +101,22 @@
 	    			console.log(pickData);
 	    			
 	    			for(i=0; i<3; i++){
-	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3()">'
+	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+	    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
 	    						+ 			'<div class="top3_ootd_border">'
 	    						+ 				'<table>'
-	    						+ 					'<tr><td colspan="3"><img width="75" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
 	    						+ 					'<tr>'
-	    						+						'<td class="font7">'+ pickData[i].ootdnic +'님</td>'
-	    						+ 						'<td><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"></td>'
-	    						+ 						'<td class="font7">'+ pickData[i].ootdlikecnt +'</td>'
+	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +'님</td>'
+	    						+ 					'</tr>'
+	    						+ 					'<tr>'
+	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+	    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
 	    						+ 					'</tr>'
 	    						+ 				'</table>'
 	    						+ 			'</div>'
 	    						+ 		'</div>';
 	    			}
-	    			
 	    			
 	    		}, 
 	    		error: function(){
@@ -159,33 +145,18 @@
 		}
 		
 		
-		/* Top3 OOTD ajax로 보여주기 */
+		/* Top3 상세페이지 보여주기 */
 		function moveToOotdTop3(ootdidx) {
 			
 			var content = document.querySelector('.content');
             contentTemp = content.innerHTML;
             
-            // 특정 OOTD 상세페이지 보여주기
-    /*       	$.ajax({
-	    		url: ootdHostUrl + '~~',
-	    		type: 'GET',
-	    		async: false,
-	    		success: function(data) {
-	    			console.log('Top3 상세페이지 호출 성공');
-	    			
-	    			viewPost(data);
-	    			
-	    		}, 
-	    		error: function(){
-	    			console.log('Top3 상세페이지 호출 실패');
-	        	}
-	    	
-	    	});		 	
-	  */
+            viewPost(ootdidx);
 			
 			console.log(ootdidx);
-			console.log('ootd 게시물 보여주기');
+			console.log('ootd Top3 게시물 보여주기');
 		}
+		
 		
 		
 		
@@ -217,13 +188,100 @@
        	}
         
        	
-       	/* 동네 선택 */
-       	function btnLoc_click() {
-       		console.log(address);
+       	
+       	
+       	
+       	/* 동네 설정 ------------------------------------------------------------------- */
+       	
+       	
+       	/* 동네 설정 모달 창 열기 */
+       	function openLocModal() {
+       		console.log(addressApiData);
        		
-       	}
+       		$('.locationModal_wrapper').css('display','');
+       		
+				lochtml = 	'<div class="regModal">';
+				lochtml += 		'<div class="regModal_header">';
+				lochtml += 			'<div class="regModal_title">내 동네 설정하기</div>';
+				lochtml += 			'<div class="regModal_back">';
+				lochtml += 				'<button type="button" class="reg_modal_close_btn" onclick="closeLocModal()" ><img width="20" src="'+awsHostUrl+'/image/icon/x.png"></button>';
+				lochtml += 			'</div>';
+				lochtml += 		'</div>';
+				lochtml += 		'<div class="locationModal_body">';
+				
+				for(i=0; i<addressApiData.length; i++) {
 
+					lochtml +=		'<label for="possibleLocBtn" class="labelforLoc">'+ addressApiData[i].city + ' ' + addressApiData[i].gu;
+					lochtml += 			'<input type="radio" id="possibleLocBtn" class="possibleLocBtn" style="display: none;" value="'+addressApiData[i].city + ' ' + addressApiData[i].gu+'">';
+					lochtml +=		'</label>';
+					
+					console.log(addressApiData[i]);
+				}
+				
+				lochtml +=			'<img width="200" src="'+awsHostUrl+'/image/main/map.png">';
+				
+				lochtml +=		'</div>';
+				lochtml += 		'<div class="regModal_footer">';
+				lochtml += 			'<button type="button" id="reg_submit_btn" onclick="changeLoc()">주소 설정하기</button>';
+				lochtml += 		'</div>';
+				lochtml += 	'</div>'; 
+				
+				console.log(addressApiData);
+				
+ 				
+ 			$('.locationModal_wrapper').html(lochtml);
+ 			
+ 			
+ 			$('.possibleLocBtn:checked').css('background-color','#424242');
+ 		
+ 				$('.possibleLocBtn:checked').css('color','white');
+ 			
+ 			// radio 버튼 클릭 이벤트
+ 			/*$('.possibleLocBtn').on('click', function() {
+ 				
+ 			});*/
+ 			
+ 			
+       	}
+       	
+       	/* 동네 설정 */
+       	function changeLoc() {
+       		
+       		var aData = $('#possibleLocBtn').val();
+       		console.log(aData);
+       		
+			var checkValue = $('input:radio[name="possibleLocBtn"]:checked');
+       		console.log(checkValue);
+       		
+       		nowLoc = checkValue.val();
+       		console.log(nowLoc);
+       		
+       		$('.locationModal_wrapper').css('display','none');
+       		setMainPage();
+       		
+       		
+       		
+    /*   		
+       		var newLoc = '';
+       		newLoc = aData.city + ' ' + aData.gu;
+       		
+       		console.log('원래 주소: '+nowLoc);
+       		
+       		nowLoc = newLoc;
+       		console.log('새 주소: '+newLoc, '바뀐 주소: '+nowLoc);
+       		
+       		$('.locationModal_wrapper').css('display','none');
+       		setMainPage();
+     */  		
+       	
+       	}
 		
+		
+		/* 동네 설정 모달 닫기 */
+		function closeLocModal() {
+			$('.locationModal_wrapper').css('display','none');
+		}
+	
 		
 		
 		
@@ -421,17 +479,17 @@
  					
  					listhtml +=			'</table>';
  					listhtml +=		'</div>';
- 					
+ 					 					
  					
  					listhtml += 	'<!-- 방명록 등록 (모달 창) -->';
  					listhtml += 	'<form id="gbregForm">';
  					listhtml += 		'<div class="regModal_wrapper" style="display: none;">';
  					listhtml += 			'<div class="regModal">';
  					listhtml += 				'<div class="regModal_header">';
- 					listhtml += 					'<div class="regModal_back">';
- 					listhtml += 						'<button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>';
- 					listhtml += 					' </div>';
  					listhtml += 					'<div class="regModal_title">방명록 남기기</div>';
+ 					listhtml += 					'<div class="regModal_back">';
+ 					listhtml += 						'<button type="button" class="reg_modal_close_btn" onclick="closeRegModal()" ><img width="20" src="'+awsHostUrl+'/image/icon/x.png"></button>';
+ 					listhtml += 					' </div>';
  					listhtml += 				'</div>';
  					listhtml += 				'<div class="regModal_body"></div>';
  					listhtml += 				'<div class="regModal_footer">';
@@ -445,11 +503,11 @@
 		            listhtml += '<form id="gbUpdateForm">'; 
 		            listhtml += 	'<div class="updateModal_wrapper" style="display: none;">'; 
 		            listhtml += 		'<div class="updateModal">'; 
-		            listhtml += 			'<div class="regModal_header">'; 
+		            listhtml += 			'<div class="regModal_header">';
+		            listhtml += 				'<div class="regModal_title">방명록 수정하기</div>';   
 		            listhtml += 				'<div class="regModal_back">';
-		            listhtml += 					'<button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>';
-		            listhtml += 				'</div>';
-		            listhtml += 				'<div class="regModal_title">방명록 수정하기</div>';      
+		            listhtml += 					'<button type="button" class="reg_modal_close_btn" onclick="closeUpdateModal()"><img width="20" src="'+awsHostUrl+'/image/icon/x.png"></button>';
+		            listhtml += 				'</div>';   
 		            listhtml += 			'</div>'; 
 		            listhtml += 			'<div class="updateModal_body"></div>';
 		            listhtml += 			'<div class="regModal_footer">';
@@ -465,10 +523,10 @@
 		            listhtml += 	'<div class="deleteModal_wrapper" style="display: none;">';
 		            listhtml += 		'<div class="deleteModal">';
 		            listhtml += 			'<div class="regModal_header">';
-		            listhtml += 				'<div class="regModal_back">';
-		            listhtml += 					'<button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="https://maymayweather.ml/main/image/main/back.png"></button>';
-		            listhtml += 				'</div>';
 		            listhtml += 				'<div class="regModal_title">방명록 삭제하기</div>';
+		            listhtml += 				'<div class="regModal_back">';
+		            listhtml += 					'<button type="button" class="reg_modal_close_btn" onclick="closeDeleteModal()"><img width="20" src="'+awsHostUrl+'/image/icon/x.png"></button>';
+		            listhtml += 				'</div>';
 		            listhtml += 			'</div>';
 		            listhtml += 			'<div class="deleteModal_body"></div>';
 		            listhtml += 			'<div class="regModal_footer">';
@@ -549,8 +607,10 @@
 		
 		
 		
-        // 프로필사진으로 이동 (추후 추가*)
+        // 회원 방명록 -> 회원 게시물로 이동
         function backToPreview() {
+        
+        	$('#content').html(contentTemp);
         
         }
         
@@ -569,6 +629,7 @@
         function setRegModal() {
             
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerId+'">'
+        				+	'<input type="hidden" id="gbWriterLoc" name="gbWriterLoc" value="'+ nowLoc +'">'
 						+	'<tr class="gbGreetArea" height="100">'
 						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerId+'님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
@@ -698,7 +759,6 @@
            	
            	// jsessionId를 FormData에 추가 
            	formData.append('jsessionId', jsessionId);
-            	
             	
            	$.ajax({
            		type: 'POST',

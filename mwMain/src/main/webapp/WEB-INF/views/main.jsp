@@ -21,7 +21,7 @@
  <%@ include file="/WEB-INF/views/include/basicset.jsp"%>
 
 </head>
- <body>
+ <body class="bg_color">
      
  	<%@ include file="/WEB-INF/views/include/headerWithLoc.jsp"%>
 
