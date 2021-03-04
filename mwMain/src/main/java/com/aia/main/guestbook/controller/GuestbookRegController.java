@@ -31,12 +31,13 @@ public class GuestbookRegController {
 		
 		int result = 0;
 		
+		System.out.println("request:" +request);
+		System.out.println("gbRegReq : " + gbRegReq);
+		
+		
 		// JSESSION ID 가져오기
 		LoginInfo redisLoginInfo = redisService.getUserInformation(gbRegReq.getJsessionId());
 
-		//System.out.println("request:" +request);
-		//System.out.println("gbRegReq : " + gbRegReq);
-		
 		// 로그인한 경우 
 		if(redisLoginInfo.getMemIdx() > 0) {
 			// 방명록 등록

@@ -49,9 +49,8 @@ public class RedisService {
 		Map<String, Object> mapMemberInfo = new HashMap<String, Object>();
 		mapMemberInfo.put("memIdx", loginInfo.getMemIdx());
 		mapMemberInfo.put("memName", loginInfo.getMemName());
-		mapMemberInfo.put("memLoc", loginInfo.getMemLoc());
+		mapMemberInfo.put("memPhoto", loginInfo.getMemPhoto());
 		redisTemplate.opsForHash().putAll(key, mapMemberInfo);
-
 	}
 
 	/**

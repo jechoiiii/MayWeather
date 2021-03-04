@@ -78,7 +78,6 @@ public class GuestbookRegService {
 			// GuestbookRegRequest에 로그인정보 넣기
 			gbRegReq.setGbWriterNo(redisLoginInfo.getMemIdx());
 			gbRegReq.setGbWriterName(redisLoginInfo.getMemName());
-			gbRegReq.setGbWriterLoc(redisLoginInfo.getMemLoc());
 			gbRegReq.setGbWriterPhoto(redisLoginInfo.getMemPhoto());
 
 			// GuestbookRegRequest -> Guestbook으로 형변환
