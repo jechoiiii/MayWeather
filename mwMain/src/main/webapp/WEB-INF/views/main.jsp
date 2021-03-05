@@ -56,6 +56,8 @@
 	var memPhoto = '${sessionScope.memPhoto}';
 	var memEmailchk = '${sessionScope.memEmailchk}';
 
+	
+	var contentTemp;
         
 </script>
 

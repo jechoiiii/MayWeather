@@ -108,7 +108,7 @@
 	    						+ 				'<table>'
 	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
 	    						+ 					'<tr>'
-	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +'님</td>'
+	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
 	    						+ 					'</tr>'
 	    						+ 					'<tr>'
 	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
@@ -136,8 +136,6 @@
 							
 		    $('#content').html(mainhtml);
 		    
-		    var content = document.querySelector('.content');
-            contentTemp = content.innerHTML;
 		    
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocAndWeather();
@@ -223,7 +221,7 @@
 	    						+ 				'<table>'
 	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
 	    						+ 					'<tr>'
-	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +'님</td>'
+	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
 	    						+ 					'</tr>'
 	    						+ 					'<tr>'
 	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
@@ -251,8 +249,6 @@
 							
 		    $('#content').html(mainhtml);
 		    
-		    var content = document.querySelector('.content');
-            contentTemp = content.innerHTML;
 		    
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getWeather();
@@ -427,8 +423,6 @@
 			    
         	$('#content').html(html);
         	
-        	contentTemp = html;
-        	
 		}
 				    
 		
@@ -438,9 +432,12 @@
 		
 		function getGbookList(ownerIdx) {
 		
+			var content = document.querySelector('.content');
+            contentTemp = content.innerHTML;
+		
 			gbOwnerId = ownerIdx;
 			
-			// 방명록 주인이름 출력
+			// 방명록 주인이름 호출
 			$.ajax({
 				url: 'https://weatherwearmember.tk/member/members/'+gbOwnerId,
 				type: 'GET',
@@ -481,7 +478,7 @@
  					
  					listhtml +=		'<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="17" src="'+awsHostUrl+'/image/main/back.png"></button>';
- 					listhtml += 		'<span>'+ gbOwnerName +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
+ 					listhtml += 		'<span>'+ gbOwnerName + ' 님의 GuestBook('+ data.totalGuestbookCount +')</span>';
  					listhtml +=			'<div class="writebtn" id="writebtn" onclick="openRegModal()"></div>';
  					listhtml += 	'</div>';	
  					listhtml += 	'<div class="gblist">';
@@ -677,13 +674,11 @@
  					// 데이터가 없으면 출력
  					if(data.guestbookList.length == 0) {
  						$('.gblist').css('min-height','500px');
- 						listhtml +=	'<div>'+gbOwnerName+'님에게 첫 방명록을 남겨보세요!</div>';
+ 						listhtml +=	'<div>'+gbOwnerName+' 님에게 첫 방명록을 남겨보세요!</div>';
  					}
  					
  					
  					$('#content').html(listhtml);
- 					
- 					contentTemp = listhtml;
  					
  					
  					// 방명록 주인인 경우, 등록 버튼 비활성화
@@ -765,7 +760,7 @@
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerId+'">'
         				+	'<input type="hidden" id="gbWriterLoc" name="gbWriterLoc" value="'+ nowLoc +'">'
 						+	'<tr class="gbGreetArea" height="100">'
-						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+'님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+' 님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 						+	'</tr>'
 						+	'<tr class="gbInsertArea1" height="110">'
@@ -778,7 +773,7 @@
 						+	'</tr>'
 						+	'<tr class="gbInsertArea2" height="180">'
 						+		'<td class="gbInsertText" colspan="3">'
-						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerName+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
+						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerName+' 님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
 						+	'<tr class="gbSecretArea" height="50">'
 						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck"></td>'
@@ -945,7 +940,7 @@
 	           		
 	           		var uformhtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerId+'"><input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
 								+		'<tr class="gbGreetArea" height="100">'
-								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+'님에게 인사를 남겨보세요 :)</span></td>'
+								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+' 님에게 인사를 남겨보세요 :)</span></td>'
 								+			'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 								+		'</tr>'
 								+		'<tr class="gbInsertArea1" height="110">'
