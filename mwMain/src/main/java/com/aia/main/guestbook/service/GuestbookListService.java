@@ -39,7 +39,7 @@ public class GuestbookListService {
 			// MemberDao 구현채 생성
 			dao = template.getMapper(GuestbookDao.class);
 			
-			int cntPerPage = 10;
+			int cntPerPage = 30;
 			
 			int startRow = (pageNum-1)*cntPerPage;
 			int endRow = startRow+cntPerPage-1;

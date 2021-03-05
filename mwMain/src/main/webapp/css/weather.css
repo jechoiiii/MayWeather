@@ -84,6 +84,10 @@
 		font-size: 0.9em;	
 	}
 	
+	.weatherBT_detail img {
+		margin-right: 10px;
+	}
+	
 	.onleft {
 		text-align: left;
 	}

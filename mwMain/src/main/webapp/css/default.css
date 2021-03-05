@@ -550,4 +550,24 @@ p5{
     border: 1px solid #757575;
 }
 
+
+#writebtn {
+    background-image: url(https://weatherwearmember.tk/member/image/icon/write.png);
+    width: 50px;
+    height: 50px;
+    background-size: 30px;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 100px;
+    border: 0px;
+    background-color: #64c2eb;
+    position: fixed;
+    bottom: 80px;
+    right: 15px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+
+
 /* ---------------------------------------------------OOTD끝 */

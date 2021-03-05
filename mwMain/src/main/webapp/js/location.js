@@ -1,5 +1,5 @@
 
-		var location;			// 위치좌표를 저장할 객체 
+		var locObj = {};		// 위치좌표를 저장할 객체 
 		var addressApiData;		// API 주소 데이터 저장할 배열
 		var nowGu;				// 현재 위치 00구 (메인 출력용)
 		var nowLoc = '';		// 현재 위치 00시 00구
@@ -25,7 +25,7 @@
 		
 		
 		
-		function getLocation() {
+		function getLocAndWeather() {
 		
 			if (navigator.geolocation) { // GPS를 지원하면
 				navigator.geolocation.getCurrentPosition(function(p) {
@@ -46,14 +46,14 @@
 			     	
 			     	// CORS 문제 해결 : 위치정보를 ajax로 서버에 전송
 			    	// 위치정보를 자바스크립트 객체에 담는다.
-			        var location =  { 
+			        locObj =  { 
 			    			x : x, 
 			    			y : y, 
 			    			lat : latitude, 
 			    			lot : longitude
 			    	};
 			    	
-			    	console.log(location);
+			    	console.log(locObj);
 			    	
 			    	
 			    	setTimeout(function(){
@@ -94,7 +94,7 @@
 				    	});
 			    	
 			    	
-			    	}, 1000 * 2);
+			    	}, 1000 * 5); 	// 5초 지연
 			    	
 			    	
 			    	
@@ -110,7 +110,7 @@
 			        $.ajax({
 			        	url: awsHostUrl + '/weathernow',
 			        	type: 'GET',
-			        	data : location,
+			        	data : locObj,
 			        	async: false,	
 			        	success: function(data){
 			        		console.log('초단기실황 API 호출 성공');
@@ -156,7 +156,7 @@
 			    	$.ajax({
 			        	url: awsHostUrl + '/weatherbytime',
 			        	type: 'GET',
-			        	data : location,
+			        	data : locObj,
 			        	async: false,	
 			        	success: function(data){
 			        		console.log('동네예보 API 호출 성공');
@@ -295,7 +295,7 @@
 				
 			  	}, function(error) {
 							console.error(error);
-							console.log('getLocation 에러');
+							console.log('getLocAndWeather 에러');
 			  	}, {
 			  		enableHighAccuracy	: false,
 			  		maximumAge			: 0,
@@ -306,6 +306,212 @@
 			}
 		
 		} 
+		
+		
+		
+		
+		
+		
+		/* 위치 호출 없이 날씨 API 데이터 호출 -------------------------------------------- */
+		
+		function getWeather() {
+		
+			console.log(locObj);
+		
+		
+			    	
+			    	// 초단기실황 API 데이터
+			    	
+			        $.ajax({
+			        	url: awsHostUrl + '/weathernow',
+			        	type: 'GET',
+			        	data : locObj,
+			        	async: false,	
+			        	success: function(data){
+			        		console.log('초단기실황 API 호출 성공');
+			        		//console.log(data);
+			        		
+			        		var jsonObj = JSON.parse(data);
+			        		wn_data = jsonObj.response.body.items.item;
+			        		
+			        		for(var i=0; i < wn_data.length; i++) {
+			        			var wn_category = wn_data[i].category;
+			        			var wn_obsrValue = wn_data[i].obsrValue;
+		                		var wn_baseDate = wn_data[i].baseDate;
+		                		var wn_baseTime = wn_data[i].baseTime;
+			        		
+			        			//console.log('wn_category: '+ wn_category, 'wn_obsrValue: '+ wn_obsrValue, 'wn_baseDate : '+ wn_baseDate, 'wn_baseTime: '+ wn_baseTime);
+			        		
+			        			// 현재 기온
+				              	if(wn_category=='T1H') {
+				              		tmp_now = wn_obsrValue;
+				              	
+				              		if((tmp_now*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_now = parseInt(tmp_now);
+				              		}
+				              		//$('#tmp_now').html(tmp_now);
+				              	}
+				              	
+				              	// 현재 강수형태 -> 하늘상태 값과 비교 후 한글로 변환해서 출력 예정
+				              	if(wn_category=='PTY'){
+				              		pty_now = wn_obsrValue;
+				              	}
+			        		
+			        		}
+			        		
+			        	},
+			        	error: function(){
+			        		console.log('초단기실황 API 호출 실패');
+			        	}
+			        }); 
+			  
+			  
+			  		// 동네예보 API 데이터 
+			  		
+			    	$.ajax({
+			        	url: awsHostUrl + '/weatherbytime',
+			        	type: 'GET',
+			        	data : locObj,
+			        	async: false,	
+			        	success: function(data){
+			        		console.log('동네예보 API 호출 성공');
+			        		//console.log(data);
+			        		
+			        		var jsonObj = JSON.parse(data);
+			        		wbt_data = jsonObj.response.body.items.item;
+			        		
+			        		for(var i=0; i < wbt_data.length; i++) {
+			        			var wbt_category = wbt_data[i].category;
+			        			var wbt_fcstValue = wbt_data[i].fcstValue;
+		                		var wbt_fcstDate = wbt_data[i].fcstDate;
+		                		var wbt_fcstTime = wbt_data[i].fcstTime;
+		                		
+			        			// 현재 하늘형태 -> 하늘상태 값과 비교 후 한글로 변환해서 출력 예정
+				              	if(wbt_category=='SKY'){
+				              		sky_now = wbt_fcstValue;
+				              	}
+			        		
+			        			// 일일 최저 기온
+				              	if(wbt_category=='TMN' && i < wbt_data.length/2){  // 당일 최저 기온만
+				              		tmp_min = wbt_fcstValue;
+				              
+				              		if((tmp_min*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_min = parseInt(tmp_min);
+				              		}
+				              		//$('#tmp_min').html(tmp_min +'°');
+				              	}
+			              	
+				              	// 일일 최고 기온
+				              	if(wbt_category=='TMX' && i < wbt_data.length/2) {	// 당일 최고 기온만
+				              		tmp_max = wbt_fcstValue;
+				              		
+				              		if((tmp_max*10)%10 == 0){	// 소수점 떼기 
+				              			tmp_max = parseInt(tmp_max);
+				              		}
+				              		//$('#tmp_max').html(tmp_max +'° /');
+				              	}
+			        		
+			        		}
+			        		
+			        	},
+			        	error: function(){
+			        		console.log('동네예보 API 호출 실패');
+			        	}
+			        }); 
+			    	
+			    	
+			    	
+			    	// 한글로 변환
+			    	// PTY 강수형태 : 	없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4), 빗방울(5), 빗방울/눈날림(6), 눈날림(7)
+				    // SKY 하늘상태 : 	맑음(1), 구름많음(3), 흐림(4)
+				    
+				    if(sky_now == 1) {
+				    	sky_now = '맑음';
+				    	icon_now = 'sunny';
+				    } else if(sky_now == 3) {
+				    	sky_now = '구름많음';
+				    	icon_now = 'cloudy';
+				    } else {
+				   		sky_now = '흐림';
+				   		icon_now = 'cloudy';
+				    }
+				    
+				    switch(pty_now) {
+				    	case 0 :
+				    		pty_now = 0;
+				    		break;
+				    	case 1 :
+				    		pty_now = '비';
+				    		icon_now = 'rainy';
+				    		break;
+				    	case 2 :
+				    		pty_now = '비/눈';
+				    		icon_now = 'cloudwithsnow';
+				    		break;
+				    	case 3 :
+				    		pty_now = '눈';
+				    		icon_now = 'snowy';
+				    		break;
+				    	case 4 :
+				    		pty_now = '소나기';
+				    		icon_now = 'rainy';
+				    		break;
+				    	case 5 :
+				    		pty_now = '빗방울';
+				    		icon_now = 'rainy';
+				    		break;
+				    	case 6 :
+				    		pty_now = '빗방울/눈날림';
+				    		icon_now = 'cloudwithsnow';
+				    		break;
+				    	case 7 :
+				    		pty_now = '눈날림';
+				    		icon_now = 'snowy';
+				    		break;
+				    } 
+				    
+				    console.log(wn_data);
+					console.log(wbt_data);
+					
+				    
+		       		var wnhtml = '<div class="weather_now">';
+		       		wnhtml += 		'<table>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td colspan="2" class="font3" id="sky_now">' + (pty_now == 0? sky_now : pty_now) + '</td>';
+		       		wnhtml += 			'</tr>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td colspan="2" class="font1" id="tmp_now">'+tmp_now+'°</td>';
+		       		wnhtml += 			'</tr>';
+		       		wnhtml += 			'<tr>';
+		       		wnhtml += 				'<td class="font5" id="tmp_max">최고:'+tmp_max+'° /</td>';
+		       		wnhtml += 			'<td class="font5" id="tmp_min">최저:'+tmp_min+'°</td>';
+		       		wnhtml +=			'</tr>';
+		       		wnhtml += 		'</table>';
+		       		wnhtml += 	'</div>';
+		       		
+		       		$('.weather_now').html(wnhtml);
+		       		
+		       		
+		       		var iconhtml = '<div class="weather_icon_wrap">';
+					iconhtml += 		'<img width="75" src="'+awsHostUrl+'/image/main/weather/'+ icon_now +'.png">';
+					iconhtml += 	'</div>';
+		       		
+		       		$('.weather_icon').html(iconhtml);
+		       		
+		       		// 현재 날씨 (하늘, 평균/최고/최저 기온) 저장
+		       		nowWth = {
+		       			sky : (pty_now == 0? sky_now : pty_now),
+		       			avTemp : tmp_now,
+		       			maxTemp : tmp_max,
+		       			minTemp : tmp_min
+		       		};
+		       		
+		       		console.log(nowWth);
+		
+		
+		}
+		
+		
 		
 		
 		
@@ -449,9 +655,9 @@
           	console.log(wbt_fcstTime.length);
           	
           	
-          	var rain_now;	// 강수량
-          	var windD_now;	// 풍향
-          	var wind_now;	// 풍속
+          	var rain_now;		// 강수량
+          	var windD_now;		// 풍향
+          	var wind_now;		// 풍속
           	var humidity_now;	// 습도
           	
            	for(var i=0; i< wn_data.length; i++) {
@@ -483,17 +689,16 @@
 					+	'</div>'
 					+	'<div class="weatherBT_detail">'
 					+			'<table>'
-					+				'<tr><td class="onleft" id="wbt_currenttime">오늘, 오후 12:00</td><td></td></tr>'
-					+				'<tr><td class="onleft">'+ (pty_now == 0? sky_now : pty_now) +'</td>'
-					+					'<td class="onright">체감 온도 0°</td></tr>'
-					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weatherTest.png">강수량</td>'
-					+					'<td class="onright">'+ rain_now +' % </td></tr>'
-					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weatherTest.png">비</td>'
-					+					'<td class="onright">'+ rain_now +' mm </td></tr>'
-					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weatherTest.png">습도</td>'
-					+					'<td class="onright">'+ humidity_now +' %</td></tr>'
-					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weatherTest.png">바람</td>'
-					+					'<td class="onright">'+ windD_now + wind_now +' m/s</td></tr>'
+					+				'<tr><td class="onleft" id="wbt_currenttime">오늘, 오후 12:00</td>'
+					+					'<td class="onright"></td></tr>'
+					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtRain.png">강수량</td>'
+					+					'<td class="onright"> '+ rain_now +' % </td></tr>'
+					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtUmbrella.png">비</td>'
+					+					'<td class="onright"> '+ rain_now +' mm </td></tr>'
+					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtHumid.png">습도</td>'
+					+					'<td class="onright"> '+ humidity_now +' %</td></tr>'
+					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtWind.png">바람</td>'
+					+					'<td class="onright"> '+ windD_now + wind_now +' m/s</td></tr>'
 					+			'</table>' 
 					+	'</div>'
 					+ '</form>'
@@ -502,40 +707,40 @@
 						
 			$('#content').html(wbtHtml);
 			
+			wbtClock();
 			
-			
-			/* 실시간 날짜 시계 구하기 */
-        
-		    function getTime() {
-				var date = new Date(); 
-			    var month = date.getMonth() + 1;
-			    var clockDate = date.getDate();
-			    var day = date.getDay();
-			    var week = ['일', '월', '화', '수', '목', '금', '토'];
-			    var hours = date.getHours();
-			    var minutes = date.getMinutes();
-			    
-			    hours = hours < 10 ? '0' + hours : hours;
-			    minutes = minutes < 10 ? '0' + minutes : minutes;
-			    
-					// 월은 0부터 1월이기때문에 +1일을 해주고 
-				    // 시간 분은 10보다 작으면 앞에0을 붙혀주기 
-			    //clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
-			    clockhtml = '지금, '+ hours + ':' + minutes;
-			    
-			    $('.wbt_currenttime').html(clockhtml);
-			    
-			    console.log(nowWth);
-		    }
-		    
-		   	function clock() {
-		   		getTime();
-		   		setInterval(getTime(), 30 * 1000);	// 30초마다 함수 반복
-		   	}
-		    
 
 		}
 
+		
+		/* 시간대별 일기 예보 - 실시간 날짜 시계 구하기 */
+        
+	    function getWbtTime() {
+			var date = new Date(); 
+		    var month = date.getMonth() + 1;
+		    var clockDate = date.getDate();
+		    var day = date.getDay();
+		    var week = ['일', '월', '화', '수', '목', '금', '토'];
+		    var hours = date.getHours();
+		    var minutes = date.getMinutes();
+		    
+		    hours = hours < 10 ? '0' + hours : hours;
+		    minutes = minutes < 10 ? '0' + minutes : minutes;
+		    
+				// 월은 0부터 1월이기때문에 +1일을 해주고 
+			    // 시간 분은 10보다 작으면 앞에0을 붙혀주기 
+		    //clockhtml = month +'월\n'+clockDate+'일\n'+week[day]+'요일\n'+ hours + ':' + minutes;
+		    clockhtml = '지금, '+ hours + ':' + minutes;
+		    
+		    $('#wbt_currenttime').html(clockhtml);
+		    
+		    console.log(nowWth);
+	    }
+	    
+	   	function wbtClock() {
+	   		getWbtTime();
+	   		setInterval(getWbtTime, 30 * 1000);	// 30초마다 함수 반복
+	   	}
 
 
 

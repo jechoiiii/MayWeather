@@ -48,12 +48,10 @@
    	
    	.font4 {
    		font-size: 1.1em;
-   		font-weight: 900;
    	}
    	
    	.font5 {
    		font-size: 0.9em;
-   		font-weight: bold;
    	}
 
 	.font6 {
@@ -78,13 +76,14 @@
 	.header_loc {
 		position: relative;
 	    top: -25px;
-	    left: 160px;
+	    left: 165px;
 	    width: auto;
 	    background-color: #64c2eb;
     }
     
     .header_loc img {
     	background-color: #64c2eb;
+    	padding-right: 5px;
 	}
     
     .locationModal_wrapper {
@@ -110,9 +109,11 @@
     
     .locationModal_body {
     	width: 100%;
-    	height: 86%;
+    	height: 82%;
     	padding: 5px;
     	padding-top: 30px;
+    	background-color: white;
+    	margin-top: 20px;
     }
     
     .labelforLoc {
@@ -122,7 +123,6 @@
         text-align: center;
         float: left;
     }
-    
     
     
     .locationModal_body img {

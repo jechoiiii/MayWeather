@@ -3,7 +3,7 @@
         
         window.onload = function() {
    
-	            setMainPage();
+	            setMainPageWithLoc();
 	        
 				clock();
 	         
@@ -27,13 +27,14 @@
 		
 		var file;				// 방명록 첨부 사진 
 		var gbNo = 0;			// 방명록 번호
+		var gbpage = 1;
 
 		
  		
 		/* 메인 ---------------------------------------------------------------------------------------------------------------------  */
 		
-		/* 메인 페이지 구성 */  
-		function setMainPage() {
+		/* 메인 페이지 구성 : 위치 호출 후 데이터 받아오기 */  
+		function setMainPageWithLoc() {
 			
 			var mainhtml = '<!-- 메인 wrap -->'
 						+	'<div class="content_wrap">'
@@ -43,7 +44,7 @@
 					
 						+ '<div class="header_time"></div>'
 							+ '<div class="weather">'
-							+ 		'<div class="weatherBT_btn"><input type="button" class="font6" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
+							+ 		'<div class="weatherBT_btn"><input type="button" class="font5" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
 							+ 		'<div class="weather_icon">'
 							+ 			'<img width="80" src="'+awsHostUrl+'/image/main/weatherTest.png">'
 							+ 		'</div>'
@@ -139,10 +140,127 @@
             contentTemp = content.innerHTML;
 		    
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
-			getLocation();
+			getLocAndWeather();
 			
 			
 		}
+		
+		
+		
+		
+		/* 메인 페이지 구성 : *위치 호출 없이* 데이터 받아오기 ----------------------- */  
+		function setMainPage() {
+			
+			var mainhtml = '<!-- 메인 wrap -->'
+						+	'<div class="content_wrap">'
+						+	'<!-- 메인 -->'
+						+	'<div class="mainForm" id="mainForm">'
+				
+					
+						+ '<div class="header_time"></div>'
+							+ '<div class="weather">'
+							+ 		'<div class="weatherBT_btn"><input type="button" class="font5" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
+							+ 		'<div class="weather_icon">'
+							+ 			'<img width="80" src="'+awsHostUrl+'/image/main/weatherTest.png">'
+							+ 		'</div>'
+							+ 		'<div class="weather_now">'
+							+ 			'<table>'
+							+ 				'<tr><td colspan="2" class="font4" id="sky_now">약한 비</td></tr>	'
+							+ 				'<tr><td colspan="2" class="font0" id="tmp_now">0°</td></tr>	'
+							+ 				'<tr><td class="font5" id="tmp_max">0° /</td><td class="font5" id="tmp_min"> -0°</td></tr>'
+							+			'</table>'
+							+ 		'</div>'
+							+ '</div>'
+							
+							+ '<div class="todayCodi">'
+							+ 		'<div class="todayCodi_ootd">'
+							+ 			'<div class="todayCodi_ootd_border">'
+							+ 				'<table>'
+							+ 					'<tr><td><img height="90" src="'+awsHostUrl+'/image/main/ootdTest.jpg"></td></tr>'
+							+ 					'<tr><td class="font5">뫄뫄님의 LOOK</td></tr>'
+							+ 				'</table>'
+							+ 			'</div>'
+							+ 		'</div>'
+							+ 		'<div class="todayCodi_recomm">'
+							+ 			'<div class="todayCodi_item">'
+							+ 				'<table>'
+							+ 					'<tr><td class="font4"> -- 오늘의 코디 추천 -- </td></tr>'
+							+ 					'<tr><td class="font_left">00님 <br>오늘 000과 0000 어때요? :)</td></tr>'
+							+ 				'</table>'
+							+ 			'</div>'
+							+ 			'<div class="todayCodi_item_img">';
+							
+				for(i=0; i<3; i++){
+					mainhtml +=				'<div class="todayCodi_item_img1"><img width="45" src="'+awsHostUrl+'/image/main/codiRecTest.png"></div>';
+				}
+							
+				mainhtml 	+= 			'</div>'
+							+ 		'</div>'
+							+ 		'<div class="todayCodi_btn" onclick="list(page)"><input type="button" value="코디할래요  >" id="btnToCloset"></div>'
+							+ '</div>'
+							
+							+ '<div class="todayPick">'
+							+ 		'<div class="todayPick_title"><h5>Todays PICK</h5></div>'
+							+ 			'<div class="top3_ootd">';
+						
+					
+						
+						
+							
+			// 좋아요 순으로 OOTD 게시물 Top3 가져오기
+		 	$.ajax({
+	    		url: ootdHostUrl + '/req/liketopthree',
+	    		type: 'GET',
+	    		async: false,
+	    		success: function(pickData) {
+	    			console.log('ootd 게시물 호출 성공');
+	    			console.log(pickData);
+	    			
+	    			for(i=0; i<3; i++){
+	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+	    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
+	    						+ 			'<div class="top3_ootd_border">'
+	    						+ 				'<table>'
+	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+	    						+ 					'<tr>'
+	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +'님</td>'
+	    						+ 					'</tr>'
+	    						+ 					'<tr>'
+	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+	    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
+	    						+ 					'</tr>'
+	    						+ 				'</table>'
+	    						+ 			'</div>'
+	    						+ 		'</div>';
+	    			}
+	    			
+	    		}, 
+	    		error: function(){
+	    			console.log('주소 호출 실패');
+	        	}
+	    	
+	    	});		 	
+					
+			
+			mainhtml += 	'</div>'
+						+ '</div>'
+						+ '</div>'
+						+ '</div>';
+						
+			
+							
+		    $('#content').html(mainhtml);
+		    
+		    var content = document.querySelector('.content');
+            contentTemp = content.innerHTML;
+		    
+		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
+			getWeather();
+			
+			
+		}
+		
+		
 		
 		
 		/* Top3 상세페이지 보여주기 */
@@ -198,6 +316,7 @@
        	function openLocModal() {
        		console.log(addressApiData);
        		
+       		$('#weatherBt_btn').css('display','none');
        		$('.locationModal_wrapper').css('display','');
        		
 				lochtml = 	'<div class="regModal">';
@@ -212,7 +331,7 @@
 				for(i=0; i<addressApiData.length; i++) {
 
 					lochtml +=		'<label for="possibleLocBtn" class="labelforLoc">'+ addressApiData[i].city + ' ' + addressApiData[i].gu;
-					lochtml += 			'<input type="radio" id="possibleLocBtn" class="possibleLocBtn" style="display: none;" value="'+addressApiData[i].city + ' ' + addressApiData[i].gu+'">';
+					lochtml += 			'<input type="radio" name="possibleLocBtn" class="possibleLocBtn" value="'+addressApiData[i].city + ' ' + addressApiData[i].gu+'">';
 					lochtml +=		'</label>';
 					
 					console.log(addressApiData[i]);
@@ -231,48 +350,44 @@
  				
  			$('.locationModal_wrapper').html(lochtml);
  			
- 			
  			$('.possibleLocBtn:checked').css('background-color','#424242');
  		
- 				$('.possibleLocBtn:checked').css('color','white');
- 			
- 			// radio 버튼 클릭 이벤트
- 			/*$('.possibleLocBtn').on('click', function() {
- 				
- 			});*/
- 			
+ 			$('.possibleLocBtn:checked').css('color','white');
  			
        	}
+       	
+       	
+       	
        	
        	/* 동네 설정 */
        	function changeLoc() {
        		
-       		var aData = $('#possibleLocBtn').val();
-       		console.log(aData);
-       		
 			var checkValue = $('input:radio[name="possibleLocBtn"]:checked');
        		console.log(checkValue);
+       		console.log(checkValue.val());
        		
-       		nowLoc = checkValue.val();
+       		const str = checkValue.val();
+       		console.log(str);
+       		
+       		nowLoc = str;
        		console.log(nowLoc);
        		
-       		$('.locationModal_wrapper').css('display','none');
-       		setMainPage();
+       		const arr = str.split(' ');
+       		console.log(arr);
+       		console.log(arr[0]);
+       		console.log(arr[1]);
        		
+       		nowGu = arr[1];
+       		console.log(nowGu);
        		
-       		
-    /*   		
-       		var newLoc = '';
-       		newLoc = aData.city + ' ' + aData.gu;
-       		
-       		console.log('원래 주소: '+nowLoc);
-       		
-       		nowLoc = newLoc;
-       		console.log('새 주소: '+newLoc, '바뀐 주소: '+nowLoc);
        		
        		$('.locationModal_wrapper').css('display','none');
-       		setMainPage();
-     */  		
+       		$('#btnLocc').html(nowGu);
+       		
+       		console.log(location);
+       		
+       		
+       		//setMainPage();
        	
        	}
 		
@@ -280,6 +395,7 @@
 		/* 동네 설정 모달 닫기 */
 		function closeLocModal() {
 			$('.locationModal_wrapper').css('display','none');
+			$('#weatherBt_btn').css('display','');
 		}
 	
 		
@@ -319,15 +435,15 @@
 		
 		/* 회원 A 방명록의 리스트 출력 --------------------------------------- */
 		
-		function getGbookList(gbOwnerIdx) {
+		function getGbookList(ownerIdx) {
 		
-			gbOwnerId = gbOwnerIdx;
+			gbOwnerId = ownerIdx;
 			console.log('방명록주인:'+gbOwnerId);
-			console.log('방명록주인:'+gbOwnerIdx);
+			console.log('방명록주인:'+ownerIdx);
 			
 			
 			$.ajax({
- 				url: awsHostUrl + '/guestbook/list/' + gbOwnerIdx + '/' + page,
+ 				url: awsHostUrl + '/guestbook/list/' + gbOwnerId + '/' + gbpage,
  				type: 'GET',
  				success:function(data){
  				
@@ -346,9 +462,9 @@
 
  					
  					listhtml +=		'<div class="gblist_title">';
- 					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="15" src="'+awsHostUrl+'/image/main/back.png"></button>';
- 					listhtml += 		'<span>'+ gbOwnerIdx +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
- 					listhtml += 		'<button type="button" onclick="openRegModal()" class="reg_modal_open_btn"><img width="30" src="'+awsHostUrl+'/image/icon/write2.png"></button>';
+ 					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="17" src="'+awsHostUrl+'/image/main/back.png"></button>';
+ 					listhtml += 		'<span>'+ gbOwnerId +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
+ 					listhtml +=			'<div class="writebtn" id="writebtn" onclick="openRegModal()"></div>';
  					listhtml += 	'</div>';	
  					listhtml += 	'<div class="gblist">';
  					listhtml += 		'<table class="gblist_table">';
@@ -356,7 +472,7 @@
  					for(var i=0; i<data.guestbookList.length; i++) {
 	 							
 	 					// 방명록 주인이거나 작성자인 경우에만, 비밀글 열람			
-	 					if(memIdx == gbOwnerIdx || memIdx == data.guestbookList[i].writerNo){
+	 					if(memIdx == gbOwnerId || memIdx == data.guestbookList[i].writerNo){
 	 						
 	 						
 	 						// 비밀글은 css 처리
@@ -381,7 +497,7 @@
                     		listhtml += 						'<div id="gbDropContent" class="gbDropdownContent">';
                     		
 		 					// 방명록 주인 -> 삭제 버튼만 보이게
-		 					if(memIdx == gbOwnerIdx){
+		 					if(memIdx == gbOwnerId){
 		 						listhtml += 							'<li class="dropdown"  id="gbdelete" onclick="openDeleteModal('+data.guestbookList[i].gbookNo +')">삭제</li>';
 		 					
 		 					// 방명록 작성자 -> 수정/삭제 버튼 모두 보이게 
@@ -543,7 +659,7 @@
  					// 데이터가 없으면 출력
  					if(data.guestbookList.length == 0) {
  						$('.gblist').css('min-height','500px');
- 						listhtml +=	'<div>'+gbOwnerIdx+'님에게 첫 방명록을 남겨보세요!</div>';
+ 						listhtml +=	'<div>'+gbOwnerId+'님에게 첫 방명록을 남겨보세요!</div>';
  					}
  					
  					
@@ -553,7 +669,7 @@
  					
  					
  					// 방명록 주인인 경우, 등록 버튼 비활성화
- 					if(memIdx == gbOwnerIdx) {
+ 					if(memIdx == gbOwnerId) {
  						$('.reg_modal_open_btn').attr('disabled', 'disabled');
  					}
 
@@ -634,7 +750,7 @@
 						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerId+'님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 						+	'</tr>'
-						+	'<tr class="gbInsertArea1" height="90">'
+						+	'<tr class="gbInsertArea1" height="110">'
 						+		'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="'+awsHostUrl+'/image/main/camera.png"></label>'
 						+			'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 						+		'<td id="gbPreview" class="gbPreview" colspan="2">'
@@ -642,7 +758,7 @@
 						+			'</div>'
 						+		'</td>'
 						+	'</tr>'
-						+	'<tr class="gbInsertArea2" height="210">'
+						+	'<tr class="gbInsertArea2" height="180">'
 						+		'<td class="gbInsertText" colspan="3">'
 						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerId+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
@@ -817,21 +933,21 @@
 								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerId+'님에게 인사를 남겨보세요 :)</span></td>'
 								+			'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 								+		'</tr>'
-								+		'<tr class="gbInsertArea1" height="90">'
+								+		'<tr class="gbInsertArea1" height="110">'
 								+			'<td class="gbInsertPhoto"><label for="gbContentPhoto"><img width="30" src="'+awsHostUrl+'/image/main/camera.png"></label>'
 								+				'<input type="file" id="gbContentPhoto" name="gbContentPhoto" accept="image/jpeg,image/png,image/gif" style="display:none;" onchange="chkImage(this)"></td>'
 								+			'<td id="gbPreview" class="gbPreview" colspan="2">'
 								+				'<div class="deletePreviewImg">';
 					
 								if(gbInfo.contentPhoto != null) {
-									uformhtml +=				'<img height="60" id="gbBeforePhoto" src="' + awsHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">';
+									uformhtml +=				'<img height="70" width="auto" id="gbBeforePhoto" src="' + awsHostUrl + uploadFileUrl + gbInfo.contentPhoto +'">';
 									uformhtml +=				'<img width="8" id="deletePreview_btn" width="30" src="'+awsHostUrl+'/image/icon/x.png" onclick="deletePreview()">';
 								}			
 								
 					uformhtml +=				'</div>'
 								+			'</td>'
 								+		'</tr>'
-								+		'<tr class="gbInsertArea2" height="210">'
+								+		'<tr class="gbInsertArea2" height="180">'
 								+			'<td class="gbInsertText" colspan="3">'
 								+				'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard">'+ gbInfo.content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</textarea></td>'
 								+		'</tr>'
@@ -914,7 +1030,7 @@
 			// 이미지가 로드가 된 경우
 			reader.onload = function(event) {			
 				
-				previewhtml = '<img width="60" height="auto" id="gbBeforePhoto" src="' + event.target.result +'">'
+				previewhtml = '<img height="70" width="auto" id="gbBeforePhoto" src="' + event.target.result +'">'
 							+ '<img width="10" id="deletePreview_btn" width="30" src="'+awsHostUrl+'/image/icon/x.png" onclick="deletePreview()">';
 				
 				$('.deletePreviewImg').html(previewhtml);

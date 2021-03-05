@@ -14,7 +14,7 @@
     	<div class="locationModal_wrapper" style="display: none;"></div>
     	
     	<!-- TEST -->
-    	<!-- <input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()"> -->
+    	<input type="button" class="font6" value="방명록" id="gblist_btn" onclick="getMoveToGb()">
     	
     	
 
