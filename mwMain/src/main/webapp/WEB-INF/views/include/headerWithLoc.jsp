@@ -6,7 +6,7 @@
 
 	    <img src="<c:url value="/image/logo/mwlogo.png"/>" width="119px" class="logoimage">
 
-		<div class="header_loc" id="header_loc" onclick="openLocModal()">
+		<div class="header_loc" id="header_loc">
 			<img height="20" src="https://maymayweather.ml/main/image/icon/location.png">
     		<button id="btnLocc" class="font4">서울</button>
     	</div>

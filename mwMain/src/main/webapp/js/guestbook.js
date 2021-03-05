@@ -169,18 +169,9 @@
 			getLocAndWeather();
 			
 			
+			
 		}
 		
-		
-		/* 동네 정보 없을 때 클릭 이벤트 비활성화 */
-		function disableBtn() {
-			/* 동네 정보 없을 때 클릭 이벤트 비활성화 */
-			if(nowLoc == null || nowLoc == '') {
-				$('#header_loc').off('click');
-				
-			}
-		
-		}
 		
 		
 		
@@ -371,11 +362,71 @@
        	
        	
        	
-       	
-       	/* 동네 설정 ------------------------------------------------------------------- */
-       	
-       	
        	/* 동네 설정 모달 창 열기 */
+       	
+       	$('#header_loc').click(function () {
+       	
+       	
+       		// 동네 데이터 없을 때 분기
+       		if(nowLoc == null || nowLoc == '') {
+       			
+       			Swal.fire({
+				  icon: 'error',
+				  title: 'GPS Error',
+				  text: 'GPS 정보가 없어요. 위치를 허락해주세요!',
+				  footer: '<a href>Why do I have this issue?</a>'
+				})
+       		
+       		} else {
+       		
+       		
+       			console.log(addressApiData);
+       		
+	       		$('#weatherBt_btn').css('display','none');
+	       		$('.locationModal_wrapper').css('display','');
+	       		
+					lochtml = 	'<div class="regModal">';
+					lochtml += 		'<div class="regModal_header">';
+					lochtml += 			'<div class="regModal_title">내 동네 설정하기</div>';
+					lochtml += 			'<div class="regModal_back">';
+					lochtml += 				'<button type="button" class="reg_modal_close_btn" onclick="closeLocModal()" ><img width="20" src="'+awsHostUrl+'/image/icon/x.png"></button>';
+					lochtml += 			'</div>';
+					lochtml += 		'</div>';
+					lochtml += 		'<div class="locationModal_body">';
+					
+					for(i=0; i<addressApiData.length; i++) {
+	
+						lochtml +=		'<label for="possibleLocBtn" class="labelforLoc">'+ addressApiData[i].city + ' ' + addressApiData[i].gu;
+						lochtml += 			'<input type="radio" name="possibleLocBtn" class="possibleLocBtn" value="'+addressApiData[i].city + ' ' + addressApiData[i].gu+'">';
+						lochtml +=		'</label>';
+						
+						console.log(addressApiData[i]);
+					}
+					
+					lochtml +=			'<img width="200" src="'+awsHostUrl+'/image/main/map.png">';
+					
+					lochtml +=		'</div>';
+					lochtml += 		'<div class="regModal_footer">';
+					lochtml += 			'<button type="button" id="reg_submit_btn" onclick="changeLoc()">주소 설정하기</button>';
+					lochtml += 		'</div>';
+					lochtml += 	'</div>'; 
+					
+					console.log(addressApiData);
+					
+	 				
+	 			$('.locationModal_wrapper').html(lochtml);
+	 			
+	 			$('.possibleLocBtn:checked').css('background-color','#424242');
+	 		
+	 			$('.possibleLocBtn:checked').css('color','white');
+       		
+       		
+       		}
+       	
+		});
+		
+       	
+       	
        	function openLocModal() {
        		console.log(addressApiData);
        		
