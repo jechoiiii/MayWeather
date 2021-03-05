@@ -406,6 +406,7 @@
 		/* 방명록 ------------------------------------------------------------------------------------------------------------------------------  */
 		
 		var gbOwnerId;	// 방명록 주인 ID
+		var gbOwnerName;	// 방명록 주인 name
 		
 		
 		/* test용 방명록 버튼 출력 ----------------------------------------- */
@@ -438,8 +439,25 @@
 		function getGbookList(ownerIdx) {
 		
 			gbOwnerId = ownerIdx;
-			console.log('방명록주인:'+gbOwnerId);
-			console.log('방명록주인:'+ownerIdx);
+			
+			// 방명록 주인이름 출력
+			$.ajax({
+				url: 'https://weatherwearmember.tk/member/members/'+gbOwnerId,
+				type: 'GET',
+				async: false,
+				success: function(name) {
+				
+					console.log(name);
+					gbOwnerName = name;
+				
+				}, 
+ 				error: function(e) {
+ 					console.log("gbOwnerName 호출 에러 : "+e);
+ 				}
+			
+			});
+			
+			console.log('방명록주인:'+gbOwnerName+'('+gbOwnerId + ')');
 			
 			
 			$.ajax({
@@ -463,7 +481,7 @@
  					
  					listhtml +=		'<div class="gblist_title">';
  					listhtml += 		'<button type="button" onclick="backToPreview()" class="gb_back_btn"><img width="17" src="'+awsHostUrl+'/image/main/back.png"></button>';
- 					listhtml += 		'<span>'+ gbOwnerId +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
+ 					listhtml += 		'<span>'+ gbOwnerName +'님의 GuestBook('+ data.totalGuestbookCount +')</span>';
  					listhtml +=			'<div class="writebtn" id="writebtn" onclick="openRegModal()"></div>';
  					listhtml += 	'</div>';	
  					listhtml += 	'<div class="gblist">';
@@ -517,7 +535,7 @@
 							// 첨부 사진 없는 경우, 이미지 출력 X
 		 					if(data.guestbookList[i].contentPhoto != null) {
 		 						listhtml +=					'<tr class="gblist_info">';
-								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 								listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
 								listhtml +=							'<div><img id="gblist_Photo" src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)" ></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 								listhtml +=						'</td>';
@@ -529,7 +547,7 @@
 								listhtml +=				'</tbody>';
 							} else {
 								listhtml +=					'<tr class="gblist_info">';
-								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
 								listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</td>';
@@ -558,7 +576,7 @@
 								// 첨부 사진 없는 경우, 이미지 출력 X
 			 					if(data.guestbookList[i].contentPhoto != null) {
 			 						listhtml +=					'<tr class="gblist_info">';
-									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 									listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
 									listhtml +=							'<div><img src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)"></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 									listhtml +=						'</td>';
@@ -571,7 +589,7 @@
 			 					
 								} else {
 									listhtml +=					'<tr class="gblist_info">';
-									listhtml +=						'<td colspan="2" class="font7">'+ data.guestbookList[i].writerLoc +' · <fmt:formatDate value="'+ data.guestbookList[i].regDate +'" pattern="yyyy.MM.dd."/></td>';			
+									listhtml +=						'<td colspan="2" class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
 									listhtml +=						'<td colspan="3" class="gblist_content">'+ data.guestbookList[i].content.replace(/(?:\r\n|\r|\n)/g,'<br/>') +'</td>';
@@ -659,7 +677,7 @@
  					// 데이터가 없으면 출력
  					if(data.guestbookList.length == 0) {
  						$('.gblist').css('min-height','500px');
- 						listhtml +=	'<div>'+gbOwnerId+'님에게 첫 방명록을 남겨보세요!</div>';
+ 						listhtml +=	'<div>'+gbOwnerName+'님에게 첫 방명록을 남겨보세요!</div>';
  					}
  					
  					
@@ -747,7 +765,7 @@
         	var reghtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerId+'">'
         				+	'<input type="hidden" id="gbWriterLoc" name="gbWriterLoc" value="'+ nowLoc +'">'
 						+	'<tr class="gbGreetArea" height="100">'
-						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerId+'님에게 인사를 남겨보세요:)</span></td>'
+						+		'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+'님에게 인사를 남겨보세요:)</span></td>'
 						+		'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 						+	'</tr>'
 						+	'<tr class="gbInsertArea1" height="110">'
@@ -760,7 +778,7 @@
 						+	'</tr>'
 						+	'<tr class="gbInsertArea2" height="180">'
 						+		'<td class="gbInsertText" colspan="3">'
-						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerId+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
+						+			'<textarea id="gbContent" name="gbContent" cols="204" wrap="hard" placeholder="'+gbOwnerName+'님의 스타일은 어떤가요? &#13;&#10;하고 싶은 말을 여기에 적어보세요."></textarea></td>'
 						+	'</tr>'
 						+	'<tr class="gbSecretArea" height="50">'
 						+		'<td colspan="3">비밀글 <input type="checkbox" id="gbcheck" name="gbcheck"></td>'
@@ -837,9 +855,6 @@
 		
         /* 방명록 등록 */
         function regGuestbook() {
-        	
-        	// 로그인 체크 추가
-        	fnLoginChk();   
 
         	var form = $('#gbregForm')[0];
         	var formData = new FormData(form);
@@ -930,7 +945,7 @@
 	           		
 	           		var uformhtml = '<table class="regModal_table"><input type="hidden" id="gbOwnerNo" name="gbOwnerNo" value="'+gbOwnerId+'"><input type="hidden" id="gbNo" name="gbNo" value="'+gbNo+'">'
 								+		'<tr class="gbGreetArea" height="100">'
-								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerId+'님에게 인사를 남겨보세요 :)</span></td>'
+								+			'<td class="gbTableExp" colspan="2"><span class="font3">잘 보셨나요?</span><br><span class="font5">'+gbOwnerName+'님에게 인사를 남겨보세요 :)</span></td>'
 								+			'<td class="gbTableImg"><img width="65" src="'+awsHostUrl+'/image/main/guestbook.png"></td>'
 								+		'</tr>'
 								+		'<tr class="gbInsertArea1" height="110">'

@@ -18,8 +18,8 @@ public class Guestbook {
 	private String writerLoc;		// 작성자의 위치 
 	private String content; 		// 작성 내용 
 	private String contentPhoto;	// 첨부 사진 
-	private Timestamp regDate;		// 작성 날짜
-	private Timestamp updateDate;	// 수정 날짜 
+	private String regDate;			// 작성 날짜
+	private String updateDate;	// 수정 날짜 
 	private String secret;			// 비밀글 여부
 		
 }
