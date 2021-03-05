@@ -45,7 +45,7 @@
 <script>
 
 	/* 회원 js에 있음 */
-	var originJsessionId = '${cookie.JSESSIONID.value}';
+	/* var originJsessionId = '${cookie.JSESSIONID.value}';
 	var jsessionId = '${sessionScope.jsessionId}';
 	
 	var memIdx = '${sessionScope.memIdx}';
@@ -54,8 +54,13 @@
 	var memLoc = '${sessionScope.memLoc}';
 	var memGender = '${sessionScope.memGender}';
 	var memPhoto = '${sessionScope.memPhoto}';
-	var memEmailchk = '${sessionScope.memEmailchk}';
+	var memEmailchk = '${sessionScope.memEmailchk}'; */
 
+	
+	var memIdx = '<%=(String)session.getAttribute("memidx")%>';
+	var memNic = '<%=(String)session.getAttribute("memnic")%>';
+	var memPhoto = '<%=(String)session.getAttribute("memphoto")%>';
+	var memLoc = '<%=(String)session.getAttribute("memloc")%>';
 	
 	var contentTemp;
         

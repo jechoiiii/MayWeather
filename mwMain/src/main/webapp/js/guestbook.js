@@ -101,22 +101,48 @@
 	    			console.log('ootd 게시물 호출 성공');
 	    			console.log(pickData);
 	    			
-	    			for(i=0; i<3; i++){
-	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
-	    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
-	    						+ 			'<div class="top3_ootd_border">'
-	    						+ 				'<table>'
-	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
-	    						+ 					'<tr>'
-	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
-	    						+ 					'</tr>'
-	    						+ 					'<tr>'
-	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
-	    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
-	    						+ 					'</tr>'
-	    						+ 				'</table>'
-	    						+ 			'</div>'
-	    						+ 		'</div>';
+	    			// 총 게시물 수가 3개보다 적을때 분기
+	    			if(pickData.length < 3){
+	    			
+	    				for(i=0; i<pickData.length; i++){
+	    					mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
+		    						+ 			'<div class="top3_ootd_border">'
+		    						+ 				'<table>'
+		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+		    						+ 					'<tr>'
+		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
+		    						+ 					'</tr>'
+		    						+ 					'<tr>'
+		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
+		    						+ 					'</tr>'
+		    						+ 				'</table>'
+		    						+ 			'</div>'
+		    						+ 		'</div>';
+	    				}
+	    			
+	    			
+	    			} else {
+	    			
+	    				for(i=0; i<3; i++){
+		    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
+		    						+ 			'<div class="top3_ootd_border">'
+		    						+ 				'<table>'
+		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+		    						+ 					'<tr>'
+		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
+		    						+ 					'</tr>'
+		    						+ 					'<tr>'
+		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
+		    						+ 					'</tr>'
+		    						+ 				'</table>'
+		    						+ 			'</div>'
+		    						+ 		'</div>';
+		    			}
+	    			
 	    			}
 	    			
 	    		}, 
@@ -137,10 +163,23 @@
 		    $('#content').html(mainhtml);
 		    
 		    
+		    
+		    
 		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
 			getLocAndWeather();
 			
 			
+		}
+		
+		
+		/* 동네 정보 없을 때 클릭 이벤트 비활성화 */
+		function disableBtn() {
+			/* 동네 정보 없을 때 클릭 이벤트 비활성화 */
+			if(nowLoc == null || nowLoc == '') {
+				$('#header_loc').off('click');
+				
+			}
+		
 		}
 		
 		
@@ -214,23 +253,51 @@
 	    			console.log('ootd 게시물 호출 성공');
 	    			console.log(pickData);
 	    			
-	    			for(i=0; i<3; i++){
-	    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
-	    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
-	    						+ 			'<div class="top3_ootd_border">'
-	    						+ 				'<table>'
-	    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
-	    						+ 					'<tr>'
-	    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
-	    						+ 					'</tr>'
-	    						+ 					'<tr>'
-	    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
-	    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
-	    						+ 					'</tr>'
-	    						+ 				'</table>'
-	    						+ 			'</div>'
-	    						+ 		'</div>';
+	    				// 총 게시물 수가 3개보다 적을때 분기
+	    			if(pickData.length < 3){
+	    			
+	    				for(i=0; i<pickData.length; i++){
+	    					mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
+		    						+ 			'<div class="top3_ootd_border">'
+		    						+ 				'<table>'
+		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+		    						+ 					'<tr>'
+		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
+		    						+ 					'</tr>'
+		    						+ 					'<tr>'
+		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
+		    						+ 					'</tr>'
+		    						+ 				'</table>'
+		    						+ 			'</div>'
+		    						+ 		'</div>';
+	    				}
+	    			
+	    			
+	    			} else {
+	    			
+	    				for(i=0; i<3; i++){
+		    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
+		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
+		    						+ 			'<div class="top3_ootd_border">'
+		    						+ 				'<table>'
+		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
+		    						+ 					'<tr>'
+		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
+		    						+ 					'</tr>'
+		    						+ 					'<tr>'
+		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
+		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
+		    						+ 					'</tr>'
+		    						+ 				'</table>'
+		    						+ 			'</div>'
+		    						+ 		'</div>';
+		    			}
+	    			
 	    			}
+	    			
+	    			
 	    			
 	    		}, 
 	    		error: function(){
@@ -534,7 +601,7 @@
 		 						listhtml +=					'<tr class="gblist_info">';
 								listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 								listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-								listhtml +=							'<div><img id="gblist_Photo" src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)" ></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
+								listhtml +=							'<div width="70" height="70"><img id="gblist_Photo" src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)" ></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 								listhtml +=						'</td>';
 								listhtml +=					'</tr>';
 								listhtml +=					'<tr class="gblist_con">';
@@ -575,7 +642,7 @@
 			 						listhtml +=					'<tr class="gblist_info">';
 									listhtml +=						'<td class="font7">'+ data.guestbookList[i].writerLoc +'  ' + data.guestbookList[i].regDate +'</td>';			
 									listhtml +=						'<td rowspan="2" class="gblist_uploadPhoto">';
-									listhtml +=							'<div><img src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)"></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
+									listhtml +=							'<div width="70" height="70"><img src="' + awsHostUrl + uploadFileUrl + data.guestbookList[i].contentPhoto +'" onclick="gbPopImage(this.src)"></div><div class="gbOriginalImage" onclick="closeGbPopup()"><div class="gbBigImg" id="gbBigImg"></div></div>';
 									listhtml +=						'</td>';
 									listhtml +=					'</tr>';
 									listhtml +=					'<tr class="gblist_con">';
@@ -661,7 +728,7 @@
 		            listhtml += 			'</div>';
 		            listhtml += 			'<div class="deleteModal_body"></div>';
 		            listhtml += 			'<div class="regModal_footer">';
-		            listhtml += 				'<button type="button" id="reg_submit_btn" onclick="deleteGuestbook()">삭제하기</button>';
+		            listhtml += 				'<button type="button" id="delete_submit_btn" onclick="deleteGuestbook()">삭제하기</button>';
 		            listhtml += 			'</div>';
 		            listhtml += 		'</div>';
 		            listhtml += 	'</div>';
@@ -669,22 +736,31 @@
 		            
 		            listhtml += '</div>';
 		            
-			    				
+			    			
+			    	$('#content').html(listhtml);	
+ 					
  					
  					// 데이터가 없으면 출력
  					if(data.guestbookList.length == 0) {
+ 						
+ 						Swal.fire({
+						  title: gbOwnerName+' 님에게 첫 방명록을 남겨보세요!',
+						  showClass: {
+						    popup: 'animate__animated animate__fadeInDown'
+						  },
+						  hideClass: {
+						    popup: 'animate__animated animate__fadeOutUp'
+						  }
+						})
  						$('.gblist').css('min-height','500px');
- 						listhtml +=	'<div>'+gbOwnerName+' 님에게 첫 방명록을 남겨보세요!</div>';
+ 						
  					}
- 					
- 					
- 					$('#content').html(listhtml);
- 					
  					
  					// 방명록 주인인 경우, 등록 버튼 비활성화
- 					if(memIdx == gbOwnerId) {
+ 				/*	if(memIdx == gbOwnerId) {
  						$('.reg_modal_open_btn').attr('disabled', 'disabled');
  					}
+ 				*/
 
  					
 	 			}, 
@@ -742,6 +818,7 @@
         	$('#content').html(contentTemp);
         
         }
+        
         
         
         
@@ -833,13 +910,21 @@
 			
 		} 
         
-		
-		
-
         /* 등록 모달 창 열기 */
         function openRegModal() {
-        	setRegModal();
-        	$('.regModal_wrapper').css('display', '');
+        
+        	// 로그인체크
+        	if(memIdx == null || memIdx == '') {
+	        	Swal.fire({
+			            icon: 'error',
+			            title: 'Oops...',
+			            text: '로그인이 안되셨네요!',
+			            footer: '<a href="javascript:memberMain()">로그인 페이지로 이동</a>'
+			          })
+        	} else {
+        		setRegModal();
+        		$('.regModal_wrapper').css('display', '');
+        	}
         }
         
         /* 등록 모달 창 닫기 */ 

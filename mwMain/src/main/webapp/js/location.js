@@ -37,8 +37,8 @@
 					x = rs['x'];
 					y = rs['y'];
 					
-					console.log(rs);
-					console.log('x좌표 : '+ x, 'y좌표 : '+ y, 'latitude : '+ latitude, 'longitude : '+ longitude);
+					//console.log(rs);
+					//console.log('x좌표 : '+ x, 'y좌표 : '+ y, 'latitude : '+ latitude, 'longitude : '+ longitude);
 					
 			        
 			     	// xy 좌표로 js로 날씨 API 불러오기 => CORS 문제 발생
@@ -72,15 +72,15 @@
 				    			var defaultGu = aData[0].gu;
 				    			
 				    			console.log(aData);
-				    			console.log(defaultCity);
-				    			console.log(defaultGu);
+				    			//console.log(defaultCity);
+				    			//console.log(defaultGu);
 				    			
 				    			$('#btnLocc').html(defaultGu);
 				    			
 				    			nowLoc = defaultCity + ' ' + defaultGu;
 				    			
+				    			console.log(addressApiData);
 				    			console.log(nowLoc);
-				    			console.log(typeof(nowLoc));
 				    			
 				    		}, 
 				    		error: function(){
@@ -94,7 +94,7 @@
 				    	});
 			    	
 			    	
-			    	}, 1000 * 5); 	// 5초 지연
+			    	}, 1000 * 2); 	// 2초 지연
 			    	
 			    	
 			    	
@@ -292,6 +292,9 @@
 		       		};
 		       		
 		       		console.log(nowWth);
+		       		
+		       		disableBtn();
+		       		
 				
 			  	}, function(error) {
 							console.error(error);
@@ -506,7 +509,7 @@
 					       		
 					       		console.log(nowWth);
 				  
-				  
+				  disableBtn();
 				  
 				  
 			}
