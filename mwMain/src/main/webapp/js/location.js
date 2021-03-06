@@ -293,8 +293,6 @@
 		       		
 		       		console.log(nowWth);
 		       		
-		       		disableBtn();
-		       		
 				
 			  	}, function(error) {
 							console.error(error);
@@ -508,8 +506,6 @@
 					       		};
 					       		
 					       		console.log(nowWth);
-				  
-				  disableBtn();
 				  
 				  
 			}
