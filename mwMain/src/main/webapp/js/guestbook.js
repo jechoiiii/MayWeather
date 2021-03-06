@@ -3,7 +3,7 @@
         
         window.onload = function() {
    
-	            setMainPageWithLoc();
+	            setMainPage();
 	        
 				clock();
 	         
@@ -34,7 +34,7 @@
 		/* 메인 ---------------------------------------------------------------------------------------------------------------------  */
 		
 		/* 메인 페이지 구성 : 위치 호출 후 데이터 받아오기 */  
-		function setMainPageWithLoc() {
+		function setMainPage() {
 			
 			var mainhtml = '<!-- 메인 wrap -->'
 						+	'<div class="content_wrap">'
@@ -163,154 +163,14 @@
 		    $('#content').html(mainhtml);
 		    
 		    
+		    // 위치 호출 여부 분기
+		    if(nowLoc == null || nowLoc == '') {
+		    	getLocAndWeather();
+		    	
+		    } else {
+		    	getWeather();
+		    }
 		    
-		    
-		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
-			getLocAndWeather();
-			
-			
-			
-		}
-		
-		
-		
-		
-		
-		/* 메인 페이지 구성 : *위치 호출 없이* 데이터 받아오기 ----------------------- */  
-		function setMainPage() {
-			
-			var mainhtml = '<!-- 메인 wrap -->'
-						+	'<div class="content_wrap">'
-						+	'<!-- 메인 -->'
-						+	'<div class="mainForm" id="mainForm">'
-				
-					
-						+ '<div class="header_time"></div>'
-							+ '<div class="weather">'
-							+ 		'<div class="weatherBT_btn"><input type="button" class="font5" value="시간대별" id="weatherBt_btn" onclick="getWeatherBT()"></div>'
-							+ 		'<div class="weather_icon">'
-							+ 			'<img width="80" src="'+awsHostUrl+'/image/main/weatherTest.png">'
-							+ 		'</div>'
-							+ 		'<div class="weather_now">'
-							+ 			'<table>'
-							+ 				'<tr><td colspan="2" class="font4" id="sky_now">약한 비</td></tr>	'
-							+ 				'<tr><td colspan="2" class="font0" id="tmp_now">0°</td></tr>	'
-							+ 				'<tr><td class="font5" id="tmp_max">0° /</td><td class="font5" id="tmp_min"> -0°</td></tr>'
-							+			'</table>'
-							+ 		'</div>'
-							+ '</div>'
-							
-							+ '<div class="todayCodi">'
-							+ 		'<div class="todayCodi_ootd">'
-							+ 			'<div class="todayCodi_ootd_border">'
-							+ 				'<table>'
-							+ 					'<tr><td><img height="90" src="'+awsHostUrl+'/image/main/ootdTest.jpg"></td></tr>'
-							+ 					'<tr><td class="font5">뫄뫄님의 LOOK</td></tr>'
-							+ 				'</table>'
-							+ 			'</div>'
-							+ 		'</div>'
-							+ 		'<div class="todayCodi_recomm">'
-							+ 			'<div class="todayCodi_item">'
-							+ 				'<table>'
-							+ 					'<tr><td class="font4"> -- 오늘의 코디 추천 -- </td></tr>'
-							+ 					'<tr><td class="font_left">00님 <br>오늘 000과 0000 어때요? :)</td></tr>'
-							+ 				'</table>'
-							+ 			'</div>'
-							+ 			'<div class="todayCodi_item_img">';
-							
-				for(i=0; i<3; i++){
-					mainhtml +=				'<div class="todayCodi_item_img1"><img width="45" src="'+awsHostUrl+'/image/main/codiRecTest.png"></div>';
-				}
-							
-				mainhtml 	+= 			'</div>'
-							+ 		'</div>'
-							+ 		'<div class="todayCodi_btn" onclick="list(page)"><input type="button" value="코디할래요  >" id="btnToCloset"></div>'
-							+ '</div>'
-							
-							+ '<div class="todayPick">'
-							+ 		'<div class="todayPick_title"><h5>Todays PICK</h5></div>'
-							+ 			'<div class="top3_ootd">';
-						
-					
-						
-						
-							
-			// 좋아요 순으로 OOTD 게시물 Top3 가져오기
-		 	$.ajax({
-	    		url: ootdHostUrl + '/req/liketopthree',
-	    		type: 'GET',
-	    		async: false,
-	    		success: function(pickData) {
-	    			console.log('ootd 게시물 호출 성공');
-	    			console.log(pickData);
-	    			
-	    				// 총 게시물 수가 3개보다 적을때 분기
-	    			if(pickData.length < 3){
-	    			
-	    				for(i=0; i<pickData.length; i++){
-	    					mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
-		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
-		    						+ 			'<div class="top3_ootd_border">'
-		    						+ 				'<table>'
-		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
-		    						+ 					'<tr>'
-		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
-		    						+ 					'</tr>'
-		    						+ 					'<tr>'
-		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
-		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
-		    						+ 					'</tr>'
-		    						+ 				'</table>'
-		    						+ 			'</div>'
-		    						+ 		'</div>';
-	    				}
-	    			
-	    			
-	    			} else {
-	    			
-	    				for(i=0; i<3; i++){
-		    				mainhtml += 	'<div class="top3_ootd'+(i+1)+'" onclick="moveToOotdTop3('+pickData[i].ootdidx+')">'
-		    						+		'<input type="hidden" id="top3_ootdIdx" value="'+pickData[i].ootdidx+'">'
-		    						+ 			'<div class="top3_ootd_border">'
-		    						+ 				'<table>'
-		    						+ 					'<tr><td colspan="2"><img width="85" class="img_paddingB" src="'+ ootdHostUrl + '/fileupload/ootdimage/THUMB_' + pickData[i].ootdphotoname +'"></td></tr>'
-		    						+ 					'<tr>'
-		    						+						'<td colspan="2" class="pick_onleft">'+ pickData[i].ootdnic +' 님</td>'
-		    						+ 					'</tr>'
-		    						+ 					'<tr>'
-		    						+ 						'<td class="pick_onleft">'+ pickData[i].ootdloc +'</td>'
-		    						+ 						'<td class="pick_onright"><img width="10" src="'+awsHostUrl+'/image/icon/heart.png"> '+ pickData[i].ootdlikecnt +'</td>'
-		    						+ 					'</tr>'
-		    						+ 				'</table>'
-		    						+ 			'</div>'
-		    						+ 		'</div>';
-		    			}
-	    			
-	    			}
-	    			
-	    			
-	    			
-	    		}, 
-	    		error: function(){
-	    			console.log('주소 호출 실패');
-	        	}
-	    	
-	    	});		 	
-					
-			
-			mainhtml += 	'</div>'
-						+ '</div>'
-						+ '</div>'
-						+ '</div>';
-						
-			
-							
-		    $('#content').html(mainhtml);
-		    
-		    
-		 	// GPS 위도/경도 요청 -> 기상청 x,y좌표로 변환 -> 서버에 전송
-			getWeather();
-			
 			
 		}
 		
@@ -479,14 +339,9 @@
        	function changeLoc() {
        		
 			var checkValue = $('.locationModal_body input:checked');
-       		console.log(checkValue);
-       		console.log(checkValue.val());
-       		
        		const str = checkValue.val();
-       		console.log(str);
        		
        		nowLoc = str;
-       		console.log(nowLoc);
        		
        		const arr = str.split(' ');
        		console.log(arr);
@@ -495,15 +350,13 @@
        		
        		nowGu = arr[1];
        		console.log(nowGu);
-       		
+       	
        		
        		$('.locationModal_wrapper').css('display','none');
        		$('#btnLocc').html(nowGu);
        		
        		console.log(location);
        		
-       		
-       		//setMainPage();
        	
        	}
 		
@@ -622,7 +475,7 @@
 	 						
 		 					listhtml += 				'<tr class="gblist_width">';
 		 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
-		 					listhtml += 						'<img width="30" class="gblist_memImg" src="'+awsHostUrl+'/image/main/blue.jpg">';
+		 					listhtml += 						'<img width="35" class="gblist_memImg" src="'+awsHostUrl+'/image/main/blue.jpg">';
 		 					listhtml += 					'</td>';
 		 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'</td>';
 		 					listhtml +=						'<td class="gblist_btns">';
@@ -684,7 +537,7 @@
 								listhtml +=				'<tbody id="'+data.guestbookList[i].gbookNo+'">'
 			 					listhtml += 				'<tr class="gblist_width">';
 			 					listhtml += 					'<td rowspan="2" class="gblist_memImgR">';
-			 					listhtml += 						'<img width="30" class="gblist_memImg" src="'+awsHostUrl+'/image/main/blue.jpg">';
+			 					listhtml += 						'<img width="35" class="gblist_memImg" src="'+awsHostUrl+'/image/main/blue.jpg">';
 			 					listhtml += 					'</td>';
 			 					listhtml += 					'<td class="gblist_name">'+ data.guestbookList[i].writerName +'</td>';
 			 					listhtml +=						'<td class="gblist_btns">';	 					

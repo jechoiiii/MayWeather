@@ -112,7 +112,6 @@
     	height: 82%;
     	padding: 5px;
     	padding-top: 30px;
-    	background-color: white;
     	margin-top: 20px;
     }
     
@@ -125,6 +124,7 @@
         float: left;
        	border-radius: 10px;
        	box-shadow: 2px 2px 8px #ccc;
+       	background-color: white;
     }
     
     .locationModal_body input[type=radio]{
