@@ -262,7 +262,7 @@
 		       		var wnhtml = '<div class="weather_now">';
 		       		wnhtml += 		'<table>';
 		       		wnhtml += 			'<tr>';
-		       		wnhtml += 				'<td colspan="2" class="font3" id="sky_now">' + (pty_now == 0? sky_now : pty_now) + '</td>';
+		       		wnhtml += 				'<td colspan="2" class="font4" id="sky_now">' + (pty_now == 0? sky_now : pty_now) + '</td>';
 		       		wnhtml += 			'</tr>';
 		       		wnhtml += 			'<tr>';
 		       		wnhtml += 				'<td colspan="2" class="font1" id="tmp_now">'+tmp_now+'°</td>';
@@ -292,6 +292,40 @@
 		       		};
 		       		
 		       		console.log(nowWth);
+		       		
+		       		
+		       		
+		       		$.ajax({
+			        	url: awsHostUrl + '/todaycodi/' +tmp_max + '/' +tmp_min,
+			        	type: 'GET',
+			        	async: false,
+			        	success: function(data){
+			        		console.log('코디아이템 호출 성공');
+			        		console.log(data);
+			        		
+			        		html = '<div class="todayCodi_ootd">';
+			        		html +=		'<table>';
+			        		html +=			'<tr>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[0].item +'1.png"></td>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[1].item +'1.png"></td>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[2].item +'1.png"></td>';
+							html +=			'</tr>';
+							html +=			'<tr><td colspan="3" height="50px">오늘 '+ data[0].name +', '+ data[1].name +', '+ data[2].name +' 어때요? :)</td></tr>';
+							html +=		'</table>';
+							html +=	'</div>';
+							
+							$('.todayCodi').html(html);
+			        		
+			        		
+			        	},
+			        	error: function(){
+						    console.log('코디아이템 호출 실패');
+			        	}
+		       		
+		       		});
+		       		
+		       		
+		       		
 		       		
 				
 			  	}, function(error) {
@@ -499,8 +533,8 @@
 		       		wnhtml += 				'<td colspan="2" class="font1" id="tmp_now">'+tmp_now+'°</td>';
 		       		wnhtml += 			'</tr>';
 		       		wnhtml += 			'<tr>';
-		       		wnhtml += 				'<td class="font5" id="tmp_max">최고:'+tmp_max+'° /</td>';
-		       		wnhtml += 			'<td class="font5" id="tmp_min">최저:'+tmp_min+'°</td>';
+		       		wnhtml += 				'<td class="font5" id="tmp_max">최고: '+tmp_max+'° /</td>';
+		       		wnhtml += 			'<td class="font5" id="tmp_min">최저: '+tmp_min+'°</td>';
 		       		wnhtml +=			'</tr>';
 		       		wnhtml += 		'</table>';
 		       		wnhtml += 	'</div>';
@@ -523,6 +557,36 @@
 		       		};
 		       		
 		       		console.log(nowWth);
+		       		
+		       		
+		       		$.ajax({
+			        	url: awsHostUrl + '/todaycodi/' +tmp_max + '/' +tmp_min,
+			        	type: 'GET',
+			        	async: false,
+			        	success: function(data){
+			        		console.log('코디아이템 호출 성공');
+			        		console.log(data);
+			        		
+			        		html = '<div class="todayCodi_ootd">';
+			        		html +=		'<table>';
+			        		html +=			'<tr>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[0].item +'1.png"></td>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[1].item +'1.png"></td>';
+							html +=				'<td width="33%"><img height="90" src="'+awsHostUrl+'/image/main/clothes/'+ data[2].item +'1.png"></td>';
+							html +=			'</tr>';
+							html +=			'<tr><td colspan="3" height="50px">오늘 '+ data[0].name +', '+ data[1].name +', '+ data[2].name +' 어때요? :)</td></tr>';
+							html +=		'</table>';
+							html +=	'</div>';
+							
+							$('.todayCodi').html(html);
+			        		
+			        		
+			        	},
+			        	error: function(){
+						    console.log('코디아이템 호출 실패');
+			        	}
+		       		
+		       		});
 		
 		
 		}
@@ -546,6 +610,8 @@
 			var wbt_pty = [];		// 강수상태
 			var icon_bt;			// 아이콘
 			
+			var barwidth;
+			    
 			
 			
 			
@@ -641,21 +707,45 @@
 			    		icon_bt = 'snowy';
 			    		break;
 			    } 
-				
+			    
+			    
+			    if(wbt_rain[j] == 0) {
+			    	barwidth = '0';
+			    } else if(wbt_rain[j] == 10) {
+			    	barwidth = '3';
+			    } else if(wbt_rain[j] == 20) {
+			    	barwidth = '7';
+			    } else if(wbt_rain[j] == 30) {
+			    	barwidth = '11';
+			    } else if(wbt_rain[j] == 40) {
+			    	barwidth = '15';
+			    } else if(wbt_rain[j] == 50) {
+			    	barwidth = '19';
+			    } else if(wbt_rain[j] == 60) {
+			    	barwidth = '23';
+			    } else if(wbt_rain[j] == 70) {
+			    	barwidth = '27';
+			    } else if(wbt_rain[j] == 80) {
+			    	barwidth = '31';
+			    } else if(wbt_rain[j] == 90) {
+			    	barwidth = '35';
+			    } else {
+			    	barwidth = '38';
+			    } 
 				
 			    
 				wbtHtml += 	 '<table>'
 					+				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+ wbt_fcstDay[j] +'</td></tr>'
 					+ 				'<tr style="height:20px;"><td id="weatherTable_time" class="font7">'+ wbt_fcstTime[j] +'시</td></tr>'
-					+				'<tr style="height:70px;"><td id="weatherTable_img"><img width="30" src="'+awsHostUrl+'/image/main/weather/' + icon_bt + '.png"></td></tr>'
+					+				'<tr style="height:100px;"><td id="weatherTable_img"><img width="30" src="'+awsHostUrl+'/image/main/weather/' + icon_bt + '.png"></td></tr>'
 					+ 				'<tr style="height:20px;"><td id="weatherTable_sky" class="font5">' + (wbt_pty[j] == 0? wbt_sky[j] : wbt_pty[j]) + '</td></tr>'
 					+				'<tr style="height:110px;"><td id="weatherTable_tmp" class="font5">'+ wbt_tmp[j] +'°</td></tr>'
-					+ 				'<tr style="height:50px;"><td id="weatherTable_rain" class="font7">'+ wbt_rain[j] +'%</td></tr>'
-					+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button" id="rainPercentBar"></td></tr>'
+					+ 				'<tr style="height:20px;"><td id="weatherTable_rain" class="font7">'+ wbt_rain[j] +'%</td></tr>'
+					+ 				'<tr style="height:10px;"><td id="weatherTable_rain_percent"><input type="button" id="rainPercentBar" style="width:'+barwidth+'px;"></td></tr>'
 					+ 		'</table>';
-					
-				$('#rainPercentBar').css('width', wbt_rain[j] * 5);
+
 			}
+			
 			
 				
 			console.log('wbt_tmp: '+ wbt_tmp);
@@ -673,6 +763,7 @@
           	
           	var rain_now;		// 강수량
           	var windD_now;		// 풍향
+          	var wind_direction;
           	var wind_now;		// 풍속
           	var humidity_now;	// 습도
           	
@@ -694,10 +785,29 @@
               		wind_now = wn_obsrValue;
               	}
         		
-        		if(wn_category=='WSD'){
+        		if(wn_category=='REH'){
         			humidity_now = wn_obsrValue;
         		}
+        		
           	} 
+          	
+          	if(windD_now < 45) {
+        		wind_direction = '북-북동';
+        	} else if(windD_now >= 45 && windD_now < 90) {
+        		wind_direction = '북동-동';
+        	} else if(windD_now >= 90 && windD_now < 135) {
+        		wind_direction = '동-남동';
+        	} else if(windD_now >= 135 && windD_now < 180) {
+        		wind_direction = '남동-남';
+        	} else if(windD_now >= 180 && windD_now < 225) {
+        		wind_direction = '남-남서';
+        	} else if(windD_now >= 225 && windD_now < 270) {
+        		wind_direction = '남서-서';
+        	} else if(windD_now >= 270 && windD_now < 315) {
+        		wind_direction = '서-북서';
+        	} else {
+        		wind_direction = '북서-북';
+        	}
           	
 					
 			wbtHtml += 			'</div>'
@@ -714,7 +824,7 @@
 					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtHumid.png">습도</td>'
 					+					'<td class="onright"> '+ humidity_now +' %</td></tr>'
 					+				'<tr><td class="onleft"><img width="15" src="'+awsHostUrl+'/image/main/weather/wbtWind.png">바람</td>'
-					+					'<td class="onright"> '+ windD_now + wind_now +' m/s</td></tr>'
+					+					'<td class="onright"> '+ wind_direction + ' \t\t\t' + wind_now +' m/s</td></tr>'
 					+			'</table>' 
 					+	'</div>'
 					+ '</form>'
@@ -750,7 +860,6 @@
 		    
 		    $('#wbt_currenttime').html(clockhtml);
 		    
-		    console.log(nowWth);
 	    }
 	    
 	   	function wbtClock() {
