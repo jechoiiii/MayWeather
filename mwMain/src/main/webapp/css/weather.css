@@ -62,9 +62,11 @@
 		background-color: #64c2eb;
 		height: 8px;
 		border: 0px;
-		border-raidus: 30px;
-		width: 30%;
 	}
+	
+	#rainPercentBar {
+    	border-radius: 10px;
+    }
 
 	.weatherBT_detail {
 		width: 100%;

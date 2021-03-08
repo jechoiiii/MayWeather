@@ -4,7 +4,7 @@
     
     <header>
 
-	    <img src="<c:url value="/image/logo/mwlogo.png"/>" width="119px" class="logoimage">
+	    <img src="<c:url value="/image/logo/mwlogo.png"/>" width="119px" class="logoimage" onclick="setMainPage()">
 
 		<div class="header_loc" id="header_loc">
 			<img height="20" src="https://maymayweather.ml/main/image/icon/location.png">
