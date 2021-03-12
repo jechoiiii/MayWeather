@@ -15,4 +15,5 @@ def productName():
 
 
 if __name__ == '__main__':
+    app.run(debug=True, port=8000, host='ec2-54-180-95-157.ap-northeast-2.compute.amazonaws.com')
 
